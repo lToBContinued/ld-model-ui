@@ -1,0 +1,86 @@
+/* 颜色变量 */
+// 主题色
+$primary-color: #2c3e50;
+$success-color: #67c23a;
+$warning-color: #e6a23c;
+$danger-color: #f56c6c;
+$error-color: #f56c6c;
+$info-color: #909399;
+
+// 背景颜色
+$main-bg-color: #f8f9fa;
+
+// 文字颜色
+$main-text-color1: #000;
+$main-text-color2: #333;
+$main-text-color3: #444;
+$sub-text-color1: #666;
+$sub-text-color2: #777;
+$sub-text-color3: #888;
+$sub-text-color4: #999;
+$light-text-color1: #aaa;
+$light-text-color2: #bbb;
+$light-text-color3: #ccc;
+
+// 边框颜色
+$border-color1: #ccc;
+$border-color2: #e0e0e0;
+$border-color3: #e5e5e5;
+$border-color4: #f0f0f0;
+$border-color5: #f5f5f5;
+
+/* 尺寸变量 */
+$logo-pic-size: 40px; // 导航栏logo大小
+$big-title-size: 20px; // logo标题大小
+$spacing-size1: 4px;
+$spacing-size2: 8px;
+$spacing-size3: 12px;
+$spacing-size4: 16px;
+$spacing-size5: 24px;
+$spacing-size6: 32px;
+$font-size-s: 14px;
+$font-size-m: 16px;
+$font-size-l: 18px;
+$title-size-s: 28px;
+$title-size-l: 32px;
+$border-radius-size-s: 4px;
+$border-radius-size-m: 8px;
+$border-radius-size-l: 16px;
+$menu-item-height: 40px; // 菜单栏item高度
+$aside-width: 240px; // 菜单栏宽度
+
+// flex居中
+@mixin flex-center($mode) {
+  display: flex;
+
+  @if $mode == 'row-center' {
+    align-items: center;
+    justify-content: center;
+  } @else if $mode == 'row-between' {
+    align-items: center;
+    justify-content: space-between;
+  } @else if $mode == 'col-center' {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  } @else if $mode == 'col-between' {
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+// 绝对居中
+@mixin absolute-center() {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin line-clamp($num) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $num;
+}

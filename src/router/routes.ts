@@ -1,0 +1,326 @@
+export default [
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/home/index.vue'),
+        meta: {
+          title: '首页概览',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/theoryKnowledge',
+        name: 'theoryKnowledge',
+        component: () => import('@/views/theoryKnowledge/index.vue'),
+        meta: {
+          title: '理论研究成果',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/TCAndJS',
+        name: 'TCAndJS',
+        component: () => import('@/views/TCAndJS/index.vue'),
+        meta: {
+          title: '典型目标TC与区域JS',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/ZZOverallPlan',
+        name: 'ZZOverallPlan',
+        component: () => import('@/views/ZZOverallPlan/index.vue'),
+        meta: {
+          title: 'ZZ统筹',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/missionPlanning',
+        name: 'missionPlanning',
+        component: () => import('@/views/missionPlanning/index.vue'),
+        meta: {
+          title: '任务规划',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/CG',
+    name: 'CG',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'JDAndYCAndYZ',
+    meta: {
+      title: '动态CG',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/CG/JDAndYCAndYZ',
+        name: 'JDAndYCAndYZ',
+        component: () => import('@/views/CG/JDAndYCAndYZ/index.vue'),
+        meta: {
+          title: 'JD、YC力量YZ与运用',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/CG/ZW',
+        name: 'ZW',
+        component: () => import('@/views/CG/ZW/index.vue'),
+        meta: {
+          title: '动态ZW',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/CG/ZHSAndJTZH',
+        name: 'ZHSAndJTZH',
+        component: () => import('@/views/CG/ZHSAndJTZH/index.vue'),
+        meta: {
+          title: 'ZHS开发与JTZH',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/CG/ZC',
+        name: 'ZC',
+        component: () => import('@/views/CG/ZC/index.vue'),
+        meta: {
+          title: 'ZC抢修',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/FH',
+    name: 'FH',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'DCMW',
+    meta: {
+      title: '综合FH',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/FH/DCMW',
+        name: 'DCMW',
+        component: () => import('@/views/FH/DCMW/index.vue'),
+        meta: {
+          title: 'DCMW',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/FH/DWFH',
+        name: 'DWFH',
+        component: () => import('@/views/FH/DWFH/index.vue'),
+        meta: {
+          title: 'DWFH',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/YL',
+    name: 'YL',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'QYLDWKS',
+    meta: {
+      title: '综合YL',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/YL/QYLDWKS',
+        name: 'QYLDWKS',
+        component: () => import('@/views/YL/QYLDWKS/index.vue'),
+        meta: {
+          title: 'QYLDWKS构建',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/YL/FZCJXMD',
+        name: 'FZCJXMD',
+        component: () => import('@/views/YL/FZCJXMD/index.vue'),
+        meta: {
+          title: 'FZCJXMD探测',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/YL/TJXQB',
+        name: 'TJXQB',
+        component: () => import('@/views/YL/TJXQB/index.vue'),
+        meta: {
+          title: '人工TJXQB',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/evaluateResult',
+        name: 'evaluateResult',
+        component: () => import('@/views/evaluateResult/index.vue'),
+        meta: {
+          title: '评估结果',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/theoreticalAbility',
+    name: 'theoreticalAbility',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'mathBasics',
+    meta: {
+      title: '理论能力',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/mathBasics',
+        name: 'mathBasics',
+        component: () => import('@/views/theoreticalAbility/mathBasics/index.vue'),
+        meta: {
+          title: '数学基础',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/logicReason',
+        name: 'logicReason',
+        component: () => import('@/views/theoreticalAbility/logicReason/index.vue'),
+        meta: {
+          title: '逻辑推理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/professionalKnowledge',
+        name: 'professionalKnowledge',
+        component: () => import('@/views/theoreticalAbility/professionalKnowledge/index.vue'),
+        meta: {
+          title: '专业知识',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    name: 'any',
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/404/index.vue'),
+    meta: {
+      title: '404',
+      icon: '',
+      hidden: true,
+      disabled: false,
+    },
+  },
+]
