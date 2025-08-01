@@ -29,6 +29,9 @@ export default [
         ...globals.browser,
         ...globals.es2021,
         ...globals.node,
+        NullType: 'readonly',
+        ElMessage: 'readonly',
+        ElMessageBox: 'readonly',
       },
     },
     // 🟡 recommended.plugins: ['prettier']
