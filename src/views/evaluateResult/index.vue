@@ -38,7 +38,7 @@
       </div>
     </zk-card>
     <zk-card style="margin-top: 24px">
-      <div class="chart" id="resultChart"></div>
+      <div class="chart" ref="resultChartInstance"></div>
     </zk-card>
   </div>
 </template>
@@ -48,9 +48,11 @@ import { ref, onMounted } from 'vue'
 import { evaluateResultFormConfig } from '@/views/evaluateResult/configs/formConfig.ts'
 import type { EvaluateResultFormType } from '@/views/evaluateResult/type.ts'
 import { evaluateResultTableConfig } from '@/views/evaluateResult/configs/tableConfigs.ts'
-import * as echarts from 'echarts'
+import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOption } from '@/views/evaluateResult/configs/chartsOption.ts'
 
+const resultChartInstance = ref<NullType<HTMLDivElement>>(null)
+const { renderChart } = useEcharts(resultChartInstance)
 const formData = ref<EvaluateResultFormType>({
   name: '',
   startDate: new Date(),
@@ -82,11 +84,7 @@ const tableData = ref([
 ])
 
 onMounted(() => {
-  const resultChartDom = document.getElementById('resultChart')
-  if (resultChartDom) {
-    const resultChart = echarts.init(resultChartDom)
-    resultChart.setOption(resultChartOption)
-  }
+  renderChart(resultChartOption)
 })
 
 const submitForm = async () => {

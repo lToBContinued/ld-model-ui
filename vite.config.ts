@@ -29,7 +29,7 @@ export default defineConfig((mode) => {
             prefix: 'Icon',
           }),
         ],
-        dts: resolve('auto-imports.d.ts'),
+        dts: resolve('src/typings/auto-imports.d.ts'),
       }),
       Components({
         dirs: ['src/components/'],
@@ -41,7 +41,7 @@ export default defineConfig((mode) => {
           ElementPlusResolver({ importStyle: 'sass' }),
         ],
         deep: true,
-        dts: resolve('components.d.ts'),
+        dts: resolve('src/typings/components.d.ts'),
       }),
       Icons({
         autoInstall: true,

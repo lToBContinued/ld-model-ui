@@ -1,6 +1,6 @@
 {
   "files": [],
-  "include": ["auto-imports.d.ts", "components.d.ts"],
+  "include": ["src/**/*.d.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"

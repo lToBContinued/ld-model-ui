@@ -2,22 +2,21 @@
   <div class="evaluate-trends">
     <zk-card>
       <div class="title">评估趋势</div>
-      <div class="chart" id="trendChart"></div>
+      <div class="chart" ref="trendInstance"></div>
     </zk-card>
   </div>
 </template>
 
 <script setup lang="ts">
-import * as echarts from 'echarts'
-import { onMounted } from 'vue'
-import { trendChartOptions } from '@/views/home/chartsOptions.ts'
+import { ref, onMounted } from 'vue'
+import { useEcharts } from '@/hooks/useEcharts.ts'
+import { trendChartOptions } from '@/views/home/configs/chartsOptions.ts'
+
+const trendInstance = ref<NullType<HTMLDivElement>>(null)
+const { renderChart } = useEcharts(trendInstance)
 
 onMounted(() => {
-  const trendChartDom = document.getElementById('trendChart')
-  if (trendChartDom) {
-    const trendChart = echarts.init(trendChartDom)
-    trendChart.setOption(trendChartOptions)
-  }
+  renderChart(trendChartOptions)
 })
 </script>
 
@@ -38,7 +37,6 @@ onMounted(() => {
 }
 
 .chart {
-  width: 100%;
   height: 300px;
 }
 </style>
