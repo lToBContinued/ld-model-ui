@@ -26,7 +26,7 @@
       </template>
     </el-table>
     <zk-pagination
-      :total="100"
+      :total="total"
       v-model:current-page="pageConfig.currentPage"
       v-model:page-size="pageConfig.pageSize"
       @change="pageChange"
@@ -97,6 +97,10 @@ defineProps({
       currentPage: 1,
       pageSize: 10,
     }),
+  },
+  total: {
+    type: Number,
+    default: 0,
   },
 })
 
