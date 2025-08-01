@@ -1,7 +1,3 @@
-import * as echarts from 'echarts'
-
-type EChartsOption = echarts.EChartsOption
-
 export const abilityChartOptions: EChartsOption = {
   series: [
     {
@@ -64,11 +60,6 @@ export const trendChartOptions: EChartsOption = {
     left: '3%',
     right: '4%',
     bottom: '3%',
-  },
-  toolbox: {
-    feature: {
-      saveAsImage: {},
-    },
   },
   xAxis: {
     type: 'category',

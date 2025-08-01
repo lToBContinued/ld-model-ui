@@ -8,6 +8,7 @@
           <span>理论研究成果评估表</span>
         </div>
       </template>
+      <!--搜索表单-->
       <div class="search-wrapper">
         <zk-form
           class="search-form"
@@ -23,6 +24,7 @@
           <zk-button type="primary" @click="submitForm">确定</zk-button>
         </div>
       </div>
+      <!--结果表格-->
       <div class="result-wrapper">
         <zk-table :columns="columns" :data="tableData" max-height="400">
           <template #level="{ row }">
@@ -40,7 +42,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import type { FormRules } from 'element-plus'
-import { theoryKnowledgeFormConfig } from '@/views/theoryKnowledge/formConfig.ts'
+import { theoryKnowledgeFormConfig } from '@/views/theoryKnowledge/configs/formConfig.ts'
 import type { theoryKnowledgeFormType } from '@/views/theoryKnowledge/type.ts'
 import type ZkForm from '@/components/zk-form.vue'
 
@@ -69,11 +71,6 @@ const columns = ref([
     prop: 'date',
     label: '评估时间',
     width: 180,
-  },
-  {
-    prop: 'assessType',
-    label: '地址',
-    defaultValue: '暂无地址',
   },
   {
     prop: 'score',
