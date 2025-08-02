@@ -38,7 +38,6 @@ declare module 'vue' {
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
     ZkButton: typeof import('./../components/zk-button.vue')['default']
     ZkCard: typeof import('./../components/zk-card.vue')['default']
-    ZkChart: typeof import('./../components/zk-chart.vue')['default']
     ZkCheckbox: typeof import('./../components/zk-checkbox.vue')['default']
     ZkDialog: typeof import('./../components/zk-dialog.vue')['default']
     ZkForm: typeof import('./../components/zk-form.vue')['default']
