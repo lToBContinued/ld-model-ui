@@ -1,12 +1,27 @@
 {
-  "files": [],
-  "include": ["src/**/*.d.ts"],
-  "references": [
-    {
-      "path": "./tsconfig.node.json"
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
     },
-    {
-      "path": "./tsconfig.app.json"
-    }
-  ]
+    "jsx": "preserve",
+    "experimentalDecorators": true, // 启用实验性的装饰器语法支持
+    "allowSyntheticDefaultImports": true, // 允许从没有默认导出的模块中使用默认导入语法（兼容部分 CommonJS 模块）
+    "useDefineForClassFields": true, // 控制类字段的编译方式为ES标准
+    "rootDir": "src", // 指定源代码的根目录，TypeScript 会从该目录开始查找需要编译的文件
+    "target": "ESNext", // 指定编译输出的 JavaScript 目标版本
+    "module": "ESNext", // 指定生成的模块代码格式
+    "lib": ["ESNext", "DOM"], // 指定编译过程中需要包含的库文件
+    "outDir": "dist", // 指定编译后输出文件的存放目录
+    "sourceMap": false, // 是否生成源映射文件
+    "strict": true, // 启用严格模式
+    "esModuleInterop": true, // 启用 CommonJS 和 ES 模块之间的互操作
+    "skipLibCheck": true, // 跳过对声明文件（.d.ts）的类型检查
+    "forceConsistentCasingInFileNames": true, // 强制文件名大小写一致
+    "moduleResolution": "node", // 指定模块解析策略，采用 Node.js 的模块解析算法
+    "allowImportingTsExtensions": true // 允许在导入语句中使用 .ts 扩展名，需配合适当的模块解析策略使用
+  },
+  "lib": ["esnext", "dom", "dom.iterable", "webworker", "scripthost"],
+  "exclude": ["node_modules", "src/**/__tests__/*"],
+  "include": ["src/**/*", "src/**/*.vue", "src/**/*.d.ts"]
 }
