@@ -1,50 +1,60 @@
 <template>
-  <div class="input-wrapper">
-    <span class="input-label" v-if="label">{{ label }}</span>
-    <el-input v-model="inputValue" :style="{ width }" v-bind="$attrs" clearable></el-input>
+  <div class="zk-input">
+    <el-input ref="ElInputRef" v-bind="props" v-model="inputValue" :style="{ width: width }">
+      <template v-if="prefixIcon" #prefix>
+        <zk-icon :icon="prefixIcon" :element-icon="elementIcon" :color="iconColor" :size="iconSize"></zk-icon>
+      </template>
+      <template v-if="suffixIcon" #suffix>
+        <zk-icon :icon="suffixIcon" :element-icon="elementIcon" :color="iconColor" :size="iconSize"></zk-icon>
+      </template>
+      <template v-if="$slots.prepend" #prepend>
+        <slot name="prepend"></slot>
+      </template>
+      <template v-if="$slots.append" #append>
+        <slot name="append"></slot>
+      </template>
+    </el-input>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+/**
+ * @description
+ * 输入框的的前置图标和后置图标是由elementIcon控制的
+ * 默认使用element-icon，需要传入el-icon图标对象，如果设置了elementIcon = false，则传入自定义的svg图标的文件名即可
+ */
+import { InputProps, InputInstance } from 'element-plus'
+import { computed, ref } from 'vue'
+
+interface ZkInputProps extends Partial<Omit<InputProps, 'modelValue'>> {
+  modelValue: string
+  elementIcon?: boolean
+  prefixIcon?: string | object
+  suffixIcon?: string | object
+  iconColor?: string
+  iconSize?: string
+  width?: string
+}
+
+const props = withDefaults(defineProps<ZkInputProps>(), {
+  modelValue: '',
+  elementIcon: true,
+  width: '240px',
+})
 
 const emit = defineEmits(['update:modelValue'])
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: '',
-  },
-  label: {
-    type: String,
-    default: '',
-  },
-  width: {
-    type: String,
-    default: '240px',
-  },
-})
+const ElInputRef = ref<InputInstance>()
 
 const inputValue = computed({
   get() {
     return props.modelValue
   },
-  set(value) {
-    emit('update:modelValue', value)
+  set(val) {
+    emit('update:modelValue', val)
   },
 })
+
+defineExpose({ ElInputRef })
 </script>
 
-<style scoped lang="scss">
-.input-wrapper {
-  display: flex;
-  align-items: center;
-  margin-right: $spacing-size4;
-}
-
-.input-label {
-  margin-right: $spacing-size2;
-  font-size: $font-size-m;
-  color: $sub-text-color1;
-  letter-spacing: 0.2em;
-}
-</style>
+<style scoped lang="scss"></style>
