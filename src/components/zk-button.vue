@@ -1,14 +1,12 @@
 <template>
-  <div class="zk-button">
-    <el-button ref="ElButtonRef" v-bind="props">
-      <template #default>
-        <slot></slot>
-      </template>
-      <template v-if="icon" #icon>
-        <zk-icon :icon="icon" :element-icon="elementIcon"></zk-icon>
-      </template>
-    </el-button>
-  </div>
+  <el-button ref="ElButtonRef" v-bind="props">
+    <template #default>
+      <slot></slot>
+    </template>
+    <template v-if="icon" #icon>
+      <zk-icon :icon="icon" :element-icon="elementIcon"></zk-icon>
+    </template>
+  </el-button>
 </template>
 
 <script setup lang="ts">
