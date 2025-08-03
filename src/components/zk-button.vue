@@ -1,25 +1,31 @@
 <template>
-  <el-button ref="ElButtonRef" v-bind="$attrs" :type="type">
-    <template v-for="(val, name) in $slots" :key="name" #[name]>
-      <slot :name="name"></slot>
-    </template>
-  </el-button>
+  <div class="zk-button">
+    <el-button ref="ElButtonRef" v-bind="props">
+      <template #default>
+        <slot></slot>
+      </template>
+      <template v-if="icon" #icon>
+        <zk-icon :icon="icon" :element-icon="elementIcon"></zk-icon>
+      </template>
+    </el-button>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { ButtonInstance, ButtonProps } from 'element-plus'
 
-defineProps({
-  type: {
-    type: String,
-    validator: (value) => {
-      return ['primary', 'success', 'warning', 'danger', ''].includes(value)
-    },
-    default: '',
-  },
+interface ZkButtonProps extends Partial<ButtonProps> {
+  elementIcon?: boolean
+  icon?: any
+}
+
+const props = withDefaults(defineProps<ZkButtonProps>(), {
+  elementIcon: true,
+  icon: null,
 })
 
-const ElButtonRef = ref(null)
+const ElButtonRef = ref<ButtonInstance>()
 
 defineExpose({ ElButtonRef })
 </script>
