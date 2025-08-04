@@ -38,6 +38,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
+    ZkAffix: typeof import('./../components/zk-affix.vue')['default']
     ZkButton: typeof import('./../components/zk-button.vue')['default']
     ZkCard: typeof import('./../components/zk-card.vue')['default']
     ZkChart: typeof import('./../components/zk-chart.vue')['default']

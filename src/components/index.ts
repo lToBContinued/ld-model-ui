@@ -1,13 +1,11 @@
 import type { App, Component } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import SvgIcon from './SvgIcon/index.vue'
 import ModuleTitle from '@/components/module-title.vue'
 import ZkButton from './zk-button.vue'
 import ZkCard from './zk-card.vue'
 import ZkCheckbox from './zk-checkbox.vue'
 
 const allGlobalComponent: Record<string, Component> = {
-  SvgIcon,
   ModuleTitle,
   ZkButton,
   ZkCard,
