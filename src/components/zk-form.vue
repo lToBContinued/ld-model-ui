@@ -136,42 +136,26 @@
 import { ref, reactive, computed, watch } from 'vue'
 import type { FormInstance } from 'element-plus'
 
-const props = defineProps({
-  formConfig: {
-    // 表格格式列表
-    type: [Object, Array],
-    default: () => {
-      return []
-    },
-    required: true,
+interface ZkFormProps {
+  formConfig: any[] | Record<string, any>
+  formData: Record<string, any>
+  labelWidth?: number | string
+  rules?: Record<string, any>
+  itemWidth?: string
+  inline?: boolean
+}
+
+const props = withDefaults(defineProps<ZkFormProps>(), {
+  formConfig: () => [],
+  formData: () => {
+    return {}
   },
-  formData: {
-    // 表格数据
-    type: Object,
-    default: () => {
-      return {}
-    },
-    required: true,
+  labelWidth: '60',
+  rules: () => {
+    return {}
   },
-  labelWidth: {
-    // 标题的宽度
-    type: [Number, String],
-    default: 60,
-  },
-  rules: {
-    type: Object,
-    default: () => {
-      return {}
-    },
-  },
-  itemWidth: {
-    type: String,
-    default: '',
-  },
-  inline: {
-    type: Boolean,
-    default: false,
-  },
+  itemWidth: '',
+  inline: false,
 })
 
 const emit = defineEmits(['form-change'])

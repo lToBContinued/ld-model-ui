@@ -8,20 +8,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+interface ZkInputNumberProps {
+  modelValue: string | number
+  label?: string
+  width?: string
+}
+
 const emit = defineEmits(['update:modelValue'])
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: '',
-  },
-  label: {
-    type: String,
-    default: '',
-  },
-  width: {
-    type: String,
-    default: '240px',
-  },
+const props = withDefaults(defineProps<ZkInputNumberProps>(), {
+  width: '240px',
 })
 
 const inputValue = computed({
