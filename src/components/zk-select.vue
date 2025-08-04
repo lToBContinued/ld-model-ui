@@ -4,29 +4,25 @@
   </el-select>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 
-const emit = defineEmits(['update:modelValue'])
-const props = defineProps({
-  modelValue: {
-    type: [String, Number],
-    default: '',
-    required: true,
-  },
+interface ZkSelectProps {
+  modelValue: string | number
   options: {
-    type: Array,
-    default: () => [],
-    required: true,
-  },
-  placeholder: {
-    type: String,
-    default: '请选择',
-  },
-  width: {
-    type: Number,
-    default: 240,
-  },
+    label: string
+    value: string | number
+  }[]
+  placeholder: string
+  width: number
+}
+
+const emit = defineEmits(['update:modelValue'])
+const props = withDefaults(defineProps<ZkSelectProps>(), {
+  modelValue: '',
+  options: () => [],
+  placeholder: '请选择',
+  width: 240,
 })
 
 const selectValue = computed({

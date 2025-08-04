@@ -17,35 +17,23 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
-const props = defineProps({
-  total: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
-  currentPage: {
-    type: Number,
-    default: 1,
-  },
-  pageSize: {
-    type: Number,
-    default: 10,
-  },
-  size: {
-    type: String,
-    default: 'default',
-  },
-  background: {
-    type: Boolean,
-    default: true,
-  },
-  pageSizes: {
-    type: Array,
-    default: () => {
-      return [5, 10, 15, 20]
-    },
-  },
+interface ZkPaginationProps {
+  total: number
+  currentPage?: number
+  pageSize?: number
+  size?: string
+  background?: boolean
+  pageSizes?: number[]
+}
+
+const props = withDefaults(defineProps<ZkPaginationProps>(), {
+  currentPage: 1,
+  pageSize: 10,
+  size: 'default',
+  background: true,
+  pageSizes: () => [5, 10, 15, 20],
 })
+
 const emit = defineEmits(['update:current-page', 'update:page-size'])
 
 const ElPaginationRef = ref()

@@ -33,7 +33,8 @@
     ></zk-pagination>
   </div>
 </template>
-<script setup>
+
+<script setup lang="ts">
 /**
  * @description 通用表格组件
  * @example
@@ -75,28 +76,25 @@
  */
 import { ref } from 'vue'
 
+interface ZkPaginationProps {
+  data: any[]
+  columns: any[]
+  maxHeight?: string
+  pageConfig?: {
+    currentPage: number
+    pageSize: number
+  }
+}
+
 const emit = defineEmits(['page-change'])
-defineProps({
-  data: {
-    type: Array,
-    default: () => [],
-    required: true,
-  },
-  columns: {
-    type: Array,
-    default: () => [],
-    required: true,
-  },
-  maxHeight: {
-    type: String,
-    default: '550px',
-  },
-  pageConfig: {
-    type: Object,
-    default: () => ({
+withDefaults(defineProps<ZkPaginationProps>(), {
+  data: () => [],
+  maxHeight: '550px',
+  pageConfig: () => {
+    return {
       currentPage: 1,
       pageSize: 10,
-    }),
+    }
   },
   total: {
     type: Number,
@@ -106,7 +104,7 @@ defineProps({
 
 const ElTableRef = ref()
 
-const pageChange = (currentPage, pageSize) => {
+const pageChange = (currentPage: number, pageSize: number) => {
   emit('page-change', currentPage, pageSize)
 }
 

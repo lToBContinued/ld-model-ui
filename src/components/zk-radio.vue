@@ -9,24 +9,19 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-const props = defineProps({
-  modelValue: {
-    type: [String, Number, Boolean],
-    default: null,
-    required: true,
-  },
+interface ZkRadioProps {
+  modelValue: string | number | boolean
   options: {
-    type: [Array, Object],
-    default: () => [],
-    required: true,
-  },
-  size: {
-    type: String,
-    default: 'default',
-    validator(value) {
-      return ['large', 'default', 'small'].includes(value as string)
-    },
-  },
+    label: string
+    value: string | number | boolean
+    disabled?: boolean
+  }[]
+  size?: string
+}
+
+const props = withDefaults(defineProps<ZkRadioProps>(), {
+  options: () => [],
+  size: 'default',
 })
 
 const emit = defineEmits(['update:modelValue'])
