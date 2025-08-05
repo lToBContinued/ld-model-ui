@@ -13,8 +13,8 @@ interface ZkSelectProps {
     label: string
     value: string | number
   }[]
-  placeholder: string
-  width: number
+  placeholder?: string
+  width?: number
 }
 
 const emit = defineEmits(['update:modelValue'])
