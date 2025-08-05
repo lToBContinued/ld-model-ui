@@ -25,7 +25,7 @@ export const theoryKnowledgeAssessFormConfig = [
   {
     prop: 'supportive',
     label: '专业知识(0-100)',
-    type: '成果支撑性 (0-40)',
+    type: 'numberInput',
   },
   {
     prop: 'remark',
