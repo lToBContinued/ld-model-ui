@@ -27,7 +27,7 @@
           v-model:page-size="state.pageSize"
         >
           <template #level="{ row }">
-            <el-tag>{{ row.level }}</el-tag>
+            <zk-tag :type="formatLevel(row.level)?.type">{{ formatLevel(row.level)?.label }}</zk-tag>
           </template>
           <template #operation>
             <div class="btn-group">
@@ -90,6 +90,30 @@ const reset = () => {
     endDate: new Date(),
     evaluateType: '',
   })
+}
+const formatLevel = (level: number) => {
+  switch (level) {
+    case 1:
+      return {
+        type: 'success',
+        label: '优秀',
+      }
+    case 2:
+      return {
+        type: 'warning',
+        label: '良好',
+      }
+    case 3:
+      return {
+        type: 'danger',
+        label: '合格',
+      }
+    default:
+      return {
+        type: 'success',
+        label: '合格',
+      }
+  }
 }
 </script>
 
