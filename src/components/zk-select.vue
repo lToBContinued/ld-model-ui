@@ -1,5 +1,5 @@
 <template>
-  <el-select v-bind="$attrs" clearable v-model="selectValue" :placeholder="placeholder" :style="{ width: selectWidth }">
+  <el-select v-bind="$attrs" clearable v-model="selectValue" :placeholder="placeholder" :style="{ width }">
     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
   </el-select>
 </template>
@@ -14,7 +14,7 @@ interface ZkSelectProps {
     value: string | number
   }[]
   placeholder?: string
-  width?: number
+  width?: string
 }
 
 const emit = defineEmits(['update:modelValue'])
@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<ZkSelectProps>(), {
   modelValue: '',
   options: () => [],
   placeholder: '请选择',
-  width: 240,
+  width: '100%',
 })
 
 const selectValue = computed({
@@ -32,10 +32,6 @@ const selectValue = computed({
   set(value) {
     emit('update:modelValue', value)
   },
-})
-
-const selectWidth = computed(() => {
-  return props.width + 'px'
 })
 </script>
 
