@@ -1,9 +1,23 @@
 <template>
   <div>
-    <el-table ref="ElTableRef" class="table" :data="data" border v-bind="$attrs" :max-height="maxHeight">
+    <div class="tools">
+      <zk-button type="success" :icon="Download" @click="importExcel">导入表格</zk-button>
+      <zk-button type="primary" :icon="Upload" @click="exportExcel">导出表格</zk-button>
+    </div>
+    <el-table
+      ref="ElTableRef"
+      class="table"
+      border
+      :data="data"
+      :row-key="rowKey"
+      :max-height="maxHeight"
+      v-bind="$attrs"
+    >
       <template v-for="(col, index) in columns" :key="col.prop || `col-${index}`">
         <!-- 专门处理 index 类型列 -->
         <el-table-column v-if="col.type === 'index'" v-bind="col" />
+        <!-- 专门处理 selection 类型列 -->
+        <el-table-column v-if="col.type === 'selection'" reserve-selection v-bind="col" />
         <!-- 处理其他类型列 -->
         <el-table-column v-else v-bind="col">
           <!--表头插槽-->
@@ -25,12 +39,17 @@
         </el-table-column>
       </template>
     </el-table>
-    <zk-pagination
-      :total="100"
-      v-model:current-page="pageConfig.currentPage"
-      v-model:page-size="pageConfig.pageSize"
-      @change="pageChange"
-    ></zk-pagination>
+    <el-pagination
+      :total="total"
+      v-model:current-page="_currentPage"
+      v-model:page-size="_pageSize"
+      :page-sizes="[5, 10, 20, 50]"
+      :pager-count="5"
+      background
+      layout="->, total, sizes, prev, pager, next, jumper"
+      @current-change="pageChange"
+      @size-change="handleSizeChange"
+    ></el-pagination>
   </div>
 </template>
 
@@ -74,34 +93,63 @@
  * ]
  * // ... existing code ...
  */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { TableInstance } from 'element-plus'
+import { Download, Upload } from '@element-plus/icons-vue'
+import * as XLSX from 'xlsx'
+import transformTableData from '@/utils/common/transformTableData.ts'
 
-interface ZkPaginationProps {
+interface KitTableProps {
   data: any[]
   columns: any[]
+  currentPage: number
+  pageSize: number
   maxHeight?: string
-  pageConfig?: {
-    currentPage: number
-    pageSize: number
-  }
+  rowKey?: string | ((row: any) => string)
+  total?: number
+  selectedRows?: any[]
 }
 
-const emit = defineEmits(['page-change'])
-withDefaults(defineProps<ZkPaginationProps>(), {
-  data: () => [],
+const props = withDefaults(defineProps<KitTableProps>(), {
   maxHeight: '550px',
-  pageConfig: () => {
-    return {
-      currentPage: 1,
-      pageSize: 10,
-    }
+  currentPage: 1,
+  pageSize: 10,
+})
+
+const emit = defineEmits(['update:current-page', 'update:page-size'])
+
+const ElTableRef = ref<TableInstance>()
+const _currentPage = computed({
+  get() {
+    return props.currentPage
+  },
+  set(val) {
+    emit('update:current-page', val)
+  },
+})
+const _pageSize = computed({
+  get() {
+    return props.pageSize
+  },
+  set(val) {
+    emit('update:page-size', val)
   },
 })
 
-const ElTableRef = ref()
+const pageChange = (currentPage: number) => {
+  console.log('>>>>> file: kit-table.vue ~ method: pageChange <<<<<\n', currentPage) // TODO: 删除
+}
+const handleSizeChange = (pageSize: number) => {
+  console.log('>>>>> file: kit-table.vue ~ method: handleSizeChange <<<<<\n', pageSize) // TODO: 删除
+}
 
-const pageChange = (currentPage: number, pageSize: number) => {
-  emit('page-change', currentPage, pageSize)
+const importExcel = () => {}
+const exportExcel = () => {
+  const exportData = transformTableData(props.selectedRows as any[], props.columns)
+  const worksheet = XLSX.utils.json_to_sheet(exportData)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+  XLSX.writeFile(workbook, 'export.xlsx', { compression: true })
 }
 
 defineExpose({ ElTableRef })
@@ -109,6 +157,12 @@ defineExpose({ ElTableRef })
 
 <style lang="scss" scoped>
 .table {
-  margin-bottom: $spacing-size5;
+  margin-bottom: 24px;
+}
+
+.tools {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 0;
 }
 </style>
