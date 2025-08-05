@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '@/router/index.js'
 
 const instance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API,
+  // baseURL: import.meta.env.VITE_BASE_API,
   timeout: 6000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
