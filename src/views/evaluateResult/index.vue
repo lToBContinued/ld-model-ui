@@ -1,7 +1,7 @@
 <template>
   <div class="evaluateResult">
     <module-title></module-title>
-    <div class="page-title">评估结果</div>
+    <div class="page-title">评估结果管理</div>
     <zk-card>
       <div class="search-wrapper">
         <zk-form
@@ -21,12 +21,13 @@
         <zk-table
           :columns="evaluateResultTableConfig"
           :data="tableData"
-          :total="100"
+          :total="state.total"
           max-height="400"
-          @page-change="pageChange"
+          v-model:current-page="state.currentPage"
+          v-model:page-size="state.pageSize"
         >
           <template #level="{ row }">
-            <el-tag>{{ row.level }}</el-tag>
+            <zk-tag :type="formatLevel(row.level)?.type">{{ formatLevel(row.level)?.label }}</zk-tag>
           </template>
           <template #operation>
             <div class="btn-group">
@@ -44,7 +45,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import { evaluateResultFormConfig } from '@/views/evaluateResult/configs/formConfig.ts'
 import type { EvaluateResultFormType } from '@/views/evaluateResult/type.ts'
 import { evaluateResultTableConfig } from '@/views/evaluateResult/configs/tableConfigs.ts'
@@ -59,29 +60,21 @@ const formData = ref<EvaluateResultFormType>({
   endDate: new Date(),
   evaluateType: 0,
 })
-const tableData = ref([
-  {
-    name: '张三',
+const state = reactive({
+  totalData: Array.from({ length: 100 }, (_, index) => ({
+    name: `用户${index + 1}`,
     evaluateType: 1,
     evaluateTime: [new Date(), new Date()],
     score: 80,
-    level: 'A',
-  },
-  {
-    name: '张三',
-    evaluateType: 1,
-    evaluateTime: [new Date(), new Date()],
-    score: 80,
-    level: 'A',
-  },
-  {
-    name: '张三',
-    evaluateType: 1,
-    evaluateTime: [new Date(), new Date()],
-    score: 80,
-    level: 'A',
-  },
-])
+    level: 1,
+  })),
+  pageSize: 10,
+  currentPage: 1,
+  total: 100,
+})
+const tableData = computed(() => {
+  return state.totalData.slice((state.currentPage - 1) * state.pageSize, state.currentPage * state.pageSize)
+})
 
 onMounted(() => {
   renderChart(resultChartOption)
@@ -98,8 +91,29 @@ const reset = () => {
     evaluateType: '',
   })
 }
-const pageChange = (currentPage: number, pageSize: number) => {
-  console.log('>>>>> file: index.vue ~ method: pageChange <<<<<\n', currentPage, pageSize) // TODO: 删除
+const formatLevel = (level: number) => {
+  switch (level) {
+    case 1:
+      return {
+        type: 'success',
+        label: '优秀',
+      }
+    case 2:
+      return {
+        type: 'warning',
+        label: '良好',
+      }
+    case 3:
+      return {
+        type: 'danger',
+        label: '合格',
+      }
+    default:
+      return {
+        type: 'success',
+        label: '合格',
+      }
+  }
 }
 </script>
 
