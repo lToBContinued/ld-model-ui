@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="tools" v-if="showTools">
+    <div class="tools">
       <zk-button type="success" :icon="Download" @click="importExcel">导入表格</zk-button>
       <zk-button type="primary" :icon="Upload" @click="exportExcel">导出表格</zk-button>
     </div>
@@ -108,14 +108,12 @@ interface KitTableProps {
   rowKey?: string | ((row: any) => string)
   total?: number
   selectedRows?: any[]
-  showTools?: boolean
 }
 
 const props = withDefaults(defineProps<KitTableProps>(), {
   maxHeight: '550px',
   currentPage: 1,
   pageSize: 10,
-  showTools: false,
 })
 
 const emit = defineEmits(['update:current-page', 'update:page-size'])
