@@ -17,6 +17,7 @@ k
       <el-container>
         <el-main>
           <!--<top-tabbar class="tabbar"></top-tabbar>-->
+          <system-notice></system-notice>
           <main-display></main-display>
         </el-main>
       </el-container>
@@ -31,6 +32,7 @@ import routes from '@/router/routes'
 import MainDisplay from '@/layout/components/main-display.vue'
 import SystemTitle from '@/layout/components/system-title.vue'
 import AsideMenu from '@/layout/components/aside-menu.vue'
+import SystemNotice from '@/layout/components/system-notice.vue'
 
 const settingStore = useSettingStore()
 </script>
