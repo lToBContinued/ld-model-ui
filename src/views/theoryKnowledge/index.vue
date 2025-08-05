@@ -12,16 +12,16 @@
       <div class="assess-wrapper">
         <zk-form
           class="assess-form"
-          ref="ZkFormRef"
+          ref="assessFromRef"
           :form-config="theoryKnowledgeAssessFormConfig"
           :form-data="assessFormData"
-          :rules="rules"
+          :rules="assessFormRules"
           label-width="140"
           inline
         ></zk-form>
         <div class="btn-group">
-          <zk-button @click="reset">重置</zk-button>
-          <zk-button type="primary" @click="submitForm">确定</zk-button>
+          <zk-button @click="resetAssessForm">重置</zk-button>
+          <zk-button type="primary" @click="submitAssessForm">确定</zk-button>
         </div>
       </div>
     </zk-card>
@@ -35,16 +35,16 @@
       <div class="search-wrapper">
         <zk-form
           class="search-form"
-          ref="ZkFormRef"
+          ref="searchFormRef"
           :form-config="theoryKnowledgeSearchFormConfig"
           :form-data="searchFormData"
-          :rules="rules"
+          :rules="searchFormRules"
           label-width="140"
           inline
         ></zk-form>
         <div class="btn-group">
-          <zk-button @click="reset">重置</zk-button>
-          <zk-button type="primary" @click="submitForm">确定</zk-button>
+          <zk-button @click="resetSearchForm">重置</zk-button>
+          <zk-button type="primary" @click="submitSearchForm">确定</zk-button>
         </div>
       </div>
       <!--结果表格-->
@@ -103,7 +103,8 @@ import ZkTable from '@/components/zk-table.vue'
 
 const resultChart = ref<NullType<HTMLDivElement>>(null)
 const { renderChart } = useEcharts(resultChart)
-const ZkFormRef = ref<InstanceType<typeof ZkForm>>()
+const assessFromRef = ref<InstanceType<typeof ZkForm>>()
+const searchFormRef = ref<InstanceType<typeof ZkForm>>()
 const assessFormData = ref<theoryKnowledgeAccessFormType>({
   company: '',
   companyNumber: '',
@@ -118,9 +119,12 @@ const searchFormData = ref<theoryKnowledgeSearchFormType>({
   startDate: new Date(),
   endDate: new Date(),
 })
-const rules: FormRules = {
+const assessFormRules: FormRules<theoryKnowledgeAccessFormType> = {
   company: [{ required: true, message: '请输入评估单位', trigger: 'blur' }],
   companyNumber: [{ required: true, message: '请输入单位编号', trigger: 'blur' }],
+}
+const searchFormRules: FormRules<theoryKnowledgeSearchFormType> = {
+  company: [{ required: true, message: '请选择评估单位', trigger: 'blur' }],
 }
 
 const state = reactive({
@@ -166,19 +170,30 @@ const formatLevel = (level: number) => {
     }
   }
 }
-const submitForm = async () => {
+const submitAssessForm = async () => {
   try {
-    await ZkFormRef.value?.formRef?.validate()
+    await assessFromRef.value?.ElFormRef?.validate()
     console.log('>>>>> file: index.vue ~ method: submitForm <<<<<\n', assessFormData.value) // TODO: 删除
   } catch (e) {
     console.log(e)
   }
 }
-const reset = () => {
-  ZkFormRef.value?.formRef?.resetFields()
+const resetAssessForm = () => {
+  assessFromRef.value?.ElFormRef?.resetFields()
 }
 const selectChange = (newSelection: any[]) => {
   ;(state.selectedRows as any[]) = newSelection
+}
+const submitSearchForm = async () => {
+  try {
+    await searchFormRef.value?.ElFormRef?.validate()
+    console.log('>>>>> file: index.vue ~ method: submitForm <<<<<\n', assessFormData.value) // TODO: 删除
+  } catch (e) {
+    console.log(e)
+  }
+}
+const resetSearchForm = () => {
+  searchFormRef.value?.ElFormRef?.resetFields()
 }
 </script>
 
