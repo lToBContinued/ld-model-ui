@@ -101,8 +101,8 @@ import transformTableData from '@/utils/common/transformTableData.ts'
 interface KitTableProps {
   data: any[]
   columns: any[]
-  currentPage: number
-  pageSize: number
+  currentPage?: number
+  pageSize?: number
   maxHeight?: string
   rowKey?: string | ((row: any) => string)
   total?: number
