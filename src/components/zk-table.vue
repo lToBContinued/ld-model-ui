@@ -40,6 +40,7 @@
       </template>
     </el-table>
     <el-pagination
+      v-if="pagination"
       :total="total"
       v-model:current-page="_currentPage"
       v-model:page-size="_pageSize"
@@ -47,8 +48,6 @@
       :pager-count="5"
       background
       layout="->, total, sizes, prev, pager, next, jumper"
-      @current-change="pageChange"
-      @size-change="handleSizeChange"
     ></el-pagination>
   </div>
 </template>
@@ -109,6 +108,7 @@ interface KitTableProps {
   total?: number
   selectedRows?: any[]
   showTools?: boolean
+  pagination?: boolean
 }
 
 const props = withDefaults(defineProps<KitTableProps>(), {
@@ -116,6 +116,7 @@ const props = withDefaults(defineProps<KitTableProps>(), {
   currentPage: 1,
   pageSize: 10,
   showTools: false,
+  pagination: true,
 })
 
 const emit = defineEmits(['update:current-page', 'update:page-size'])
@@ -137,13 +138,6 @@ const _pageSize = computed({
     emit('update:page-size', val)
   },
 })
-
-const pageChange = (currentPage: number) => {
-  console.log('>>>>> file: kit-table.vue ~ method: pageChange <<<<<\n', currentPage) // TODO: 删除
-}
-const handleSizeChange = (pageSize: number) => {
-  console.log('>>>>> file: kit-table.vue ~ method: handleSizeChange <<<<<\n', pageSize) // TODO: 删除
-}
 
 const importExcel = () => {}
 const exportExcel = () => {
