@@ -33,7 +33,6 @@ const inputValue = computed({
 .input-wrapper {
   display: flex;
   align-items: center;
-  margin-right: $spacing-size4;
 }
 
 .input-label {
