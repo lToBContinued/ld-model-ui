@@ -1,5 +1,5 @@
 <template>
-  <el-card ref="ElCardRef" v-bind="$attrs">
+  <el-card ref="ElCardRef" v-bind="props">
     <template v-for="(val, name) in $slots" :key="name" #[name]>
       <slot :name="name"></slot>
     </template>
@@ -8,8 +8,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { CardProps, CardInstance } from 'element-plus'
 
-const ElCardRef = ref(null)
+type ZkCardProps = CardProps & {}
+
+const props = withDefaults(defineProps<ZkCardProps>(), {})
+
+const ElCardRef = ref<CardInstance>()
 
 defineExpose({ ElCardRef })
 </script>

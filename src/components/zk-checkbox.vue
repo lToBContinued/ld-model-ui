@@ -1,40 +1,42 @@
 <template>
-  <el-checkbox-group v-model="checkList" v-bind="$attrs">
-    <el-checkbox
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value"
-      :disabled="item.disabled"
-    />
+  <el-checkbox-group v-bind="props" v-model="checkList">
+    <template v-if="checkboxButton">
+      <el-checkbox-button
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+        :disabled="item.disabled"
+      ></el-checkbox-button>
+    </template>
+    <template v-else>
+      <el-checkbox
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value"
+        :disabled="item.disabled"
+        :border="border"
+      ></el-checkbox>
+    </template>
   </el-checkbox-group>
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { CheckboxGroupProps } from 'element-plus'
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: () => {
-      return []
-    },
-  },
-  options: {
-    type: Array,
-    default: () => {
-      return []
-    },
-    required: true,
-  },
-  size: {
-    type: String,
-    default: 'default',
-    validator(value) {
-      return ['large', 'default', 'small'].includes(value)
-    },
-  },
-})
+interface ZkCheckboxProps extends Partial<CheckboxGroupProps> {
+  options?: {
+    label: string | number | boolean | object
+    value: string | number | boolean | object
+    disabled?: boolean
+  }[]
+  checkboxButton?: boolean
+  border?: boolean
+}
+
+const props = withDefaults(defineProps<ZkCheckboxProps>(), {})
 
 const emit = defineEmits(['update:modelValue'])
 const checkList = computed({

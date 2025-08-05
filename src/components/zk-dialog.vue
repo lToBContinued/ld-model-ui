@@ -1,49 +1,39 @@
 <template>
-  <el-dialog ref="ElDialogRef" :model-value="modelValue" v-bind="$attrs" width="50%" :close-on-click-modal="false">
+  <el-dialog ref="ElDialogRef" v-bind="$attrs" :model-value="modelValue" :width="width" :close-on-click-modal="false">
     <template v-for="(val, name) in $slots" :key="name" #[name]="scopedData">
       <slot :name="name" v-bind="scopedData || {}"></slot>
     </template>
     <template #footer v-if="showFooter">
-      <el-button plain @click="emit('cancel', false)">{{ cancelText }}</el-button>
-      <el-button :type="confirmBtnType" @click="emit('confirm')">{{ confirmText }}</el-button>
+      <zk-button plain @click="emit('cancel', false)">{{ cancelText }}</zk-button>
+      <zk-button :type="confirmBtnType" @click="emit('confirm')">{{ confirmText }}</zk-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { DialogInstance } from 'element-plus'
 
-defineProps({
-  // 窗口是否打开
-  modelValue: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
-  // 显示确定和取消按钮
-  showFooter: {
-    type: Boolean,
-    default: true,
-  },
-  // 取消按钮文字
-  cancelText: {
-    type: String,
-    default: '取消',
-  },
-  // 确定按钮文字
-  confirmText: {
-    type: String,
-    default: '确定',
-  },
-  // 确认按钮类型
-  confirmBtnType: {
-    type: String,
-    default: 'primary',
-  },
+interface ZkDialogProps {
+  modelValue: boolean
+  showFooter?: boolean
+  cancelText?: string
+  confirmText?: string
+  confirmBtnType?: string
+  width?: string
+}
+
+withDefaults(defineProps<ZkDialogProps>(), {
+  modelValue: false,
+  showFooter: true,
+  cancelText: '取消',
+  confirmText: '确定',
+  confirmBtnType: 'primary',
+  width: '50%',
 })
 
 const emit = defineEmits(['cancel', 'confirm'])
-const ElDialogRef = ref(null)
+const ElDialogRef = ref<DialogInstance>()
 
 defineExpose({ ElDialogRef })
 </script>
