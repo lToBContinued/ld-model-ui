@@ -1,10 +1,15 @@
-export interface theoryKnowledgeFormType {
-  name: string
-  employeeNumber: string
-  department: string
-  position: string
-  basicKnowledge: number
-  professionalKnowledge: number
-  actualApplication: number
+export interface theoryKnowledgeAccessFormType {
+  company: string
+  companyNumber: string
+  targeted: number
+  comprehensive: number
+  accuracy: number
+  supportive: number
   remark: string
+}
+
+export interface theoryKnowledgeSearchFormType {
+  company: string
+  startDate: Date
+  endDate: Date
 }
