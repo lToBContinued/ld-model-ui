@@ -4,8 +4,7 @@ type EChartsOption = echarts.EChartsOption
 
 export const resultChartOption: EChartsOption = {
   title: {
-    text: 'Referer of a Website',
-    subtext: 'Fake Data',
+    text: '评估分布',
     left: 'center',
   },
   tooltip: {
@@ -22,11 +21,11 @@ export const resultChartOption: EChartsOption = {
       type: 'pie',
       radius: '50%',
       data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' },
+        { value: 1048, name: '优秀' },
+        { value: 735, name: '良好' },
+        { value: 580, name: '合格' },
+        { value: 484, name: '基本合格' },
+        { value: 300, name: '不合格' },
       ],
       emphasis: {
         itemStyle: {
