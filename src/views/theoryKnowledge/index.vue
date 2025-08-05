@@ -59,6 +59,7 @@
             row-key="id"
             :reserve-selection="true"
             :selected-rows="state.selectedRows"
+            show-tools
             v-model:current-page="state.currentPage"
             v-model:page-size="state.pageSize"
             @selection-change="selectChange"
