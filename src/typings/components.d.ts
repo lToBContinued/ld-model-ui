@@ -50,5 +50,6 @@ declare module 'vue' {
     ZkRadio: typeof import('./../components/zk-radio.vue')['default']
     ZkSelect: typeof import('./../components/zk-select.vue')['default']
     ZkTable: typeof import('./../components/zk-table.vue')['default']
+    ZkTag: typeof import('./../components/zk-tag.vue')['default']
   }
 }
