@@ -261,6 +261,33 @@ export default [
       },
     ],
   },
+  {
+    path: '/systemManage',
+    name: 'systemManage',
+    component: () => import('@/layout/index.vue'),
+    redirect: '/systemManage/index',
+    meta: {
+      title: '系统管理',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/systemManage/companyManage',
+        name: 'companyManage',
+        component: () => import('@/views/systemManage/companyManage/index.vue'),
+        meta: {
+          title: '评估单位管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
   /*{
     path: '/theoreticalAbility',
     name: 'theoreticalAbility',
