@@ -261,7 +261,7 @@ export default [
       },
     ],
   },
-  {
+  /*{
     path: '/theoreticalAbility',
     name: 'theoreticalAbility',
     component: () => import('@/layout/index.vue'),
@@ -311,7 +311,7 @@ export default [
         },
       },
     ],
-  },
+  },*/
   {
     name: 'any',
     path: '/:pathMatch(.*)*',
