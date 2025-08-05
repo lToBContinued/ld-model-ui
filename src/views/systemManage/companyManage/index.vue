@@ -23,7 +23,6 @@
       </zk-table>
     </zk-card>
     <zk-dialog
-      ref="addCompanyFormRef"
       :model-value="dialogShow"
       @cancel="closeDialog"
       @close="closeDialog"
@@ -31,6 +30,7 @@
       title="新增单位"
     >
       <zk-form
+        ref="addCompanyFormRef"
         :form-config="addCompanyFormConfig"
         :form-data="addCompanyFormData"
         :rules="rules"
@@ -77,10 +77,15 @@ const getCompanyList = async () => {
 
 const closeDialog = () => {
   dialogShow.value = false
-  addCompanyFormRef.value?.formRef?.resetFields()
+  addCompanyFormRef.value?.ElFormRef?.resetFields()
 }
 const confirmAddCompany = async () => {
-  console.log('>>>>> file: index.vue ~ method: confirmAddCompany <<<<<\n', addCompanyFormData.value) // TODO: 删除
+  try {
+    await addCompanyFormRef.value?.ElFormRef?.validate()
+    console.log('>>>>> file: index.vue ~ method: confirmAddCompany <<<<<\n', addCompanyFormData.value) // TODO: 删除
+  } catch (e) {
+    console.log(e)
+  }
 }
 const editCompany = (row: any) => {
   dialogShow.value = true
