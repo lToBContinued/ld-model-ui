@@ -37,7 +37,7 @@ interface ZkDatePickerProps {
 const props = withDefaults(defineProps<ZkDatePickerProps>(), {
   modelValue: '',
   width: '100%',
-  size: 'small',
+  size: 'default',
   type: 'date',
   format: 'YYYY-MM-DD HH:mm:ss',
   placeholder: '选择日期时间',
