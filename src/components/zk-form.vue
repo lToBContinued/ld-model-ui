@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form
-      ref="formRef"
+      ref="ElFormRef"
       v-bind="$attrs"
       :rules="rules"
       :model="_formData"
@@ -134,7 +134,7 @@
  * ]
  */
 import { ref, reactive, computed, watch } from 'vue'
-import type { FormInstance } from 'element-plus'
+import { FormInstance } from 'element-plus'
 
 interface ZkFormProps {
   formConfig: any[] | Record<string, any>
@@ -160,7 +160,7 @@ const props = withDefaults(defineProps<ZkFormProps>(), {
 
 const emit = defineEmits(['form-change'])
 const _formData = reactive(props.formData)
-const formRef = ref<FormInstance>()
+const ElFormRef = ref<FormInstance>()
 
 watch(
   () => _formData,
@@ -174,7 +174,7 @@ const _labelWidth = computed(() => {
   return `${props.labelWidth}px`
 })
 
-defineExpose({ formRef })
+defineExpose({ ElFormRef })
 </script>
 
 <style scoped lang="scss"></style>
