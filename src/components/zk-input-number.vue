@@ -16,7 +16,7 @@ interface ZkInputNumberProps {
 
 const emit = defineEmits(['update:modelValue'])
 const props = withDefaults(defineProps<ZkInputNumberProps>(), {
-  width: '240px',
+  width: '100%',
 })
 
 const inputValue = computed({

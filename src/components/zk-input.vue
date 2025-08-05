@@ -37,7 +37,7 @@ interface ZkInputProps extends Partial<InputProps> {
 
 const props = withDefaults(defineProps<ZkInputProps>(), {
   elementIcon: true,
-  width: '240px',
+  width: '100%',
 })
 
 const emit = defineEmits(['update:modelValue'])
