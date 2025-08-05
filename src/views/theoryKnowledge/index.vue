@@ -53,17 +53,17 @@
         <div class="result-table">
           <p class="table-title bold">评估详情</p>
           <zk-table
-            ref="multipleTable"
+            :data="tableData"
+            :columns="resultTableColumns"
+            :total="state.total"
+            row-key="id"
+            :reserve-selection="true"
+            :selected-rows="state.selectedRows"
+            show-tools
             v-model:current-page="state.currentPage"
             v-model:page-size="state.pageSize"
-            :columns="resultTableColumns"
-            :data="tableData"
-            :total="state.total"
-            max-height="200"
-            @select="handleSelectChange"
-            @select-all="handleSelectAllChange"
-            @update:page-size="handleSizeChange"
-            @update:current-page="currentChange"
+            @selection-change="selectChange"
+            max-height="200px"
           >
             <template #level="{ row }">
               <el-tag :type="formatLevel(row.level)?.type">{{ formatLevel(row.level)?.desc }} </el-tag>
@@ -80,10 +80,6 @@
                 不合格
               </p>
             </div>
-            <div class="export-btns">
-              <zk-button type="success">导出Excel</zk-button>
-              <zk-button type="primary">导出PDF</zk-button>
-            </div>
           </div>
         </div>
       </div>
@@ -92,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, nextTick, watch, reactive } from 'vue'
+import { onMounted, ref, computed, watch, reactive } from 'vue'
 import type { FormRules } from 'element-plus'
 import {
   theoryKnowledgeAssessFormConfig,
@@ -129,7 +125,7 @@ const rules: FormRules = {
 
 const state = reactive({
   currentPage: 1,
-  selectRowMap: new Map(), //用于存储选中的每一行
+  selectedRows: [], //用于存储选中的每一行
   pageSize: 10,
   totalData: Array.from({ length: 1000 }, (_, index) => {
     return {
@@ -142,8 +138,6 @@ const state = reactive({
   total: 1000,
 })
 
-const multipleTable = ref<InstanceType<typeof ZkTable>>()
-
 const tableData = computed(() => {
   return state.totalData.slice((state.currentPage - 1) * state.pageSize, state.currentPage * state.pageSize)
 })
@@ -151,16 +145,6 @@ const tableData = computed(() => {
 onMounted(() => {
   renderChart(theoryKnowledgeResultChartOptions)
 })
-
-watch(
-  () => state.selectRowMap,
-  (newVal) => {
-    console.log('>>>>> file: index.vue ~ method:  <<<<<\n', newVal) // TODO: 删除
-  },
-  {
-    deep: true,
-  },
-)
 
 const formatLevel = (level: number) => {
   if (level === 1) {
@@ -193,57 +177,8 @@ const submitForm = async () => {
 const reset = () => {
   ZkFormRef.value?.formRef?.resetFields()
 }
-// 选择单条数据
-const handleSelectChange = (val: any, row: any) => {
-  const checked = state.selectRowMap.has(row.id)
-  if (checked) {
-    state.selectRowMap.delete(row.id)
-  } else {
-    state.selectRowMap.set(row.id, row)
-  }
-}
-// 全选
-const handleSelectAllChange = (val: any) => {
-  tableData.value.forEach((row) => {
-    if (val.length === 0) {
-      // 取消全选 只有选中的需要改变状态
-      if (isChecked(row)) onRowSelectChange(row)
-    } else {
-      // 全选 只有未选中的才需要改变状态
-      if (!isChecked(row)) onRowSelectChange(row)
-    }
-  })
-}
-// 页面切换
-const currentChange = (page: any) => {
-  state.currentPage = page
-  tableData.value.forEach((row: any) => {
-    nextTick(() => {
-      const checked = state.selectRowMap.has(row.id)
-      if (checked) {
-        multipleTable.value?.ElTableRef?.toggleRowSelection(row, true)
-      }
-    })
-  })
-}
-// 修改每页显示条数
-const handleSizeChange = (val: number) => {
-  state.pageSize = val
-  currentChange(1)
-}
-
-const isChecked = (row: any) => {
-  return state.selectRowMap.has(row.id)
-}
-
-const onRowSelectChange = (row: any) => {
-  if (state.selectRowMap.has(row.id)) {
-    state.selectRowMap.delete(row.id)
-    multipleTable.value?.ElTableRef?.toggleRowSelection(row, false)
-  } else {
-    state.selectRowMap.set(row.id, row)
-    multipleTable.value?.ElTableRef?.toggleRowSelection(row, true)
-  }
+const selectChange = (newSelection: any[]) => {
+  ;(state.selectedRows as any[]) = newSelection
 }
 </script>
 
