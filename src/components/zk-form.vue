@@ -8,7 +8,6 @@
             <zk-select v-model="_formData[item.prop]" v-if="item.type === 'select'" v-bind="item.config"></zk-select>
             <!-- 时间选择器 -->
             <zk-date-picker
-              size="small"
               v-else-if="item.type === 'datePicker'"
               v-model="_formData[item.prop]"
               type="datetime"
