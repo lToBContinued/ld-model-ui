@@ -96,6 +96,10 @@ withDefaults(defineProps<ZkPaginationProps>(), {
       pageSize: 10,
     }
   },
+  total: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const ElTableRef = ref()

@@ -26,7 +26,8 @@
 import { InputProps, InputInstance } from 'element-plus'
 import { computed, ref } from 'vue'
 
-interface ZkInputProps extends Partial<InputProps> {
+interface ZkInputProps extends Partial<Omit<InputProps, 'modelValue'>> {
+  modelValue: string
   elementIcon?: boolean
   prefixIcon?: string | object
   suffixIcon?: string | object
@@ -36,6 +37,7 @@ interface ZkInputProps extends Partial<InputProps> {
 }
 
 const props = withDefaults(defineProps<ZkInputProps>(), {
+  modelValue: '',
   elementIcon: true,
   width: '240px',
 })

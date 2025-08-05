@@ -18,15 +18,7 @@
         <!-- 下拉框 -->
         <zk-select v-model="_formData[item.prop]" v-if="item.type === 'select'" v-bind="item.config"></zk-select>
         <!-- 时间选择器 -->
-        <el-date-picker
-          size="small"
-          v-else-if="item.type === 'datePicker'"
-          v-model="_formData[item.prop]"
-          type="datetime"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          placeholder="选择日期时间"
-          v-bind="item.config"
-        >
+        <el-date-picker v-else-if="item.type === 'datePicker'" v-model="_formData[item.prop]" v-bind="item.config">
         </el-date-picker>
         <!--单选框-->
         <zk-radio v-else-if="item.type === 'radio'" v-model="_formData[item.prop]" v-bind="item.config"></zk-radio>
