@@ -35,8 +35,14 @@
             <template v-if="item.slot === 'default'" #default>
               <slot name="default"></slot>
             </template>
-            <template v-else-if="item.slot === 'label'" #label>
+            <template v-if="item.slot === 'label' || active" #label="{ label }">
               <slot name="label"></slot>
+              <div v-if="active" class="append-label">
+                <el-icon v-if="item.append" class="close" color="red" @click="removeFormItem(label)"
+                  ><CircleClose
+                /></el-icon>
+                {{ item.label }}
+              </div>
             </template>
             <template v-else-if="item.slot === 'error'" #error>
               <slot name="error"></slot>
@@ -44,6 +50,7 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <zk-button v-if="active" type="primary" @click="addFormItem">添加一项</zk-button>
     </el-form>
   </div>
 </template>
@@ -131,6 +138,7 @@
  */
 import { ref, reactive, computed, watch } from 'vue'
 import { FormInstance } from 'element-plus'
+import { CircleClose } from '@element-plus/icons-vue'
 
 interface ZkFormProps {
   formConfig: any[] | Record<string, any>
@@ -140,6 +148,7 @@ interface ZkFormProps {
   itemWidth?: string
   inline?: boolean
   gutter?: number
+  active?: boolean // 是否为可添加/删除表单项的表单
 }
 
 const props = withDefaults(defineProps<ZkFormProps>(), {
@@ -156,7 +165,7 @@ const props = withDefaults(defineProps<ZkFormProps>(), {
   gutter: 20,
 })
 
-const emit = defineEmits(['form-change'])
+const emit = defineEmits(['form-change', 'update:form-config'])
 const _formData = reactive(props.formData)
 const ElFormRef = ref<FormInstance>()
 const _inline = computed(() => {
@@ -185,10 +194,22 @@ const _labelWidth = computed(() => {
   return `${props.labelWidth}px`
 })
 
+const addFormItem = () => {}
+const removeFormItem = (label: string) => {}
+
 defineExpose({ ElFormRef })
 </script>
 
 <style scoped lang="scss">
+.append-label {
+  display: flex;
+  align-items: center;
+
+  .close {
+    margin-right: 4px;
+    cursor: pointer;
+  }
+}
 ::v-deep(.el-form) {
   .el-form-item {
     width: 100%;
