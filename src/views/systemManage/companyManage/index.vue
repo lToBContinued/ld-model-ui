@@ -29,13 +29,15 @@
       @confirm="confirmAddCompany"
       title="新增单位"
     >
-      <zk-form
-        ref="addCompanyFormRef"
-        :form-config="addCompanyFormConfig"
-        :form-data="addCompanyFormData"
-        :rules="rules"
-        label-width="80"
-      ></zk-form>
+      <div style="width: 50%">
+        <zk-form
+          ref="addCompanyFormRef"
+          :form-config="addCompanyFormConfig"
+          :form-data="addCompanyFormData"
+          :rules="rules"
+          label-width="80"
+        ></zk-form>
+      </div>
     </zk-dialog>
   </div>
 </template>
@@ -44,7 +46,6 @@
 import { ref, reactive } from 'vue'
 import { companyTableColumns } from '@/views/systemManage/companyManage/configs/tableConfigs.ts'
 import { getAssessCompanyListApi } from '@/api/companyManage'
-import ZkTable from '@/components/zk-table.vue'
 import { addCompanyFormDataType } from '@/views/systemManage/types.ts'
 import { addCompanyFormConfig } from '@/views/systemManage/companyManage/configs/formConfigs.ts'
 import ZkForm from '@/components/zk-form.vue'
