@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock('api/companyManage/assessCompanyList', 'get', () => {
+Mock.mock('api/home/recentRecords', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',
@@ -9,18 +9,12 @@ Mock.mock('api/companyManage/assessCompanyList', 'get', () => {
     pageSize: 10,
     'data|20': [
       {
-        // 单位名称（随机中文企业名称）
-        company: '@ctitle(3, 6)@pick(["有限公司", "股份有限公司", "集团", "企业", "研究所"])',
-        // 单位编号（格式：前缀+6位数字）
-        companyNumber: 'CP' + Mock.Random.integer(100000, 999999),
-        // 部门（从常见部门中随机选择）
-        'department|1': ['技术部', '财务部', '人力资源部', '市场部', '销售部', '行政部', '研发中心', '生产部'],
-        // 代号（2位大写字母+3位数字）
-        code: () => {
-          const letters = Mock.Random.string('upper', 2)
-          const numbers = Mock.Random.integer(100, 999)
-          return `${letters}${numbers}`
-        },
+        id: /^[a-z0-9]{8}$/, // 8位随机字符串ID
+        company: '@ctitle(3, 6)@pick(["有限公司", "股份有限公司", "集团", "企业", "研究所"])', // 5-10字中文公司名称
+        date: '@date("yyyy-MM-dd")', // 格式化为YYYY-MM-DD的日期
+        assessType: '@pick(["年度评估", "季度评估", "月度评估", "专项评估"])', // 从数组中随机选择评估类型
+        score: '@integer(0, 100)', // 0-100的随机整数得分
+        level: '@pick(["A", "B", "C"])', // 随机评估等级A/B/C
       },
     ],
   })

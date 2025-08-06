@@ -98,17 +98,17 @@ export default defineConfig((mode) => {
       },
     },
     // 代理跨域
-    server: {
-      proxy: {
-        [env.VITE_BASE_API]: {
-          // 获取数据的服务器地址设置
-          target: env.VITE_SERVER,
-          // 是否代理跨域
-          changeOrigin: true,
-          // 路径重写
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
+    // server: {
+    //   proxy: {
+    //     [env.VITE_BASE_API]: {
+    //       // 获取数据的服务器地址设置
+    //       target: env.VITE_SERVER,
+    //       // 是否代理跨域
+    //       changeOrigin: true,
+    //       // 路径重写
+    //       rewrite: (path) => path.replace(/^\/api/, ''),
+    //     },
+    //   },
+    // },
   }
 })

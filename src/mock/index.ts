@@ -1,2 +1,2 @@
-import './home/index.ts'
 import './companyManage/index.ts'
+import './home/index.ts'
