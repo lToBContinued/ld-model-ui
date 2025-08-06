@@ -194,8 +194,8 @@ defineExpose({ ElFormRef })
 
   .el-form-item__content {
     display: block;
-    width: 200px;
     flex-shrink: 0;
+    width: 200px;
   }
 }
 </style>
