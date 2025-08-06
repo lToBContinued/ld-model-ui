@@ -37,6 +37,8 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
+    ElTransfer: typeof import('element-plus/es')['ElTransfer']
+    ElTree: typeof import('element-plus/es')['ElTree']
     ModuleTitle: typeof import('./../components/module-title.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -55,5 +57,7 @@ declare module 'vue' {
     ZkSelect: typeof import('./../components/zk-select.vue')['default']
     ZkTable: typeof import('./../components/zk-table.vue')['default']
     ZkTag: typeof import('./../components/zk-tag.vue')['default']
+    ZkTransfer: typeof import('./../components/zk-transfer.vue')['default']
+    ZkTree: typeof import('./../components/zk-tree.vue')['default']
   }
 }

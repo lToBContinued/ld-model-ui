@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-form ref="ElFormRef" v-bind="$attrs" :rules="rules" :model="_formData" :label-width="_labelWidth">
-      <el-row :gutter="40" :justify="inline ? 'start' : 'center'">
+      <el-row :gutter="gutter" :justify="inline ? 'start' : 'center'">
         <el-col v-for="item in formConfig" :key="item.prop" v-bind="_inline">
           <el-form-item :label="item.label" :prop="item.prop">
             <!-- 下拉框 -->
@@ -139,6 +139,7 @@ interface ZkFormProps {
   rules?: Record<string, any>
   itemWidth?: string
   inline?: boolean
+  gutter?: number
 }
 
 const props = withDefaults(defineProps<ZkFormProps>(), {
@@ -152,6 +153,7 @@ const props = withDefaults(defineProps<ZkFormProps>(), {
   },
   itemWidth: '',
   inline: false,
+  gutter: 20,
 })
 
 const emit = defineEmits(['form-change'])
@@ -194,8 +196,8 @@ defineExpose({ ElFormRef })
 
   .el-form-item__content {
     display: block;
-    width: 200px;
     flex-shrink: 0;
+    width: 200px;
   }
 }
 </style>
