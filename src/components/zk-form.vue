@@ -31,7 +31,7 @@
               v-bind="item.config"
             ></zk-input-number>
             <!-- 输入框 -->
-            <zk-input v-else v-model="_formData[item.prop]" v-bind="item.config"></zk-input>
+            <zk-input v-else-if="item.type === 'input'" v-model="_formData[item.prop]" v-bind="item.config"></zk-input>
             <template v-if="item.slot === 'default'" #default>
               <slot name="default"></slot>
             </template>
@@ -52,6 +52,17 @@
       </el-row>
       <zk-button v-if="active" type="primary" @click="addFormItem">添加一项</zk-button>
     </el-form>
+    <zk-dialog :model-value="dialogShow" width="400px" @cancel="closeDialog" @close="closeDialog">
+      <template #title>
+        <span style="font-size: 18px">添加表单项</span>
+      </template>
+      <zk-form
+        v-model:form-config="addFormConfig"
+        v-model:form-data="addFormData"
+        :rules="addFormRules"
+        ref="addFormItemFormRef"
+      ></zk-form>
+    </zk-dialog>
   </div>
 </template>
 
@@ -59,6 +70,7 @@
 /**
  * @description 用法
  * @example config和官方的配置一致
+ * 需要动态添加或者删除表单项时，设置active为true
  * const formConfig = [
  *   // 使用下拉框
  *   {
@@ -137,8 +149,9 @@
  * ]
  */
 import { ref, reactive, computed, watch } from 'vue'
-import { FormInstance } from 'element-plus'
+import { FormInstance, FormRules } from 'element-plus'
 import { CircleClose } from '@element-plus/icons-vue'
+import type ZkForm from '@/components/zk-form.vue'
 
 interface ZkFormProps {
   formConfig: any[] | Record<string, any>
@@ -165,9 +178,37 @@ const props = withDefaults(defineProps<ZkFormProps>(), {
   gutter: 20,
 })
 
-const emit = defineEmits(['form-change', 'update:form-config'])
+const emit = defineEmits(['update:form-data', 'update:form-config'])
 const _formData = reactive(props.formData)
 const ElFormRef = ref<FormInstance>()
+const addFormItemFormRef = ref<InstanceType<typeof ZkForm>>()
+const dialogShow = ref(false)
+const addFormConfig = [
+  {
+    prop: 'label',
+    label: '标签',
+    type: 'input',
+    config: {
+      placeholder: '输入标签',
+    },
+  },
+  {
+    prop: 'value',
+    label: '字段',
+    type: 'input',
+    config: {
+      placeholder: '输入字段',
+    },
+  },
+]
+const addFormData = reactive({
+  label: '',
+  value: '',
+})
+const addFormRules: FormRules = {
+  label: [{ required: true, message: '请输入标签', trigger: 'blur' }],
+  value: [{ required: true, message: '请输入字段', trigger: 'blur' }, {}],
+}
 const _inline = computed(() => {
   if (props.inline) {
     return {
@@ -185,7 +226,7 @@ const _inline = computed(() => {
 watch(
   () => _formData,
   (newValue) => {
-    emit('form-change', newValue)
+    emit('update:form-data', newValue)
   },
   { deep: true },
 )
@@ -194,8 +235,13 @@ const _labelWidth = computed(() => {
   return `${props.labelWidth}px`
 })
 
-const addFormItem = () => {}
+const addFormItem = () => {
+  dialogShow.value = true
+}
 const removeFormItem = (label: string) => {}
+const closeDialog = () => {
+  dialogShow.value = false
+}
 
 defineExpose({ ElFormRef })
 </script>

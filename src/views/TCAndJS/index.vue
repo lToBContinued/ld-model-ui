@@ -14,22 +14,27 @@ const formConfig = reactive([
   {
     prop: 'name',
     label: '年龄',
+    type: 'input',
   },
   {
     prop: 'name',
     label: '年龄',
+    type: 'input',
   },
   {
     prop: 'name',
     label: '年龄',
+    type: 'input',
   },
   {
     prop: 'name',
     label: '年龄',
+    type: 'input',
   },
   {
     prop: 'name',
     label: '年龄',
+    type: 'input',
   },
 ])
 </script>
