@@ -2,7 +2,7 @@
   <div>
     <el-form ref="ElFormRef" v-bind="$attrs" :rules="rules" :model="_formData" :label-width="_labelWidth">
       <el-row :gutter="gutter" :justify="inline ? 'start' : 'center'">
-        <el-col v-for="item in formConfig" :key="item.prop" v-bind="_inline">
+        <el-col v-for="item in _formConfig" :key="item.prop" v-bind="_inline">
           <el-form-item :label="item.label" :prop="item.prop">
             <!-- 下拉框 -->
             <zk-select v-model="_formData[item.prop]" v-if="item.type === 'select'" v-bind="item.config"></zk-select>
@@ -35,25 +35,22 @@
             <template v-if="item.slot === 'default'" #default>
               <slot name="default"></slot>
             </template>
-            <template v-if="item.slot === 'label' || active" #label="{ label }">
+            <template v-if="item.slot === 'label' || active" #label>
               <slot name="label"></slot>
               <div v-if="active" class="append-label">
-                <el-icon v-if="item.append" class="close" color="red" @click="removeFormItem(label)"
-                  ><CircleClose
-                /></el-icon>
+                <el-icon v-if="item.append" class="close" color="red" @click="removeFormItem(item.prop)">
+                  <CircleClose />
+                </el-icon>
                 {{ item.label }}
               </div>
-            </template>
-            <template v-else-if="item.slot === 'error'" #error>
-              <slot name="error"></slot>
             </template>
           </el-form-item>
         </el-col>
       </el-row>
       <zk-button v-if="active" type="primary" @click="addFormItem">添加一项</zk-button>
     </el-form>
-    <zk-dialog :model-value="dialogShow" width="400px" @cancel="closeDialog" @close="closeDialog">
-      <template #title>
+    <zk-dialog :model-value="dialogShow" width="400px" @cancel="closeDialog" @close="closeDialog" @confirm="confirmAdd">
+      <template #header>
         <span style="font-size: 18px">添加表单项</span>
       </template>
       <zk-form
@@ -157,7 +154,7 @@ interface ZkFormProps {
   formConfig: any[] | Record<string, any>
   formData: Record<string, any>
   labelWidth?: number | string
-  rules?: Record<string, any>
+  rules?: FormRules
   itemWidth?: string
   inline?: boolean
   gutter?: number
@@ -166,19 +163,16 @@ interface ZkFormProps {
 
 const props = withDefaults(defineProps<ZkFormProps>(), {
   formConfig: () => [],
-  formData: () => {
-    return {}
-  },
+  formData: () => ({}),
   labelWidth: '60',
-  rules: () => {
-    return {}
-  },
+  rules: () => ({}),
   itemWidth: '',
   inline: false,
   gutter: 20,
 })
 
 const emit = defineEmits(['update:form-data', 'update:form-config'])
+const _formConfig = reactive(props.formConfig)
 const _formData = reactive(props.formData)
 const ElFormRef = ref<FormInstance>()
 const addFormItemFormRef = ref<InstanceType<typeof ZkForm>>()
@@ -205,10 +199,17 @@ const addFormData = reactive({
   label: '',
   value: '',
 })
-const addFormRules: FormRules = {
+const addFormRules: FormRules = reactive({
   label: [{ required: true, message: '请输入标签', trigger: 'blur' }],
-  value: [{ required: true, message: '请输入字段', trigger: 'blur' }, {}],
-}
+  value: [
+    {
+      required: true,
+      message: '请输入字段',
+      trigger: 'blur',
+    },
+    { pattern: /^[a-zA-Z0-9_]+$/, message: '请输入字母、数字或下划线', trigger: 'blur' },
+  ],
+})
 const _inline = computed(() => {
   if (props.inline) {
     return {
@@ -222,6 +223,9 @@ const _inline = computed(() => {
     }
   }
 })
+const _labelWidth = computed(() => {
+  return `${props.labelWidth}px`
+})
 
 watch(
   () => _formData,
@@ -231,15 +235,54 @@ watch(
   { deep: true },
 )
 
-const _labelWidth = computed(() => {
-  return `${props.labelWidth}px`
-})
+watch(
+  _formConfig,
+  (newValue) => {
+    emit('update:form-config', newValue)
+  },
+  { deep: true },
+)
 
+// 打开添加表单项弹窗
 const addFormItem = () => {
   dialogShow.value = true
 }
-const removeFormItem = (label: string) => {}
+// 确定添加
+const confirmAdd = async () => {
+  try {
+    await addFormItemFormRef.value?.ElFormRef?.validate((valid, fields) => {
+      if (valid) {
+        const index = props.formConfig.findIndex((item: Record<string, any>) => item.prop === addFormData.value)
+        if (index > -1) {
+          ElMessage.error('字段已存在，请更换')
+        } else {
+          _formConfig.push({
+            prop: addFormData.value,
+            label: addFormData.label,
+            type: 'input',
+            append: true,
+          })
+          _formData[addFormData.value] = ''
+          closeDialog()
+        }
+      } else {
+        console.error('表单错误', fields)
+      }
+    })
+  } catch (e) {
+    console.log(e)
+  }
+}
+// 移出添加过的表单项
+const removeFormItem = (prop: string) => {
+  const index = _formConfig.findIndex((item: Record<string, any>) => item.prop === prop)
+  if (index > -1) {
+    _formConfig.splice(index, 1)
+    delete _formData[prop]
+  }
+}
 const closeDialog = () => {
+  addFormItemFormRef.value?.ElFormRef?.resetFields()
   dialogShow.value = false
 }
 
@@ -252,10 +295,11 @@ defineExpose({ ElFormRef })
   align-items: center;
 
   .close {
-    margin-right: 4px;
     cursor: pointer;
+    margin-right: 4px;
   }
 }
+
 ::v-deep(.el-form) {
   .el-form-item {
     width: 100%;

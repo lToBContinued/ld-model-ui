@@ -1,6 +1,6 @@
 <template>
   <div class="zk-input">
-    <el-input ref="ElInputRef" v-bind="props" v-model="inputValue" :style="{ width: width }">
+    <el-input ref="ElInputRef" v-model="inputValue" :style="{ width: width }" v-bind="$attrs">
       <template v-if="prefixIcon" #prefix>
         <zk-icon :icon="prefixIcon" :element-icon="elementIcon" :color="iconColor" :size="iconSize"></zk-icon>
       </template>
@@ -23,10 +23,11 @@
  * 输入框的的前置图标和后置图标是由elementIcon控制的
  * 默认使用element-icon，需要传入el-icon图标对象，如果设置了elementIcon = false，则传入自定义的svg图标的文件名即可
  */
-import { InputProps, InputInstance } from 'element-plus'
+import { InputInstance } from 'element-plus'
 import { computed, ref } from 'vue'
 
-interface ZkInputProps extends Partial<InputProps> {
+interface ZkInputProps {
+  modelValue: string | number
   elementIcon?: boolean
   prefixIcon?: string | object
   suffixIcon?: string | object
@@ -36,6 +37,7 @@ interface ZkInputProps extends Partial<InputProps> {
 }
 
 const props = withDefaults(defineProps<ZkInputProps>(), {
+  modelValue: '',
   elementIcon: true,
   width: '100%',
 })

@@ -91,14 +91,14 @@ const tableData = ref([])
 
 const submitForm = async () => {
   try {
-    await ZkFormRef.value?.formRef?.validate()
+    await ZkFormRef.value?.ElFormRef?.validate()
     console.log('>>>>> file: index.vue ~ method: submitForm <<<<<\n', formData.value) // TODO: 删除
   } catch (e) {
     console.log(e)
   }
 }
 const reset = () => {
-  ZkFormRef.value?.formRef?.resetFields()
+  ZkFormRef.value?.ElFormRef?.resetFields()
 }
 const checkRow = (row: any) => {
   console.log('>>>>> file: recent-records.vue ~ method: checkRow <<<<<\n', row) // TODO: 删除

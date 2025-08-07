@@ -2,18 +2,22 @@ export const theoryKnowledgeFormConfig = [
   {
     prop: 'name',
     label: '姓名',
+    type: 'input',
   },
   {
     prop: 'employeeNumber',
     label: '员工编号',
+    type: 'input',
   },
   {
     prop: 'department',
     label: '部门',
+    type: 'input',
   },
   {
     prop: 'position',
     label: '职位',
+    type: 'input',
   },
   {
     prop: 'basicKnowledge',
