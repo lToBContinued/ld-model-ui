@@ -19,6 +19,45 @@ export default [
     ],
   },
   {
+    path: '/assessTargetSystem',
+    name: 'assessTargetSystem',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'library',
+    meta: {
+      title: '评估指标体系',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/library',
+        name: 'library',
+        component: () => import('@/views/assessTargetSystem/library/index.vue'),
+        meta: {
+          title: '可用指标库',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/scheme',
+        name: 'scheme',
+        component: () => import('@/views/assessTargetSystem/scheme/index.vue'),
+        meta: {
+          title: '评估方案',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
     path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
