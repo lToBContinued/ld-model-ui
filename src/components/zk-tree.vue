@@ -81,12 +81,12 @@ const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
 
-enum PROPS {
-  label = props.customProps.label,
-  children = props.customProps.children,
-  disabled = props.customProps.disabled,
-  isLeaf = props.customProps.isLeaf,
-  class = props.customProps.class,
+const PROPS: Record<string, any> = {
+  label: props.customProps.label,
+  children: props.customProps.children,
+  disabled: props.customProps.disabled,
+  isLeaf: props.customProps.isLeaf,
+  class: props.customProps.class,
 }
 
 watch(filterText, (val) => {
