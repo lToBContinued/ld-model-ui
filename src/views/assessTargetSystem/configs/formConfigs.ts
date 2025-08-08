@@ -57,3 +57,114 @@ export const schemaBasicAssessFormConfig = [
     },
   },
 ]
+
+export const assessFormConfig = [
+  {
+    prop: 'target',
+    label: '成果针对性',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '5',
+          value: 5,
+        },
+        {
+          label: '10',
+          value: 10,
+        },
+        {
+          label: '15',
+          value: 15,
+        },
+        {
+          label: '20',
+          value: 20,
+        },
+      ],
+    },
+  },
+  {
+    prop: 'comprehensive',
+    label: '成果全面性',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '5',
+          value: 5,
+        },
+        {
+          label: '10',
+          value: 10,
+        },
+        {
+          label: '15',
+          value: 15,
+        },
+        {
+          label: '20',
+          value: 20,
+        },
+      ],
+    },
+  },
+  {
+    prop: 'accuracy',
+    label: '成果准确性',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '5',
+          value: 5,
+        },
+        {
+          label: '10',
+          value: 10,
+        },
+        {
+          label: '15',
+          value: 15,
+        },
+        {
+          label: '20',
+          value: 20,
+        },
+      ],
+    },
+  },
+  {
+    prop: 'supportive',
+    label: '成果支撑性',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '10',
+          value: 10,
+        },
+        {
+          label: '20',
+          value: 20,
+        },
+        {
+          label: '30',
+          value: 30,
+        },
+        {
+          label: '40',
+          value: 40,
+        },
+      ],
+    },
+  },
+  {
+    prop: 'remark',
+    label: '备注',
+    type: 'input',
+    config: {
+      type: 'textarea',
+    },
+  },
+]

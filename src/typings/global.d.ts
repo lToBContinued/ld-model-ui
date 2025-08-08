@@ -8,6 +8,7 @@ declare global {
 
   /** 空类型 */
   type NullType<T> = T | null
+  type UndefinedType<T> = T | undefined
 
   /** 属性类型 */
   type PropType<T> = propType<T>
