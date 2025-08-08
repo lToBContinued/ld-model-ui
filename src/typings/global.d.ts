@@ -1,5 +1,6 @@
 import { PropType as propType } from 'vue'
 import * as echarts from 'echarts'
+import { FormRules } from 'element-plus'
 
 declare global {
   /** 颜色类型 */
@@ -13,6 +14,9 @@ declare global {
 
   /** echarts配置类型 */
   type EChartsOption = echarts.EChartsOption
+
+  /** 表单校验类型 */
+  type ValidFormRules<T> = FormRules<T>
 
   /** 分页请求参数 */
   interface PaginationParams {
