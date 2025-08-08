@@ -17,3 +17,12 @@ export const getAssessSubjectOptionsApi = () => {
     url: 'api/schema/getAssessSubjectOptions',
   })
 }
+
+/**
+ * @description 获得评估结果表格
+ */
+export const getAssessResultApi = () => {
+  return request({
+    url: 'api/schema/getAssessResult',
+  })
+}

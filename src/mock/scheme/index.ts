@@ -27,3 +27,32 @@ Mock.mock('api/schema/getAssessSubjectOptions', 'get', () => {
     ],
   })
 })
+
+Mock.mock('api/schema/getAssessResult', 'get', () => {
+  return Mock.mock({
+    status: 200,
+    msg: 'success',
+    data: [
+      {
+        subject: '成果针对性',
+        score: '@integer(0, 100)',
+        level: '@pick(["A", "B", "C",])',
+      },
+      {
+        subject: '成果全面性',
+        score: '@integer(0, 100)',
+        level: '@pick(["A", "B", "C",])',
+      },
+      {
+        subject: '成果准确性',
+        score: '@integer(0, 100)',
+        level: '@pick(["A", "B", "C",])',
+      },
+      {
+        subject: '成果支撑性',
+        score: '@integer(0, 100)',
+        level: '@pick(["A", "B", "C",])',
+      },
+    ],
+  })
+})
