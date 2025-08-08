@@ -4,6 +4,7 @@ export const evaluateResultFormConfig = [
   {
     prop: 'name',
     label: '姓名',
+    type: 'input',
   },
   {
     prop: 'startDate',
