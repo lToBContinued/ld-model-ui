@@ -48,8 +48,8 @@ getMetricOptions()
   align-items: center;
 
   .label {
-    font-size: $font-size-m;
     margin-right: $spacing-size2;
+    font-size: $font-size-m;
     color: $sub-text-color4;
   }
 }

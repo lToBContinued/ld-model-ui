@@ -13,3 +13,10 @@ export interface AssessFormData {
   supportive: UndefinedType<number>
   remark: string
 }
+
+export interface ResultFilterFormData {
+  company: string
+  experts: string
+  startDate: NullType<Date>
+  endDate: NullType<Date>
+}

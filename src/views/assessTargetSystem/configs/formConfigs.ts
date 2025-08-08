@@ -168,3 +168,78 @@ export const assessFormConfig = [
     },
   },
 ]
+
+export const resultFilterFormConfig = [
+  {
+    prop: 'company',
+    label: '参训单位',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '单位1',
+          value: '1',
+        },
+        {
+          label: '单位2',
+          value: '2',
+        },
+        {
+          label: '单位3',
+          value: '3',
+        },
+        {
+          label: '单位4',
+          value: '4',
+        },
+      ],
+    },
+  },
+  {
+    prop: 'experts',
+    label: '评估专家',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '专家1',
+          value: '1',
+        },
+        {
+          label: '专家2',
+          value: '2',
+        },
+        {
+          label: '专家3',
+          value: '3',
+        },
+        {
+          label: '专家4',
+          value: '4',
+        },
+      ],
+    },
+  },
+  {
+    prop: 'startDate',
+    label: '评估时间',
+    type: 'datePicker',
+    config: {
+      type: 'date',
+      placeholder: '请选择日期',
+      format: 'YYYY-MM-DD',
+      valueFormat: '',
+    },
+  },
+  {
+    prop: 'endDate',
+    label: '评估时间',
+    type: 'datePicker',
+    config: {
+      type: 'date',
+      placeholder: '请选择日期',
+      format: 'YYYY-MM-DD',
+      valueFormat: '',
+    },
+  },
+]
