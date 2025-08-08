@@ -32,7 +32,7 @@ export default [
     },
     children: [
       {
-        path: '/library',
+        path: '/assessTargetSystem/library',
         name: 'library',
         component: () => import('@/views/assessTargetSystem/library/index.vue'),
         meta: {
@@ -44,7 +44,7 @@ export default [
         },
       },
       {
-        path: '/scheme',
+        path: '/assessTargetSystem/scheme',
         name: 'scheme',
         component: () => import('@/views/assessTargetSystem/scheme/index.vue'),
         meta: {
@@ -319,6 +319,18 @@ export default [
         component: () => import('@/views/systemManage/companyManage/index.vue'),
         meta: {
           title: '评估单位管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/systemManage/metricsManage',
+        name: 'metricsManage',
+        component: () => import('@/views/systemManage/metricsManage/index.vue'),
+        meta: {
+          title: '指标管理',
           icon: '',
           hidden: false,
           disabled: false,
