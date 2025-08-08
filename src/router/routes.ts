@@ -36,7 +36,7 @@ export default [
         name: 'library',
         component: () => import('@/views/assessTargetSystem/library/index.vue'),
         meta: {
-          title: '可用指标库',
+          title: '评估指标库列表',
           icon: '',
           hidden: false,
           disabled: false,
