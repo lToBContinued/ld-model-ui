@@ -91,15 +91,13 @@ getTableData()
 }
 
 .result-display {
-  width: 100%;
-  border: 1px solid red;
-}
-
-.result-display {
   display: flex;
-  height: 400px;
   gap: $spacing-size4;
+
   width: 100%;
+  height: 400px;
+
+  border: 1px solid red;
 
   .result-chart {
     flex-shrink: 0;

@@ -1,11 +1,11 @@
 <template>
   <div class="system-title">
-    <h1 class="big-title user-unselect">{{ setting.SYSTEM_NAME }}</h1>
+    <h1 class="big-title user-unselect">{{ SETTING.SYSTEM_NAME }}</h1>
   </div>
 </template>
 
 <script setup lang="ts">
-import setting from '@/setting/index.ts'
+import SETTING from '@/setting/index.ts'
 </script>
 
 <style scoped lang="scss">

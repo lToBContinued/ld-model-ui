@@ -19,6 +19,17 @@ declare global {
   /** 表单校验类型 */
   type ValidFormRules<T> = FormRules<T>
 
+  /** 响应参数 */
+  type ResponseData<T> = {
+    status: number
+    msg: string
+    total?: number
+    currentPage?: number
+    pageSize?: number
+    token?: string
+    data: T
+  }
+
   /** 分页请求参数 */
   interface PaginationParams {
     /** 当前页码 */

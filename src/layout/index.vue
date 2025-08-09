@@ -16,8 +16,7 @@ k
       </el-aside>
       <el-container>
         <el-main>
-          <!--<top-tabbar class="tabbar"></top-tabbar>-->
-          <system-notice></system-notice>
+          <top-tabbar class="tabbar"></top-tabbar>
           <main-display></main-display>
         </el-main>
       </el-container>
@@ -33,6 +32,7 @@ import MainDisplay from '@/layout/components/main-display.vue'
 import SystemTitle from '@/layout/components/system-title.vue'
 import AsideMenu from '@/layout/components/aside-menu.vue'
 import SystemNotice from '@/layout/components/system-notice.vue'
+import TopTabbar from '@/layout/components/top-tabbar.vue'
 
 const settingStore = useSettingStore()
 </script>
@@ -88,7 +88,7 @@ const settingStore = useSettingStore()
 ::v-deep(.el-main) {
   position: relative;
   width: calc(100% - $aside-width);
-  padding: $spacing-size5;
+  padding: calc(50px + $spacing-size5) $spacing-size5 $spacing-size5;
 
   // 背景颜色
   background: $main-bg-color;
