@@ -17,8 +17,11 @@ export const logoutApi = (data: any) => {
   })
 }
 
-export const getUserInfoApi = () => {
+export const getUserInfoApi = (id: string) => {
   return request<any, ResponseData<UserInfo>>({
     url: `api/getUserInfo`,
+    params: {
+      id,
+    },
   })
 }

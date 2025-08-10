@@ -29,7 +29,7 @@ const useUserStore = defineStore(STORE_NAMES.USER, () => {
   }
   // 获取用户信息
   const getUserInfo = async () => {
-    const res = await getUserInfoApi()
+    const res = await getUserInfoApi(userId.value)
     if (res.status === 200) {
       username.value = res.data!.username!
       phone.value = res.data!.phone!
