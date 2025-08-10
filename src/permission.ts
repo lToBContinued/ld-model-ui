@@ -35,6 +35,7 @@ router.beforeEach(async (to, from, next) => {
       }
     }
   } else {
+    userStore.clearUserInfo()
     // 没有token
     if (to.path === '/login') {
       next()

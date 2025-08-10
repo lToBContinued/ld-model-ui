@@ -65,6 +65,7 @@ const useUserStore = defineStore(STORE_NAMES.USER, () => {
     login,
     getUserInfo,
     logout,
+    clearUserInfo,
   }
 })
 
