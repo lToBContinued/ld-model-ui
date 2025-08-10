@@ -13,8 +13,8 @@
         ></zk-form>
         <div class="form-btns">
           <zk-button type="primary" style="width: 100%" :loading="loginLoading" @click="userLogin"
-            >登&nbsp;录</zk-button
-          >
+            >登&nbsp;录
+          </zk-button>
         </div>
       </div>
     </div>
@@ -51,13 +51,15 @@ const particlesInit = async (engine: any) => {
 }
 // 登录
 const userLogin = async () => {
+  loginLoading.value = true
   try {
     await loginFormRef.value?.ElFormRef?.validate()
-    loginLoading.value = true
     await login(loginFormData)
     ElMessage.success('登录成功')
-    router.push({ path: '/' })
-    loginLoading.value = false
+    setTimeout(() => {
+      router.push({ path: '/' })
+      loginLoading.value = false
+    }, 500)
   } catch (e) {
     loginLoading.value = false
     console.log(e)

@@ -20,14 +20,14 @@ declare global {
   type ValidFormRules<T> = FormRules<T>
 
   /** 响应参数 */
-  type ResponseData<T> = {
+  type ResponseData<T = any> = {
     status: number
     msg: string
     total?: number
     currentPage?: number
     pageSize?: number
     token?: string
-    data: T
+    data?: T
   }
 
   /** 分页请求参数 */

@@ -7,7 +7,7 @@ import useUserStore from '@/stores/modules/user.ts'
 
 NProgress.configure({ showSpinner: false })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const username = userStore.username
   NProgress.start()
@@ -19,10 +19,19 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
     } else {
       if (username) {
+        // 如果前往的页面不是登录页面，并且获取到了用户信息
         next()
       } else {
-        // 获取用户信息
-        next()
+        // 如果没有获取到用户信息，则获取用户信息和路由
+        try {
+          await userStore.getUserInfo()
+          next({ ...to, replace: true })
+        } catch (e) {
+          // 获取用户信息失败（token失效或被修改的情况），移除token，跳转到登录页
+          await userStore.logout()
+          next({ path: '/login' })
+          console.log(e)
+        }
       }
     }
   } else {

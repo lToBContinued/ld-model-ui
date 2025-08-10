@@ -13,7 +13,24 @@ Mock.mock('api/login', 'post', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',
-    data: userInfo,
+    data: {
+      id: userInfo.id,
+    },
     token: 'Bearer ' + Mock.Random.string('lower', 64),
+  })
+})
+
+Mock.mock('api/logout', 'post', () => {
+  return Mock.mock({
+    status: 200,
+    msg: 'success',
+  })
+})
+
+Mock.mock('api/getUserInfo', 'get', () => {
+  return Mock.mock({
+    status: 200,
+    msg: 'success',
+    data: userInfo,
   })
 })
