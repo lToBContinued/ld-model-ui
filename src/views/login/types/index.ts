@@ -11,4 +11,5 @@ export interface UserInfo {
   createTime?: Date
   updateTime?: Date
   delFlag?: number
+  role?: number
 }

@@ -25,3 +25,12 @@ export const getUserInfoApi = (id: string) => {
     },
   })
 }
+
+export const getRouterApi = (role: number) => {
+  return request<any, ResponseData<Record<string, any>>>({
+    url: `/api/getRouter`,
+    params: {
+      role,
+    },
+  })
+}

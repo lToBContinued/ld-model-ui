@@ -11,7 +11,7 @@ k
           :collapse="settingStore.isCollapse"
         >
           <system-title v-if="!settingStore.isCollapse"></system-title>
-          <aside-menu :menuList="routes"></aside-menu>
+          <aside-menu :menuList="menuStore.menuData"></aside-menu>
         </el-menu>
       </el-aside>
       <el-container>
@@ -26,15 +26,15 @@ k
 
 <script setup lang="ts">
 import useSettingStore from '@/stores/modules/setting.ts'
-import routes from '@/router/routes'
 // import TopTabbar from '@/layout/components/top-tabbar.vue'
 import MainDisplay from '@/layout/components/main-display.vue'
 import SystemTitle from '@/layout/components/system-title.vue'
 import AsideMenu from '@/layout/components/aside-menu.vue'
-import SystemNotice from '@/layout/components/system-notice.vue'
 import TopTabbar from '@/layout/components/top-tabbar.vue'
+import useMenuStore from '@/stores/modules/menu.ts'
 
 const settingStore = useSettingStore()
+const menuStore = useMenuStore()
 </script>
 
 <style scoped lang="scss">

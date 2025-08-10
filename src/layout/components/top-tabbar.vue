@@ -12,7 +12,7 @@
     <div class="right">
       <el-dropdown>
         <div class="username-wrapper">
-          <span class="username bold">{{ userStore.username || '用户' }}</span>
+          <span class="username bold">{{ userStore.username }}</span>
           <el-icon><ArrowDownBold /></el-icon>
         </div>
         <template #dropdown>
@@ -95,9 +95,9 @@ const userLogout = async () => {
 
 .right {
   .username {
+    margin-right: $spacing-size2;
     font-size: $font-size-m;
     color: $main-text-color1;
-    margin-right: $spacing-size2;
   }
 }
 </style>

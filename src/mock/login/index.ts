@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 import getQuery from '@/mock/getQuery.ts'
-import { adminUserInfo, UserUserInfo } from '@/mock/data'
+import { adminRouter, adminUserInfo, userRouter, UserUserInfo } from '@/mock/login/data.ts'
 import getBody from '@/mock/getBody.ts'
 
 Mock.mock('/api/login', 'post', (req) => {
@@ -56,6 +56,28 @@ Mock.mock(/api\/getUserInfo/, 'get', (req) => {
     return Mock.mock({
       status: 400,
       msg: '用户不存在',
+    })
+  }
+})
+
+Mock.mock(/\/api\/getRouter/, 'get', (req) => {
+  const role = getQuery(req.url, 'role')
+  if (role === '0') {
+    return Mock.mock({
+      status: 200,
+      msg: 'success',
+      data: adminRouter,
+    })
+  } else if (role === '1') {
+    return Mock.mock({
+      status: 200,
+      msg: 'success',
+      data: userRouter,
+    })
+  } else {
+    return Mock.mock({
+      status: 400,
+      msg: '角色不存在',
     })
   }
 })

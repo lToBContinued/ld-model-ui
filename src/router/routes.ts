@@ -11,6 +11,21 @@ export default [
       iconShow: false,
     },
   },
+]
+
+/*export default [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+    meta: {
+      title: '登录',
+      icon: '',
+      hidden: true,
+      disabled: true,
+      iconShow: false,
+    },
+  },
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
@@ -351,7 +366,7 @@ export default [
       },
     ],
   },
-  /*{
+  /!*{
     path: '/theoreticalAbility',
     name: 'theoreticalAbility',
     component: () => import('@/layout/index.vue'),
@@ -401,7 +416,7 @@ export default [
         },
       },
     ],
-  },*/
+  },*!/
   {
     name: 'any',
     path: '/:pathMatch(.*)*',
@@ -413,4 +428,4 @@ export default [
       disabled: false,
     },
   },
-]
+]*/
