@@ -13,6 +13,7 @@ const useUserStore = defineStore(STORE_NAMES.USER, () => {
 
   // 登录
   const login = async (loginInfo: LoginFormData) => {
+    console.log('>>>>> file: user.ts ~ method: login <<<<<\n', loginInfo) // TODO: 删除
     const res = await loginApi(loginInfo)
     if (res.status === 200) {
       userId.value = res.data!.id!
