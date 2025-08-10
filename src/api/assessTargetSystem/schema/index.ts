@@ -5,7 +5,7 @@ import request from '@/utils/request.ts'
  */
 export const getParticipateUnitsSelectOptionsApi = () => {
   return request({
-    url: 'api/schema/participateUnitsSelectOptions',
+    url: '/api/schema/participateUnitsSelectOptions',
   })
 }
 
@@ -14,7 +14,7 @@ export const getParticipateUnitsSelectOptionsApi = () => {
  */
 export const getAssessSubjectOptionsApi = () => {
   return request({
-    url: 'api/schema/getAssessSubjectOptions',
+    url: '/api/schema/getAssessSubjectOptions',
   })
 }
 
@@ -23,6 +23,6 @@ export const getAssessSubjectOptionsApi = () => {
  */
 export const getAssessResultApi = () => {
   return request({
-    url: 'api/schema/getAssessResult',
+    url: '/api/schema/getAssessResult',
   })
 }

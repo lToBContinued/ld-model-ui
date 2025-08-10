@@ -3,7 +3,7 @@ import { LoginFormData, UserInfo } from '@/views/login/types'
 
 export const loginApi = (data: LoginFormData) => {
   return request<any, ResponseData<UserInfo>>({
-    url: 'api/login',
+    url: '/api/login',
     method: 'post',
     data,
   })
@@ -11,7 +11,7 @@ export const loginApi = (data: LoginFormData) => {
 
 export const logoutApi = (data: any) => {
   return request<any, ResponseData>({
-    url: 'api/logout',
+    url: '/api/logout',
     method: 'post',
     data,
   })
@@ -19,7 +19,7 @@ export const logoutApi = (data: any) => {
 
 export const getUserInfoApi = (id: string) => {
   return request<any, ResponseData<UserInfo>>({
-    url: `api/getUserInfo`,
+    url: `/api/getUserInfo`,
     params: {
       id,
     },

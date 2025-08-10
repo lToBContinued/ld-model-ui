@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock('api/metricsManage/metricOptions', 'get', () => {
+Mock.mock('/api/metricsManage/metricOptions', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',

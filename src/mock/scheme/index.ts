@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock('api/schema/participateUnitsSelectOptions', 'get', () => {
+Mock.mock('/api/schema/participateUnitsSelectOptions', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',
@@ -14,7 +14,7 @@ Mock.mock('api/schema/participateUnitsSelectOptions', 'get', () => {
   })
 })
 
-Mock.mock('api/schema/getAssessSubjectOptions', 'get', () => {
+Mock.mock('/api/schema/getAssessSubjectOptions', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',

@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock('api/companyManage/assessCompanyList', 'get', () => {
+Mock.mock('/api/companyManage/assessCompanyList', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',

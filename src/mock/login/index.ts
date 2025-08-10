@@ -353,7 +353,7 @@ const router = [
   },
 ]
 
-Mock.mock('api/login', 'post', () => {
+Mock.mock('/api/login', 'post', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',
@@ -364,7 +364,7 @@ Mock.mock('api/login', 'post', () => {
   })
 })
 
-Mock.mock('api/logout', 'post', () => {
+Mock.mock('/api/logout', 'post', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',

@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-Mock.mock('api/home/recentRecords', 'get', () => {
+Mock.mock('/api/home/recentRecords', 'get', () => {
   return Mock.mock({
     status: 200,
     msg: 'success',
