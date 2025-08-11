@@ -1,6 +1,5 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import vueDevTools from 'vite-plugin-vue-devtools'
 import * as path from 'node:path'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -21,7 +20,6 @@ export default defineConfig((mode) => {
     base: './',
     plugins: [
       vue(),
-      vueDevTools(),
       AutoImport({
         resolvers: [
           ElementPlusResolver(),
@@ -98,17 +96,17 @@ export default defineConfig((mode) => {
       },
     },
     // 代理跨域
-    server: {
-      proxy: {
-        [env.VITE_BASE_API]: {
-          // 获取数据的服务器地址设置
-          target: env.VITE_SERVER,
-          // 是否代理跨域
-          changeOrigin: true,
-          // 路径重写
-          rewrite: (path) => path.replace(/^\/api/, ''),
-        },
-      },
-    },
+    // server: {
+    //   proxy: {
+    //     [env.VITE_BASE_API]: {
+    //       // 获取数据的服务器地址设置
+    //       target: env.VITE_SERVER,
+    //       // 是否代理跨域
+    //       changeOrigin: true,
+    //       // 路径重写
+    //       rewrite: (path) => path.replace(/^\/api/, ''),
+    //     },
+    //   },
+    // },
   }
 })

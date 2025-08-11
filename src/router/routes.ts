@@ -1,5 +1,32 @@
 export default [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+    meta: {
+      title: '登录',
+      icon: '',
+      hidden: true,
+      disabled: true,
+      iconShow: false,
+    },
+  },
+]
+
+/*export default [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('@/views/login/index.vue'),
+    meta: {
+      title: '登录',
+      icon: '',
+      hidden: true,
+      disabled: true,
+      iconShow: false,
+    },
+  },
+  {
     path: '/',
     component: () => import('@/layout/index.vue'),
     redirect: '/home',
@@ -10,6 +37,45 @@ export default [
         component: () => import('@/views/home/index.vue'),
         meta: {
           title: '首页概览',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/assessTargetSystem',
+    name: 'assessTargetSystem',
+    component: () => import('@/layout/index.vue'),
+    redirect: 'library',
+    meta: {
+      title: '评估指标体系',
+      icon: '',
+      hidden: false,
+      disabled: false,
+      iconShow: false,
+    },
+    children: [
+      {
+        path: '/assessTargetSystem/library',
+        name: 'library',
+        component: () => import('@/views/assessTargetSystem/library/index.vue'),
+        meta: {
+          title: '评估指标库列表',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
+        path: '/assessTargetSystem/scheme',
+        name: 'scheme',
+        component: () => import('@/views/assessTargetSystem/scheme/index.vue'),
+        meta: {
+          title: '评估方案',
           icon: '',
           hidden: false,
           disabled: false,
@@ -286,9 +352,21 @@ export default [
           iconShow: false,
         },
       },
+      {
+        path: '/systemManage/metricsManage',
+        name: 'metricsManage',
+        component: () => import('@/views/systemManage/metricsManage/index.vue'),
+        meta: {
+          title: '指标管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
-  /*{
+  /!*{
     path: '/theoreticalAbility',
     name: 'theoreticalAbility',
     component: () => import('@/layout/index.vue'),
@@ -338,7 +416,7 @@ export default [
         },
       },
     ],
-  },*/
+  },*!/
   {
     name: 'any',
     path: '/:pathMatch(.*)*',
@@ -350,4 +428,4 @@ export default [
       disabled: false,
     },
   },
-]
+]*/

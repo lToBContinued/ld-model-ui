@@ -26,6 +26,6 @@
 # EXPOSE 80
 # 启动nginx并在前台运行
 # CMD ["nginx", "-g", "daemon off;"]
-FROM nginx:latest
+FROM arm64v8/nginx:latest
 COPY dist/  /usr/share/nginx/html/
 COPY nginx/default.conf /etc/nginx/conf.d/default.conf

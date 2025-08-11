@@ -32,6 +32,8 @@ export default [
         NullType: 'readonly',
         ElMessage: 'readonly',
         ElMessageBox: 'readonly',
+        ValidFormRules: 'readonly',
+        UndefinedType: 'readonly',
       },
     },
     // 🟡 recommended.plugins: ['prettier']
@@ -46,7 +48,6 @@ export default [
 
       // 🟡 一些自己的自定义 rules
       'prettier/prettier': 'warn',
-      'no-unused-vars': 'warn',
 
       // eslint（https://eslint.bootcss.com/docs/rules/）
       'no-var': 'error', // 要求使用 let 或 const 而不是 var
@@ -57,7 +58,15 @@ export default [
       'no-useless-escape': 'off', // 禁止不必要的转义字符
 
       // typeScript (https://typescript-eslint.io/rules)
-      '@typescript-eslint/no-unused-vars': 'error', // 禁止定义未使用的变量
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/prefer-ts-expect-error': 'error', // 禁止使用 @ts-ignore
       '@typescript-eslint/no-explicit-any': 'off', // 禁止使用 any 类型
       '@typescript-eslint/no-non-null-assertion': 'off',

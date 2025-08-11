@@ -1,2 +1,7 @@
-import './home/index.ts'
 import './companyManage/index.ts'
+import './home/index.ts'
+import './metricsManage/index.ts'
+import './scheme/index.ts'
+import './login/index.ts'
+import './userManage/index.ts'
+import './library/index.ts'
