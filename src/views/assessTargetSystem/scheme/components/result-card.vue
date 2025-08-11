@@ -45,7 +45,7 @@ interface ResultCardProps {
   searchParams: Record<string, any>
 }
 
-const props = withDefaults(defineProps<ResultCardProps>(), {})
+withDefaults(defineProps<ResultCardProps>(), {})
 
 const resultChart = ref<NullType<HTMLDivElement>>(null)
 const { renderChart } = useEcharts(resultChart)
