@@ -356,6 +356,18 @@ export const adminRouter = [
           iconShow: false,
         },
       },
+      {
+        path: '/systemManage/userManage',
+        name: 'userManage',
+        component: 'systemManage/userManage/index',
+        meta: {
+          title: '用户管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
 ]
