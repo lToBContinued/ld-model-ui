@@ -17,7 +17,7 @@
         <!-- 专门处理 index 类型列 -->
         <el-table-column v-if="col.type === 'index'" v-bind="col" />
         <!-- 专门处理 selection 类型列 -->
-        <el-table-column v-if="col.type === 'selection'" reserve-selection v-bind="col" />
+        <el-table-column v-else-if="col.type === 'selection'" reserve-selection v-bind="col" />
         <!-- 处理其他类型列 -->
         <el-table-column v-else v-bind="col">
           <!--表头插槽-->
