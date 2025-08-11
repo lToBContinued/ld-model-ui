@@ -22,10 +22,13 @@ export const userManageTableColumns = [
     prop: 'delFlag',
     label: '状态',
     slot: 'delFlag',
+    width: '80px',
+    align: 'center',
   },
   {
     slot: 'operation',
     label: '操作',
     width: '200px',
+    align: 'center',
   },
 ]
