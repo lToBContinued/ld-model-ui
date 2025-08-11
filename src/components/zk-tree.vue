@@ -1,6 +1,6 @@
 <template>
   <div class="zk-tree">
-    <zk-input v-model="filterText" placeholder="请输入搜索内容"></zk-input>
+    <zk-input v-if="filter" v-model="filterText" placeholder="请输入搜索内容"></zk-input>
     <el-tree
       ref="ElTreeRef"
       class="user-unselect"
@@ -27,6 +27,9 @@
             </zk-button>
             <zk-button v-if="active.remove" type="danger" link @click="remove(node, data)" style="margin-left: 4px">
               删除
+            </zk-button>
+            <zk-button v-if="active.check" type="primary" link @click="viewNode(node, data)" style="margin-left: 4px">
+              查看
             </zk-button>
           </div>
         </div>
@@ -59,9 +62,11 @@ interface ZkTreeProps {
     append: boolean
     edit: boolean
     remove: boolean
+    check: boolean
   }
   highlightCurrent?: boolean
   background?: string // 背景颜色
+  filter?: boolean
 }
 
 type Node = RenderContentContext['node']
@@ -75,8 +80,10 @@ const props = withDefaults(defineProps<ZkTreeProps>(), {
     children: 'children',
   },
   background: '#fff',
+  filter: false,
 })
 
+const emit = defineEmits(['view-node'])
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
@@ -132,6 +139,9 @@ const edit = (data: Data) => {
   }).then(({ value }) => {
     data[PROPS.label] = value
   })
+}
+const viewNode = (node: Node, data: Data) => {
+  emit('view-node', node, data)
 }
 
 defineExpose({ ElTreeRef })
