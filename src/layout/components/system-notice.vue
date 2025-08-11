@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const isShow = ref(true)
+const isShow = ref(false)
 </script>
 
 <style scoped lang="scss">
