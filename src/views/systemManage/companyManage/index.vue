@@ -96,7 +96,7 @@ const removeCompany = (row: any) => {
   console.log('>>>>> file: index.vue ~ method: removeCompany <<<<<\n', row) // TODO: 删除
 }
 
-getCompanyList()
+// getCompanyList()
 </script>
 
 <style scoped lang="scss">

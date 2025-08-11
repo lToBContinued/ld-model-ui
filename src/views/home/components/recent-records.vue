@@ -47,7 +47,7 @@ const dialogConfirm = () => {
   dialogShow.value = false
 }
 
-getRecentRecord()
+// getRecentRecord()
 </script>
 
 <style scoped lang="scss">

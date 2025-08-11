@@ -73,7 +73,7 @@ const loadNodes: LoadFunction = (node, resolve) => {
       {
         id: 11,
         isLeaf: true,
-        label: '二级指标-送命指标',
+        label: '二级指标-clyq',
       },
       {
         id: 12,

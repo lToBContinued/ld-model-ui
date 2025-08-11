@@ -1,3 +1,3 @@
 export default {
-  SYSTEM_NAME: '无敌的评估系统',
+  SYSTEM_NAME: 'ld模型评估系统',
 }

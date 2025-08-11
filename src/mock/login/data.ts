@@ -1,8 +1,8 @@
 export const adminUserInfo = {
   id: 'admin123456',
   role: 0,
-  username: '超管',
-  phone: '13800000000',
+  username: '管理员',
+  phone: '',
   createTime: new Date(),
   updateTime: new Date(),
   delFlag: 1,
@@ -11,8 +11,8 @@ export const adminUserInfo = {
 export const UserUserInfo = {
   id: 'user123456',
   role: 1,
-  username: '张三',
-  phone: '13800000000',
+  username: '用户',
+  phone: '',
   createTime: new Date(),
   updateTime: new Date(),
   delFlag: 1,

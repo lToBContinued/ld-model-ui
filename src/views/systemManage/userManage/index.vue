@@ -176,7 +176,7 @@ const closeDialog = () => {
 }
 
 watchEffect(() => {
-  getUserList()
+  // getUserList()
   console.log('>>>>> file: index.vue ~ method:  <<<<<\n', state.currentPage, state.pageSize) // TODO: 删除
 })
 </script>

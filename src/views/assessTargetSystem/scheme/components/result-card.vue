@@ -97,8 +97,6 @@ getTableData()
   width: 100%;
   height: 400px;
 
-  border: 1px solid red;
-
   .result-chart {
     flex-shrink: 0;
     width: 40%;

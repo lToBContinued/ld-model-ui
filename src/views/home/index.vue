@@ -2,9 +2,9 @@
   <div>
     <module-title></module-title>
     <div class="overview-wrapper">
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
+      <statistics-card :data="overviewData1" class="overview-card"></statistics-card>
+      <statistics-card :data="overviewData2" class="overview-card"></statistics-card>
+      <statistics-card :data="overviewData3" class="overview-card"></statistics-card>
     </div>
     <div class="charts-wrapper">
       <!--能力分布-->
@@ -23,10 +23,19 @@ import AbilityAnalysis from '@/views/home/components/ability-analysis.vue'
 import EvaluateTrends from '@/views/home/components/evaluate-trends.vue'
 import RecentRecords from '@/views/home/components/recent-records.vue'
 
-const overviewData = {
+const overviewData1 = {
   title: '总评估人数',
   value: 124,
   desc: '本月新增：18',
+}
+const overviewData2 = {
+  title: '平均得分',
+  value: 124,
+  desc: '较上月: +2.3%',
+}
+const overviewData3 = {
+  title: '评估完成率',
+  value: '92%',
 }
 </script>
 

@@ -14,7 +14,7 @@ interface moduleTitlePropsType {
 }
 
 withDefaults(defineProps<moduleTitlePropsType>(), {
-  title: 'XXX评估系统',
+  title: 'ld模型评估系统',
 })
 </script>
 

@@ -1,18 +1,8 @@
 export const abilityChartOptions: EChartsOption = {
   series: [
     {
-      name: 'Capacity distribution analysis',
       type: 'radar',
-      data: [
-        {
-          value: [4200, 3000, 20000, 35000, 50000, 18000],
-          name: '张三',
-        },
-        {
-          value: [5000, 14000, 28000, 26000, 42000, 21000],
-          name: '李四',
-        },
-      ],
+      data: [],
       tooltip: {
         trigger: 'item',
       },
@@ -32,12 +22,13 @@ export const abilityChartOptions: EChartsOption = {
   },
   radar: {
     indicator: [
-      { name: '攻击', max: 6500 },
-      { name: '防御', max: 16000 },
-      { name: '速度', max: 30000 },
-      { name: '灵巧', max: 38000 },
-      { name: '旋转', max: 52000 },
-      { name: '法术', max: 25000 },
+      { name: '理论研究成果', max: 100 },
+      { name: '典型目标TC与区域JS', max: 100 },
+      { name: 'ZZ统筹', max: 100 },
+      { name: '任务规划', max: 100 },
+      { name: '动态CG', max: 100 },
+      { name: '综合FH', max: 100 },
+      { name: '综合YL', max: 100 },
     ],
     center: ['50%', '50%'],
     radius: '80%',
@@ -52,7 +43,7 @@ export const trendChartOptions: EChartsOption = {
     trigger: 'axis',
   },
   legend: {
-    data: ['1月', '2月', '3月', '4月', '5月'],
+    data: ['平均得分'],
     left: 'center',
     top: 'top',
   },
@@ -64,7 +55,7 @@ export const trendChartOptions: EChartsOption = {
   xAxis: {
     type: 'category',
     boundaryGap: false,
-    data: ['1月', '2月', '3月', '4月', '5月'],
+    data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月'],
   },
   yAxis: {
     type: 'value',
@@ -72,29 +63,9 @@ export const trendChartOptions: EChartsOption = {
   },
   series: [
     {
-      name: '1月',
+      name: '平均得分',
       type: 'line',
-      data: [120, 132, 101, 134, 90, 230, 210],
-    },
-    {
-      name: '2月',
-      type: 'line',
-      data: [220, 182, 191, 234, 290, 330, 310],
-    },
-    {
-      name: '3月',
-      type: 'line',
-      data: [150, 232, 201, 154, 190, 330, 410],
-    },
-    {
-      name: '4月',
-      type: 'line',
-      data: [320, 332, 301, 334, 390, 330, 320],
-    },
-    {
-      name: '5月',
-      type: 'line',
-      data: [820, 932, 901, 934, 1290, 1330, 1320],
+      data: [80, 92, 91, 94, 75, 82, 96],
     },
   ],
 }
