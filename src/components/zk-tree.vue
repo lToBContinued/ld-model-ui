@@ -125,10 +125,40 @@ const append = (data: Data) => {
 }
 // 删除节点
 const remove = (node: Node, data: Data) => {
-  const parent = node.parent
+  /*const parent = node.parent
   const children: TreeData[] = parent?.data[PROPS.children] || parent?.data
   const index = children.findIndex((d) => d.id === data.id)
-  children.splice(index, 1)
+  if (node.level === 1) {
+    ElMessage.error('根节点不能删除')
+    return
+  }
+  if (node.childNodes.length > 0) {
+    ElMessageBox.confirm('该节点下有子节点，是否删除子节点？', '删除节点', {
+      confirmButtonText: '删除',
+      cancelButtonText: '取消',
+      draggable: true,
+    }).then(() => {
+      children.splice(index, 1)
+    })
+  } else {
+    children.splice(index, 1)
+  }*/
+  const currentNode = ElTreeRef.value?.getNode(node)
+  if (currentNode!.level === 1) {
+    ElMessage.error('根节点不能删除')
+    return
+  }
+  if (currentNode!.childNodes.length > 0) {
+    ElMessageBox.confirm('该节点下有子节点，是否删除子节点？', '删除节点', {
+      confirmButtonText: '删除',
+      cancelButtonText: '取消',
+      draggable: true,
+    }).then(() => {
+      ElTreeRef.value?.remove(node)
+    })
+  } else {
+    ElTreeRef.value?.remove(node)
+  }
 }
 // 修改节点
 const edit = (data: Data) => {
