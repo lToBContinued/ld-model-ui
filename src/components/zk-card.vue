@@ -10,7 +10,7 @@
 import { ref } from 'vue'
 import { CardProps, CardInstance } from 'element-plus'
 
-type ZkCardProps = CardProps & {}
+type ZkCardProps = Partial<CardProps> & {}
 
 const props = withDefaults(defineProps<ZkCardProps>(), {})
 
