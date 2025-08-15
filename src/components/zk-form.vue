@@ -30,6 +30,12 @@
               v-model="_formData[item.prop]"
               v-bind="item.config"
             ></zk-input-number>
+            <!--json编辑器-->
+            <zk-json-editor
+              v-else-if="item.type === 'jsonEditor'"
+              v-model="_formData[item.prop]"
+              v-bind="item.config"
+            ></zk-json-editor>
             <!-- 输入框 -->
             <zk-input v-else-if="item.type === 'input'" v-model="_formData[item.prop]" v-bind="item.config"></zk-input>
             <template v-if="item.slot === 'default'" #default>

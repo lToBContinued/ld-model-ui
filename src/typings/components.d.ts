@@ -62,6 +62,7 @@ declare module 'vue' {
     ZkIcon: typeof import('./../components/zk-icon.vue')['default']
     ZkInput: typeof import('./../components/zk-input.vue')['default']
     ZkInputNumber: typeof import('./../components/zk-input-number.vue')['default']
+    ZkJsonEditor: typeof import('./../components/zk-json-editor.vue')['default']
     ZkPagination: typeof import('./../components/zk-pagination.vue')['default']
     ZkRadio: typeof import('./../components/zk-radio.vue')['default']
     ZkSelect: typeof import('./../components/zk-select.vue')['default']
