@@ -1,4 +1,4 @@
-export default [
+/*export default [
   {
     path: '/login',
     name: 'login',
@@ -11,9 +11,9 @@ export default [
       iconShow: false,
     },
   },
-]
+]*/
 
-/*export default [
+export default [
   {
     path: '/login',
     name: 'login',
@@ -84,7 +84,7 @@ export default [
       },
     ],
   },
-  {
+  /*{
     path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
@@ -308,7 +308,7 @@ export default [
         },
       },
     ],
-  },
+  },*/
   {
     path: '/',
     component: () => import('@/layout/index.vue'),
@@ -364,9 +364,21 @@ export default [
           iconShow: false,
         },
       },
+      {
+        path: '/systemManage/indicatorManage',
+        name: 'indicatorManage',
+        component: () => import('@/views/systemManage/indicatorManage/index.vue'),
+        meta: {
+          title: '指标管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
-  /!*{
+  /*{
     path: '/theoreticalAbility',
     name: 'theoreticalAbility',
     component: () => import('@/layout/index.vue'),
@@ -416,7 +428,7 @@ export default [
         },
       },
     ],
-  },*!/
+  },*/
   {
     name: 'any',
     path: '/:pathMatch(.*)*',
@@ -428,4 +440,4 @@ export default [
       disabled: false,
     },
   },
-]*/
+]
