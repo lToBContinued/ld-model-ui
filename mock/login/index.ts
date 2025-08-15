@@ -1,7 +1,7 @@
 import Mock from 'mockjs'
-import getQuery from '@/mock/getQuery.ts'
-import { adminRouter, adminUserInfo, userRouter, UserUserInfo } from '@/mock/login/data.ts'
-import getBody from '@/mock/getBody.ts'
+import getQuery from '../getQuery'
+import { adminRouter, adminUserInfo, userRouter, UserUserInfo } from './data'
+import getBody from '../getBody'
 
 Mock.mock('/api/login', 'post', (req) => {
   const { username, password } = getBody(req.body)

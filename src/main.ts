@@ -7,7 +7,7 @@ import ElementPlus from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import 'virtual:svg-icons-register'
 import Particles from 'particles.vue3'
-import './mock/index.ts'
+import '/mock/index.ts'
 // import './permission.ts'
 
 const app = createApp(App)
