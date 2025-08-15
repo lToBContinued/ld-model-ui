@@ -21,15 +21,18 @@
         <div class="custom-tree-node">
           <span>{{ node.label }}</span>
           <div>
-            <zk-button v-if="active.append" type="primary" link @click="append(data)">添加</zk-button>
-            <zk-button v-if="active.edit" type="primary" link @click="edit(data)" style="margin-left: 4px">
+            <zk-button v-if="active.append" type="primary" link @click.stop="append(data)">添加</zk-button>
+            <zk-button v-if="active.edit" type="primary" link @click.stop="edit(data)" style="margin-left: 4px">
               修改
             </zk-button>
-            <zk-button v-if="active.remove" type="danger" link @click="remove(node, data)" style="margin-left: 4px">
+            <zk-button
+              v-if="active.remove"
+              type="danger"
+              link
+              @click.stop="remove(node, data)"
+              style="margin-left: 4px"
+            >
               删除
-            </zk-button>
-            <zk-button v-if="active.check" type="primary" link @click="viewNode(node, data)" style="margin-left: 4px">
-              查看
             </zk-button>
           </div>
         </div>
@@ -214,10 +217,6 @@ const edit = (data: Data) => {
   }).then(({ value }) => {
     data[PROPS.label] = value
   })
-}
-// 查看节点
-const viewNode = (node: Node, data: Data) => {
-  emit('view-node', node, data)
 }
 const closeDialog = () => {
   indicatorFormRef.value?.ElFormRef?.resetFields()
