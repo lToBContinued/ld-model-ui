@@ -21,7 +21,7 @@
         <div class="custom-tree-node">
           <span>{{ node.label }}</span>
           <div>
-            <zk-button v-if="active.append" type="primary" link @click.stop="append(data)">添加</zk-button>
+            <zk-button v-if="active.append" type="primary" link @click.stop="append(data)">添加 </zk-button>
             <zk-button v-if="active.edit" type="primary" link @click.stop="edit(data)" style="margin-left: 4px">
               修改
             </zk-button>
@@ -84,6 +84,7 @@ interface ZkTreeProps {
   background?: string // 背景颜色
   filter?: boolean
 }
+
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
@@ -159,17 +160,22 @@ const append = (data: Data) => {
   dialogShow.value = true
   currentNodeData.value = data
 }
-const confirmAppend = () => {
-  const newChild = {
-    id: Date.now(),
-    [PROPS.children]: [],
-    ...indicatorFormData,
+const confirmAppend = async () => {
+  try {
+    await indicatorFormRef.value?.ElFormRef?.validate()
+    const newChild = {
+      id: Date.now(),
+      [PROPS.children]: [],
+      ...indicatorFormData,
+    }
+    if (!currentNodeData.value![PROPS.children]) {
+      currentNodeData.value![PROPS.children] = []
+    }
+    currentNodeData.value![PROPS.children].push(newChild)
+    closeDialog()
+  } catch (e) {
+    console.error(e)
   }
-  if (!currentNodeData.value![PROPS.children]) {
-    currentNodeData.value![PROPS.children] = []
-  }
-  currentNodeData.value![PROPS.children].push(newChild)
-  closeDialog()
 }
 // 删除节点
 const remove = (node: Node, data: Data) => {
