@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed, watch, reactive } from 'vue'
+import { onMounted, ref, computed, reactive } from 'vue'
 import type { FormRules } from 'element-plus'
 import {
   theoryKnowledgeAssessFormConfig,

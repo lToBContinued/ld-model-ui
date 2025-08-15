@@ -2,10 +2,12 @@ export const theoryKnowledgeAssessFormConfig = [
   {
     prop: 'company',
     label: '评估单位',
+    type: 'input',
   },
   {
     prop: 'companyNumber',
     label: '单位编号',
+    type: 'input',
   },
   {
     prop: 'targeted',
@@ -30,6 +32,7 @@ export const theoryKnowledgeAssessFormConfig = [
   {
     prop: 'remark',
     label: '备注',
+    type: 'input',
     config: {
       type: 'textarea',
     },

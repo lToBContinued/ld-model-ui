@@ -1,6 +1,6 @@
 <template>
   <div class="system-notice">
-    <svg-icon name="overview" size="40" @click="isShow = true"></svg-icon>
+    <svg-icon name="overview" size="30" @click="isShow = true"></svg-icon>
     <zk-dialog :model-value="isShow" :show-footer="false" @close="isShow = false">
       <div class="title-wrapper">
         <h1 class="title">XXXX评估系统概述</h1>
@@ -63,7 +63,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const isShow = ref(true)
+const isShow = ref(false)
 </script>
 
 <style scoped lang="scss">
@@ -71,14 +71,9 @@ const isShow = ref(true)
   @include flex-center(row-center);
 
   cursor: pointer;
-
-  position: fixed;
-  z-index: 999;
-  top: 20px;
-  right: 50px;
-
-  width: 50px;
-  height: 50px;
+  width: 35px;
+  height: 35px;
+  margin-left: $spacing-size4;
 }
 
 .title-wrapper {
@@ -133,8 +128,8 @@ ol {
   transition: all 0.3s;
 
   &:hover {
-    width: 45px !important;
-    height: 45px !important;
+    width: 35px !important;
+    height: 35px !important;
   }
 }
 
