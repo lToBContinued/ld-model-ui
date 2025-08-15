@@ -21,7 +21,7 @@
         <div class="custom-tree-node">
           <span>{{ node.label }}</span>
           <div>
-            <zk-button v-if="active.append" type="primary" link @click="append(data)">添加 </zk-button>
+            <zk-button v-if="active.append" type="primary" link @click="append(data)">添加</zk-button>
             <zk-button v-if="active.edit" type="primary" link @click="edit(data)" style="margin-left: 4px">
               修改
             </zk-button>
@@ -35,6 +35,18 @@
         </div>
       </template>
     </el-tree>
+    <zk-dialog v-model="dialogShow" width="500px" @cancel="closeDialog" @confirm="confirmAppend" @close="closeDialog">
+      <template #header>
+        <span style="font-size: 18px">添加节点</span>
+      </template>
+      <zk-form
+        ref="indicatorFormRef"
+        v-model:form-data="indicatorFormData"
+        v-model:form-config="indicatorFormConfig"
+        :rules="indicatorFormRules"
+        :label-width="130"
+      ></zk-form>
+    </zk-dialog>
   </div>
 </template>
 
@@ -46,6 +58,7 @@
 import { ref, reactive, watch } from 'vue'
 import { TreeData, TreeKey, TreeOptionProps } from 'element-plus/es/components/tree/src/tree.type'
 import { FilterNodeMethodFunction, RenderContentContext, TreeInstance } from 'element-plus'
+import ZkForm from '@/components/zk-form.vue'
 
 interface ZkTreeProps {
   data: TreeData
@@ -68,7 +81,6 @@ interface ZkTreeProps {
   background?: string // 背景颜色
   filter?: boolean
 }
-
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
@@ -83,18 +95,52 @@ const props = withDefaults(defineProps<ZkTreeProps>(), {
   filter: false,
 })
 
+const PROPS: Record<string, any> = {
+  label: props.customProps.label,
+  children: props.customProps.children,
+  disabled: props.customProps.disabled || 'disabled',
+  isLeaf: props.customProps.isLeaf || 'isLeaf',
+  class: props.customProps.class,
+}
 const emit = defineEmits(['view-node'])
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
-
-const PROPS: Record<string, any> = {
-  label: props.customProps.label,
-  children: props.customProps.children,
-  disabled: props.customProps.disabled,
-  isLeaf: props.customProps.isLeaf,
-  class: props.customProps.class,
-}
+const dialogShow = ref(false)
+const indicatorFormData = reactive({
+  [PROPS.label]: '',
+  [PROPS.isLeaf]: undefined,
+})
+const indicatorFormConfig = reactive([
+  {
+    prop: PROPS.label,
+    label: '节点名称',
+    type: 'input',
+  },
+  {
+    prop: 'isLeaf',
+    label: '是否为叶子节点',
+    type: 'radio',
+    config: {
+      options: [
+        {
+          label: '是',
+          value: 0,
+        },
+        {
+          label: '否',
+          value: 1,
+        },
+      ],
+    },
+  },
+])
+const indicatorFormRules = reactive({
+  [PROPS.label]: [{ required: true, message: '请输入节点名称', trigger: 'blur' }],
+  [PROPS.isLeaf]: [{ required: true, message: '请选择是否为叶子节点', trigger: 'blur' }],
+})
+const currentNodeData = ref<Data>()
+const indicatorFormRef = ref<InstanceType<typeof ZkForm>>()
 
 watch(filterText, (val) => {
   ElTreeRef.value!.filter(val)
@@ -107,21 +153,20 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: any) => {
 }
 // 添加节点
 const append = (data: Data) => {
-  ElMessageBox.prompt('', '输入节点名称', {
-    confirmButtonText: '添加',
-    cancelButtonText: '取消',
-    draggable: true,
-  }).then(({ value }) => {
-    const newChild = {
-      id: Date.now(),
-      [PROPS.label]: value,
-      [PROPS.children]: [],
-    }
-    if (!data[PROPS.children]) {
-      data[PROPS.children] = []
-    }
-    data[PROPS.children].push(newChild)
-  })
+  dialogShow.value = true
+  currentNodeData.value = data
+}
+const confirmAppend = () => {
+  const newChild = {
+    id: Date.now(),
+    [PROPS.children]: [],
+    ...indicatorFormData,
+  }
+  if (!currentNodeData.value![PROPS.children]) {
+    currentNodeData.value![PROPS.children] = []
+  }
+  currentNodeData.value![PROPS.children].push(newChild)
+  closeDialog()
 }
 // 删除节点
 const remove = (node: Node, data: Data) => {
@@ -170,8 +215,13 @@ const edit = (data: Data) => {
     data[PROPS.label] = value
   })
 }
+// 查看节点
 const viewNode = (node: Node, data: Data) => {
   emit('view-node', node, data)
+}
+const closeDialog = () => {
+  indicatorFormRef.value?.ElFormRef?.resetFields()
+  dialogShow.value = false
 }
 
 defineExpose({ ElTreeRef })
