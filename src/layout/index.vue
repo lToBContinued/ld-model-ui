@@ -89,7 +89,8 @@ const menuStore = useMenuStore()
 ::v-deep(.el-main) {
   position: relative;
   width: calc(100% - $aside-width);
-  padding: calc(50px + $spacing-size5) $spacing-size5 $spacing-size5;
+  padding: $spacing-size5 $spacing-size5 0 $spacing-size5;
+  margin-top: 50px;
 
   // 背景颜色
   background: $main-bg-color;
