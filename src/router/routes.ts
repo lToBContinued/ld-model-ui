@@ -376,6 +376,18 @@ export default [
           iconShow: false,
         },
       },
+      {
+        path: '/systemManage/schemeManage',
+        name: 'schemeManage',
+        component: () => import('@/views/systemManage/schemeManage/index.vue'),
+        meta: {
+          title: '方案管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
   /*{
