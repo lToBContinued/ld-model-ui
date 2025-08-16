@@ -2,7 +2,7 @@
   <div class="indicatorManage">
     <zk-card>
       <el-row>
-        <el-col :span="8">
+        <el-col :span="10">
           <div class="tree">
             <zk-tree
               ref="ZkTreeRef"
@@ -14,14 +14,12 @@
             ></zk-tree>
           </div>
         </el-col>
-        <el-col :span="16">
+        <el-col :span="14">
           <div class="panel">
             <zk-form v-model:form-data="formData" v-model:form-config="formConfig" label-width="80"></zk-form>
+            <zk-button type="primary" @click="saveConfig" style="margin-left: auto">保存配置</zk-button>
           </div>
         </el-col>
-      </el-row>
-      <el-row justify="end">
-        <zk-button type="primary" @click="saveConfig">保存配置</zk-button>
       </el-row>
     </zk-card>
   </div>
@@ -144,16 +142,23 @@ const saveConfig = () => {
 
 <style scoped lang="scss">
 .tree {
+  overflow-y: auto;
   width: 100%;
-  height: 100%;
+  height: 600px;
   border: 1px solid $border-color1;
 }
 
 .panel {
+  display: flex;
+  flex-direction: column;
   width: 100%;
 }
 
 ::v-deep(.el-card__body) {
   height: calc(100vh - 50px - 2 * $spacing-size5);
+}
+
+::v-deep(.el-tree-node__content) {
+  height: 40px;
 }
 </style>
