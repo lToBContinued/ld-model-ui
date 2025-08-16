@@ -3,7 +3,7 @@
     <el-form ref="ElFormRef" v-bind="$attrs" :rules="rules" :model="_formData" :label-width="_labelWidth">
       <el-row :gutter="gutter" :justify="inline ? 'start' : 'center'">
         <el-col v-for="item in _formConfig" :key="item.prop" v-bind="_inline">
-          <el-form-item :label="item.label" :prop="item.prop">
+          <el-form-item :label="item.label" :prop="item.prop" :rules="item.rules">
             <!-- 下拉框 -->
             <zk-select v-model="_formData[item.prop]" v-if="item.type === 'select'" v-bind="item.config"></zk-select>
             <!-- 时间选择器 -->
