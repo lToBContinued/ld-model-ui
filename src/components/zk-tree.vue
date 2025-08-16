@@ -270,4 +270,8 @@ defineExpose({ ElTreeRef })
     margin: 8px;
   }
 }
+
+::v-deep(.el-tree-node__content) {
+  height: 40px;
+}
 </style>
