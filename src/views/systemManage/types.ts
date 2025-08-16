@@ -32,3 +32,30 @@ export interface UserFormData {
   password?: string
   phone?: string
 }
+
+export interface SchemeListItem {
+  id: string | number
+  schemeName: string
+  schemeDesc?: string
+  isLeaf?: boolean
+  level?: number
+  children?: SchemeListItem[]
+}
+
+export interface buildSchemeTreeItem {
+  id: string
+  title: string
+  desc: string
+  level: number
+  children: buildSchemeTreeItem[]
+}
+
+export interface AddSecondLevelFormData {
+  indicatorName: string
+  indicatorDesc: string
+}
+
+export interface AddChildIndicatorFormData {
+  indicatorName: string
+  indicatorDesc: string
+}

@@ -113,30 +113,12 @@ const filterText = ref('')
 const dialogShow = ref(false)
 const indicatorFormData = reactive({
   [PROPS.label]: '',
-  [PROPS.isLeaf]: undefined,
 })
 const indicatorFormConfig = reactive([
   {
     prop: PROPS.label,
     label: '节点名称',
     type: 'input',
-  },
-  {
-    prop: 'isLeaf',
-    label: '是否为叶子节点',
-    type: 'radio',
-    config: {
-      options: [
-        {
-          label: '是',
-          value: 0,
-        },
-        {
-          label: '否',
-          value: 1,
-        },
-      ],
-    },
   },
 ])
 const indicatorFormRules = reactive({
