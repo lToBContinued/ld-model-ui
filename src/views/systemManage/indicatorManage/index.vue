@@ -4,6 +4,9 @@
       <el-row>
         <el-col :span="10">
           <div class="tree">
+            <zk-button type="primary" @click="addRoot" :icon="Plus" style="margin: 4px 0 0 4px">
+              添加指标体系
+            </zk-button>
             <zk-tree
               ref="ZkTreeRef"
               v-model:data="rootTree"
@@ -16,12 +19,36 @@
         </el-col>
         <el-col :span="14">
           <div class="panel">
-            <zk-form v-model:form-data="formData" v-model:form-config="formConfig" label-width="80"></zk-form>
-            <zk-button type="primary" @click="saveConfig" style="margin-left: auto">保存配置</zk-button>
+            <zk-form
+              v-model:form-data="indicatorConfigFormData"
+              v-model:form-config="indicatorConfigFormCofnig"
+              label-width="80"
+            ></zk-form>
+            <zk-button type="primary" @click="saveConfig" style="margin-left: auto">保存配置 </zk-button>
           </div>
         </el-col>
       </el-row>
     </zk-card>
+    <zk-dialog
+      v-model="addRootDialogShow"
+      width="450px"
+      @close="closeRootDialog"
+      @cancel="closeRootDialog"
+      @confirm="submitAddRootDialog"
+    >
+      <template #header>
+        <span style="font-size: 18px">添加指标体系</span>
+      </template>
+      <div style="width: 400px">
+        <zk-form
+          ref="addRootFormRef"
+          v-model:form-config="addRootFormConfig"
+          v-model:form-data="addRootFormData"
+          :rules="addRootFormRules"
+          label-width="80"
+        ></zk-form>
+      </div>
+    </zk-dialog>
   </div>
 </template>
 
@@ -32,71 +59,39 @@ import indicatorTemplate from './indicatorTemplate.json'
 import type { LoadFunction } from 'element-plus'
 import { getIndicatorDetail, getIndicatorTree } from '@/api/indicatorManage'
 import ZkTree from '@/components/zk-tree.vue'
+import { Plus } from '@element-plus/icons-vue'
+import {
+  addRootFormConfig,
+  indicatorConfigFormCofnig,
+} from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
+import ZkForm from '@/components/zk-form.vue'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
+const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
+const addRootDialogShow = ref(false)
 const rootTree = reactive([
   {
     id: '0',
     label: 'ld指标根节点',
   },
 ])
-const formConfig = [
-  {
-    prop: 'parent',
-    label: '父级指标',
-    type: 'input',
-    config: {
-      disabled: true,
-      style: {
-        width: '240px',
-      },
-    },
-  },
-  {
-    prop: 'indicatorName',
-    label: '指标名称',
-    type: 'input',
-    config: {
-      style: {
-        width: '240px',
-      },
-    },
-  },
-  {
-    prop: 'description',
-    label: '指标描述',
-    type: 'input',
-    config: {
-      type: 'textarea',
-    },
-  },
-  {
-    prop: 'type',
-    label: '节点类型',
-    type: 'radio',
-    config: {
-      options: [
-        { label: '录入节点', value: '0' },
-        { label: '计算节点', value: '1' },
-      ],
-    },
-  },
-  {
-    prop: 'config',
-    label: '指标配置',
-    type: 'jsonEditor',
-  },
-]
-const formData = reactive({
+const indicatorConfigFormData = reactive({
   parent: '',
   indicatorName: '',
   description: '',
   type: '',
   config: JSON.stringify(indicatorTemplate, null, 2),
 })
+const addRootFormData = reactive({
+  indicatorName: '',
+  description: '',
+})
+const addRootFormRules = {
+  indicatorName: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
+}
 
 watch(
   () => rootTree,
@@ -127,16 +122,39 @@ const viewNode = async (data: Data, node: Node) => {
   const parent = node.parent?.data
   const res = await getIndicatorDetail({ nodeId: self.id })
   const { indicatorName, description, type, config, formConfig } = res.data
-  formData.parent = parent?.label
-  formData.indicatorName = indicatorName
-  formData.description = description
-  formData.type = type
-  formData.config = config
-  formData.config = formConfig
+  indicatorConfigFormData.parent = parent?.label
+  indicatorConfigFormData.indicatorName = indicatorName
+  indicatorConfigFormData.description = description
+  indicatorConfigFormData.type = type
+  indicatorConfigFormData.config = config
+  indicatorConfigFormData.config = formConfig
 }
 // 保存配置
 const saveConfig = () => {
-  console.log('>>>>> file: index.vue ~ method: submit <<<<<\n', formData) // TODO: 删除
+  console.log('>>>>> file: index.vue ~ method: submit <<<<<\n', indicatorConfigFormData) // TODO: 删除
+}
+// 打开添加根节点弹窗
+const addRoot = () => {
+  addRootDialogShow.value = true
+}
+const closeRootDialog = () => {
+  addRootFormRef.value?.ElFormRef?.resetFields()
+  addRootDialogShow.value = false
+}
+// 添加指标体系根节点
+const submitAddRootDialog = async () => {
+  try {
+    await addRootFormRef.value?.ElFormRef?.validate()
+    const rootNode = {
+      id: `${Date.now()}`,
+      label: addRootFormData.indicatorName,
+    }
+    rootTree.push(rootNode)
+    // TODO: 提交添加指标体系根节点
+    closeRootDialog()
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>
 
