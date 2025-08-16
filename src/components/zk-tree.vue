@@ -199,7 +199,13 @@ const remove = (node: Node, data: Data) => {
   }*/
   const currentNode = ElTreeRef.value?.getNode(node)
   if (currentNode!.level === 1) {
-    ElMessage.error('根节点不能删除')
+    ElMessageBox.confirm('此节点为根节点，请检查是否有子节点后，在确定是否删除！', '警告', {
+      confirmButtonText: '确定删除',
+      cancelButtonText: '取消',
+      draggable: true,
+    }).then(() => {
+      ElTreeRef.value?.remove(node)
+    })
     return
   }
   if (currentNode!.childNodes.length > 0) {
