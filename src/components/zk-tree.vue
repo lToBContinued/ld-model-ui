@@ -100,8 +100,8 @@ const props = withDefaults(defineProps<ZkTreeProps>(), {
 })
 
 const PROPS: Record<string, any> = {
-  label: props.customProps.label,
-  children: props.customProps.children,
+  label: props.customProps.label || 'label',
+  children: props.customProps.children || 'children',
   disabled: props.customProps.disabled || 'disabled',
   isLeaf: props.customProps.isLeaf || 'isLeaf',
   class: props.customProps.class,
