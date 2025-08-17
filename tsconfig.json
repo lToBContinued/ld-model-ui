@@ -2,9 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "jsx": "preserve",
     // 启用实验性的装饰器语法支持,
@@ -43,20 +41,7 @@
     // 允许在导入语句中使用 .json 扩展名,
     "resolveJsonModule": true
   },
-  "lib": [
-    "esnext",
-    "dom",
-    "dom.iterable",
-    "webworker",
-    "scripthost"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/**/__tests__/*"
-  ],
-  "include": [
-    "src/**/*",
-    "src/**/*.vue",
-    "src/**/*.d.ts"
-  ]
+  "lib": ["esnext", "dom", "dom.iterable", "webworker", "scripthost"],
+  "exclude": ["node_modules", "src/**/__tests__/*"],
+  "include": ["src/**/*", "src/**/*.vue", "src/**/*.d.ts"]
 }

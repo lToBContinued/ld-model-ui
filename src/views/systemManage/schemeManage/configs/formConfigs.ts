@@ -1,13 +1,31 @@
-export const addSchemeGroupFormConfig = [
+export const addSchemeFormConfig = [
   {
     prop: 'schemeName',
-    label: '方案组名称',
+    label: '方案名称',
     type: 'input',
-    rules: [{ required: true, message: '请输入方案组名称', trigger: 'blur' }],
+    rules: [{ required: true, message: '请输入方案名称', trigger: 'blur' }],
+  },
+  {
+    prop: 'indicatorId',
+    label: '指标体系',
+    type: 'select',
+    rules: [{ required: true, message: '请选择指标体系', trigger: 'change' }],
+    config: {
+      options: [
+        {
+          label: 'ld指标体系',
+          value: 'ld',
+        },
+        {
+          label: 'fx指标体系',
+          value: 'fx',
+        },
+      ],
+    },
   },
   {
     prop: 'schemeDesc',
-    label: '方案组描述',
+    label: '方案描述',
     type: 'input',
     config: {
       type: 'textarea',
@@ -26,7 +44,7 @@ export const indicatorOptions = [
   },
 ]
 
-export const addSecondLevelFormConfig = [
+export const addSecondIndicatorFormConfig = [
   {
     prop: 'indicatorName',
     label: '指标名称',

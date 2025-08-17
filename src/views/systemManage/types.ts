@@ -34,28 +34,27 @@ export interface UserFormData {
 }
 
 export interface SchemeListItem {
-  id: string | number
-  schemeName: string
+  id?: string | number
+  schemeName?: string
   schemeDesc?: string
-  isLeaf?: boolean
+  indicatorId?: string
+}
+
+export interface BuildSchemeTreeItem {
+  indicatorId?: string
+  indicatorName?: string
+  indicatorDesc?: string
   level?: number
-  children?: SchemeListItem[]
+  children?: BuildSchemeTreeItem[]
 }
 
-export interface buildSchemeTreeItem {
-  id: string
-  title: string
-  desc: string
-  level: number
-  children: buildSchemeTreeItem[]
-}
-
-export interface AddSecondLevelFormData {
+export interface AddSecondIndicatorFormData {
   indicatorName: string
   indicatorDesc: string
 }
 
-export interface AddChildIndicatorFormData {
-  indicatorName: string
-  indicatorDesc: string
+export interface AddSchemeFormData {
+  schemeName: string
+  indicatorId: string
+  schemeDesc: string
 }

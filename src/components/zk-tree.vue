@@ -106,7 +106,6 @@ const PROPS: Record<string, any> = {
   isLeaf: props.customProps.isLeaf || 'isLeaf',
   class: props.customProps.class,
 }
-const emit = defineEmits(['view-node'])
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
