@@ -2,7 +2,7 @@
   <div class="scheme-manage">
     <el-row class="user-unselect">
       <el-col :span="6">
-        <scheme-list @scheme-change="schemeChange"></scheme-list>
+        <scheme-list @scheme-change="schemeChange" @remove-scheme="removeScheme"></scheme-list>
       </el-col>
       <el-col :span="18">
         <div class="scheme-content">
@@ -48,14 +48,14 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { AddSecondIndicatorFormData, BuildSchemeTreeItem, SchemeListItem } from '@/views/systemManage/types.ts'
-import SchemeCollapse from '@/views/systemManage/schemeManage/components/scheme-collapse.vue'
-import SchemeList from '@/views/systemManage/schemeManage/components/scheme-list.vue'
 import { getSchemeDetailApi } from '@/api/schemeManage'
 import { Plus } from '@element-plus/icons-vue'
 import { addSecondIndicatorFormConfig } from '@/views/systemManage/schemeManage/configs/formConfigs.ts'
+import SchemeCollapse from '@/views/systemManage/schemeManage/components/scheme-collapse.vue'
+import SchemeList from '@/views/systemManage/schemeManage/components/scheme-list.vue'
 import ZkForm from '@/components/zk-form.vue'
 
-const selectedScheme = reactive<SchemeListItem>({})
+const selectedScheme = ref<SchemeListItem>({})
 const indicatorTreeData = ref<BuildSchemeTreeItem[]>([])
 // 二级指标
 const addSecondIndicatorDialogShow = ref(false)
@@ -67,7 +67,7 @@ const addSecondIndicatorFormData = reactive<AddSecondIndicatorFormData>({
 
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
-  Object.assign(selectedScheme, scheme)
+  selectedScheme.value = scheme
   await getSchemeDetail(scheme.id as string)
 }
 const getSchemeDetail = async (id: string) => {
@@ -76,6 +76,9 @@ const getSchemeDetail = async (id: string) => {
 }
 const saveScheme = () => {
   alert(`保存方案：${JSON.stringify(indicatorTreeData.value)}`)
+}
+const removeScheme = (id: string) => {
+  selectedScheme.value = {}
 }
 // 二级指标
 const confirmAddChildIndicator = async () => {

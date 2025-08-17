@@ -35,26 +35,15 @@ import { Plus } from '@element-plus/icons-vue'
 import { AddSchemeFormData, SchemeListItem } from '@/views/systemManage/types.ts'
 import { addSchemeFormConfig } from '@/views/systemManage/schemeManage/configs/formConfigs.ts'
 import ZkForm from '@/components/zk-form.vue'
+import { getSchemeListApi } from '@/api/schemeManage'
 
 const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
+  'remove-scheme': [id: string]
 }>()
 const addSchemeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addSchemeDialogShow = ref(false)
-const schemeList = ref<SchemeListItem[]>([
-  {
-    id: 'ld-scheme-1',
-    indicatorId: 'ld',
-    schemeDesc: 'ld方案1的描述',
-    schemeName: 'ld方案1',
-  },
-  {
-    id: 'fx-scheme-1',
-    indicatorId: 'fx',
-    schemeDesc: 'fx方案1的描述',
-    schemeName: 'fx方案1',
-  },
-])
+const schemeList = ref<SchemeListItem[]>([])
 const addSchemeFormData = reactive<AddSchemeFormData>({
   indicatorId: '',
   schemeDesc: '',
@@ -62,7 +51,10 @@ const addSchemeFormData = reactive<AddSchemeFormData>({
 })
 
 // 获取方案列表
-const getTreeConfig = () => {}
+const getTreeConfig = async () => {
+  const res = await getSchemeListApi()
+  schemeList.value = res.data
+}
 // 方案相关
 const addSchemeGroup = () => {
   addSchemeDialogShow.value = true
@@ -75,7 +67,7 @@ const confirmAddScheme = async () => {
   try {
     await addSchemeFormRef.value?.ElFormRef?.validate()
     const newGroup = {
-      id: Date.now(),
+      id: '123456',
       ...addSchemeFormData,
     } as SchemeListItem
     schemeList.value.push(newGroup)
@@ -86,11 +78,14 @@ const confirmAddScheme = async () => {
 }
 const removeSchema = (id: string) => {
   schemeList.value = schemeList.value.filter((item) => item.id !== id)
+  emit('remove-scheme', id)
 }
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
   emit('scheme-change', scheme)
 }
+
+getTreeConfig()
 </script>
 
 <style scoped lang="scss">
