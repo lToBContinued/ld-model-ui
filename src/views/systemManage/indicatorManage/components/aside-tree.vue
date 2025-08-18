@@ -58,12 +58,10 @@ import ZkTree from '@/components/zk-tree.vue'
 import { reactive, ref } from 'vue'
 import type { LoadFunction } from 'element-plus'
 import { RenderContentContext } from 'element-plus'
-import indicatorTemplate from '../indicatorTemplate.json'
-import { addIndicatorApi, getIndicatorDetail, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage'
+import { addIndicatorApi, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage'
 import ZkForm from '@/components/zk-form.vue'
 import { GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
 import { addChildNodeFormConfig, addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
-import { IndicatorConfigFormData } from '@/views/systemManage/types.ts'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
@@ -74,12 +72,6 @@ const emit = defineEmits<{
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
 const addRootDialogShow = ref(false)
-const clickedNode = reactive<IndicatorConfigFormData>({
-  parentName: '',
-  indicatorName: '',
-  indicatorDesc: '',
-  config: JSON.stringify(indicatorTemplate, null, 2),
-})
 const addRootFormData = reactive({
   indicatorName: '',
   indicatorDesc: '',
@@ -90,8 +82,8 @@ const addRootFormRules = {
 const rootNode = ref()
 const rootResolve = ref()
 const rootReject = ref()
-const currentChildNode = ref<Node>()
-const currentChildData = ref<Data>()
+const currentNode = ref<Node>()
+const currentData = ref<Data>()
 const addChildNodeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addChildNodeDialogShow = ref(false)
 const addChildNodeFormData = reactive({
@@ -105,23 +97,26 @@ const getTreeConfig: LoadFunction = async (node, resolve, reject) => {
     rootNode.value = node
     rootResolve.value = resolve
     rootReject.value = reject
-    return resolve((await getIndicatorList(0)).data!)
+    await getFirstLevelTreeData(resolve)
   }
   if (node.level >= 1) {
-    const res = await getIndicatorList(node.data.id)
-    if (res?.status === 200) {
-      return resolve(res.data!)
-    } else {
-      ElMessage.error('节点加载失败，请重试')
-      return reject!()
-    }
+    await getIndex(node, resolve)
   }
 }
-const getIndicatorList = async (id = 0): Promise<ResponseData<GetIndicatorListApiRes[]>> => {
-  const params = {
-    id,
-  }
-  return await getIndicatorListApi(params)
+// 首次获取根节点数据
+const getFirstLevelTreeData = async (resolve: any) => {
+  const res = await getIndicatorListApi({ id: 0 })
+  resolve(res.data!)
+}
+// 加载叶子结点数据
+const getIndex = async (node: Node, resolve: any) => {
+  const data = await getIndicatorDetail(node.data.id)
+  resolve(data)
+}
+// 获取树的数据
+const getIndicatorDetail = async (id: number): Promise<GetIndicatorListApiRes[]> => {
+  const res = await getIndicatorListApi({ id })
+  return res.data!
 }
 // 查看节点
 const viewNode = async (data: Data, node: Node) => {
@@ -148,13 +143,14 @@ const submitAddRootDialog = async () => {
 }
 // 删除节点
 const removeNode = async (node: Node, data: Data) => {
-  const nodeId = data.id
+  currentNode.value = node
+  currentData.value = data
   ElMessageBox.confirm('是否删除该节点和它的所有子节点？', '警告', {
     confirmButtonText: '删除',
     cancelButtonText: '取消',
     draggable: true,
   }).then(async () => {
-    const res = await removeIndicatorApi({ id: nodeId })
+    const res = await removeIndicatorApi({ id: currentData.value!.id })
     if (res.status === 200) {
       ZkTreeRef.value?.ElTreeRef?.remove(node)
       ElMessage.success('删除成功')
@@ -165,7 +161,8 @@ const removeNode = async (node: Node, data: Data) => {
 }
 // 添加子节点
 const openAppendNode = async (node: Node, data: Data) => {
-  currentChildData.value = data
+  currentNode.value = node
+  currentData.value = data
   addChildNodeDialogShow.value = true
 }
 const closeAddChildNodeDialog = () => {
@@ -174,7 +171,7 @@ const closeAddChildNodeDialog = () => {
 }
 const submitAddChildNodeDialog = async () => {
   await addChildNodeFormRef.value?.ElFormRef?.validate()
-  const parentId = currentChildData.value!.id
+  const parentId = currentData.value!.id
   const data = {
     indicatorName: addChildNodeFormData.indicatorName,
     indicatorDesc: addChildNodeFormData.indicatorDesc,
@@ -184,12 +181,14 @@ const submitAddChildNodeDialog = async () => {
   if (res.status === 200) {
     ElMessage.success('添加成功')
     refreshTree()
+    defaultExpandIds.value[0] = res.data?.id
+    console.log('>>>>> file: aside-tree.vue ~ method: submitAddChildNodeDialog <<<<<\n', defaultExpandIds.value)
     closeAddChildNodeDialog()
   } else {
     ElMessage.error('添加失败')
   }
 }
-// 刷新数
+// 刷新树
 const refreshTree = () => {
   rootNode.value.childNodes = []
   getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
