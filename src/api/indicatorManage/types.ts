@@ -17,4 +17,5 @@ export interface AddIndicatorApiRes {
 export interface AddIndicatorApiSend {
   indicatorName: string
   indicatorDesc: string
+  parentId?: number
 }

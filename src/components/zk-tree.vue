@@ -21,8 +21,8 @@
         <div class="custom-tree-node">
           <span>{{ node.label }}</span>
           <div>
-            <zk-button v-if="active.append" type="primary" link @click.stop="append(data)">添加 </zk-button>
-            <zk-button v-if="active.edit" type="primary" link @click.stop="edit(data)" style="margin-left: 4px">
+            <zk-button v-if="active.append" type="primary" link @click.stop="append(node, data)"> 添加 </zk-button>
+            <zk-button v-if="active.edit" type="primary" link @click.stop="edit(node, data)" style="margin-left: 4px">
               修改
             </zk-button>
             <zk-button
@@ -108,6 +108,7 @@ const PROPS: Record<string, any> = {
 }
 const emit = defineEmits<{
   'remove-node': [node: Node, data: Data]
+  'append-node': [node: Node, data: Data]
 }>()
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
@@ -140,9 +141,10 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: any) => {
   return data[PROPS.label].includes(value)
 }
 // 添加节点
-const append = (data: Data) => {
-  dialogShow.value = true
-  currentNodeData.value = data
+const append = (node: Node, data: Data) => {
+  // dialogShow.value = true
+  // currentNodeData.value = data
+  emit('append-node', node, data)
 }
 const confirmAppend = async () => {
   try {
@@ -206,7 +208,7 @@ const remove = (node: Node, data: Data) => {
   emit('remove-node', node, data)
 }
 // 修改节点
-const edit = (data: Data) => {
+const edit = (node: Node, data: Data) => {
   ElMessageBox.prompt('', '输入节点名称', {
     confirmButtonText: '修改',
     cancelButtonText: '取消',

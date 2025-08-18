@@ -4,12 +4,13 @@
     <zk-tree
       ref="ZkTreeRef"
       :active="{ append: true, edit: false, remove: true, check: false }"
-      :load="getTreeConfig"
       :custom-props="{ label: 'indicatorName' }"
+      :load="getTreeConfig"
       lazy
       node-key="id"
       @node-click="viewNode"
       @remove-node="removeNode"
+      @append-node="openAppendNode"
     ></zk-tree>
     <zk-dialog
       v-model="addRootDialogShow"
@@ -31,6 +32,23 @@
         ></zk-form>
       </div>
     </zk-dialog>
+    <zk-dialog
+      v-model="addChildNodeDialogShow"
+      width="450px"
+      @cancel="closeAddChildNodeDialog"
+      @close="closeAddChildNodeDialog"
+      @confirm="submitAddChildNodeDialog"
+    >
+      <template #header>
+        <span style="font-size: 18px">添加指标</span>
+      </template>
+      <zk-form
+        ref="addChildNodeFormRef"
+        v-model:form-config="addChildNodeFormConfig"
+        v-model:form-data="addChildNodeFormData"
+        label-width="80"
+      ></zk-form>
+    </zk-dialog>
   </div>
 </template>
 
@@ -44,7 +62,7 @@ import indicatorTemplate from '../indicatorTemplate.json'
 import { addIndicatorApi, getIndicatorDetail, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage'
 import ZkForm from '@/components/zk-form.vue'
 import { GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
-import { addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
+import { addChildNodeFormConfig, addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
@@ -72,6 +90,14 @@ const addRootFormRules = {
 const rootNode = ref()
 const rootResolve = ref()
 const rootReject = ref()
+const currentChildNode = ref<Node>()
+const currentChildData = ref<Data>()
+const addChildNodeFormRef = ref<InstanceType<typeof ZkForm>>()
+const addChildNodeDialogShow = ref(false)
+const addChildNodeFormData = reactive({
+  indicatorName: '',
+  indicatorDesc: '',
+})
 
 // 获取树
 const getTreeConfig: LoadFunction = async (node, resolve, reject) => {
@@ -109,7 +135,6 @@ const viewNode = async (data: Data, node: Node) => {
   indicatorConfigFormData.type = type
   indicatorConfigFormData.config = config
   indicatorConfigFormData.config = formConfig
-  emit('view-node', data, node)
 }
 // 打开添加根节点弹窗
 const addRoot = () => {
@@ -124,13 +149,13 @@ const submitAddRootDialog = async () => {
   try {
     await addRootFormRef.value?.ElFormRef?.validate()
     await addIndicatorApi(addRootFormData)
-    rootNode.value.childNodes = []
-    getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
+    refreshTree()
     closeRootDialog()
   } catch (e) {
     console.error(e)
   }
 }
+// 删除节点
 const removeNode = async (node: Node, data: Data) => {
   const nodeId = data.id
   ElMessageBox.confirm('是否删除该节点和它的所有子节点？', '警告', {
@@ -146,6 +171,37 @@ const removeNode = async (node: Node, data: Data) => {
       ElMessage.error('删除失败')
     }
   })
+}
+// 添加子节点
+const openAppendNode = async (node: Node, data: Data) => {
+  currentChildData.value = data
+  addChildNodeDialogShow.value = true
+}
+const closeAddChildNodeDialog = () => {
+  addChildNodeFormRef.value?.ElFormRef?.resetFields()
+  addChildNodeDialogShow.value = false
+}
+const submitAddChildNodeDialog = async () => {
+  await addChildNodeFormRef.value?.ElFormRef?.validate()
+  const parentId = currentChildData.value!.id
+  const data = {
+    indicatorName: addChildNodeFormData.indicatorName,
+    indicatorDesc: addChildNodeFormData.indicatorDesc,
+    parentId,
+  }
+  const res = await addIndicatorApi(data)
+  if (res.status === 200) {
+    ElMessage.success('添加成功')
+    refreshTree()
+    closeAddChildNodeDialog()
+  } else {
+    ElMessage.error('添加失败')
+  }
+}
+// 刷新数
+const refreshTree = () => {
+  rootNode.value.childNodes = []
+  getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
 }
 </script>
 
