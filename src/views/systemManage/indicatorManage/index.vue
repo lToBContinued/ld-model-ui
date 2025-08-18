@@ -12,7 +12,7 @@
               v-model:form-config="indicatorConfigFormCofnig"
               label-width="80"
             ></zk-form>
-            <zk-button type="primary" @click="saveConfig" style="margin-left: auto">保存配置 </zk-button>
+            <zk-button style="margin-left: auto" type="primary" @click="saveConfig">保存配置 </zk-button>
           </div>
         </el-col>
       </el-row>
@@ -22,35 +22,37 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
-import indicatorTemplate from './indicatorTemplate.json'
 import { indicatorConfigFormCofnig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
 import ZkForm from '@/components/zk-form.vue'
 import AsideTree from '@/views/systemManage/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetail } from '@/api/indicatorManage'
 import { RenderContentContext } from 'element-plus'
+import { IndicatorConfigFormData } from '@/views/systemManage/types.ts'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
-const indicatorConfigFormData = reactive({
-  parent: '',
-  indicatorName: '',
+const indicatorConfigFormData = reactive<IndicatorConfigFormData>({
+  config: '',
   indicatorDesc: '',
-  type: '',
-  config: JSON.stringify(indicatorTemplate, null, 2),
+  indicatorName: '',
+  isLeaf: 0,
+  parentName: '',
 })
 
-const viewNode = async (data: Data, node: Node) => {
-  const self = data
-  const parent = node.parent?.data
-  const res = await getIndicatorDetail({ nodeId: self.id })
-  const { indicatorName, description, type, config, formConfig } = res.data
-  indicatorConfigFormData.parent = parent?.label
-  indicatorConfigFormData.indicatorName = indicatorName
-  indicatorConfigFormData.indicatorDesc = description
-  indicatorConfigFormData.type = type
-  indicatorConfigFormData.config = config
-  indicatorConfigFormData.config = formConfig
+const viewNode = async (data: Data, _: Node) => {
+  const res = await getIndicatorDetail({ id: data.id })
+  const { config, indicatorDesc, indicatorName, isLeaf, parentName } = res.data!
+  Object.assign(indicatorConfigFormData, {
+    config,
+    indicatorDesc,
+    indicatorName,
+    isLeaf,
+    parentName,
+  })
+}
+const saveConfig = () => {
+  console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', indicatorConfigFormData) // TODO: 删除
 }
 </script>
 
@@ -59,6 +61,7 @@ const viewNode = async (data: Data, node: Node) => {
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding-left: $spacing-size2;
 }
 
 ::v-deep(.el-card__body) {

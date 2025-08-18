@@ -1,3 +1,13 @@
+/**
+ * @description 指标管理
+ * @param { number } id 指标ID
+ * @param { string } indicatorName 指标名称
+ * @param { string } indicatorDesc 指标描述
+ * @param { number } parentId 父指标ID
+ * @param { number } level 指标等级
+ * @param { number } isLeaf 指标是否为叶子节点
+ * @param { string } config 指标配置
+ */
 import db from '../db/index.js'
 
 // 增加指标
@@ -129,6 +139,30 @@ export const getIndicatorList = async (req, res, next) => {
       status: 200,
       msg: 'success',
       data: result,
+    })
+  } catch (e) {
+    console.error(e)
+    next({ e })
+  }
+}
+
+// 获取指标详情
+export const getIndicatorDetail = async (req, res, next) => {
+  const { id } = req.query
+  // 修改 SQL，通过自连接查询父级指标名称
+  const sql = `
+    SELECT i.*, p.indicatorName AS parentName
+    FROM indicators i
+    LEFT JOIN indicators p ON i.parentId = p.id
+    WHERE i.id = ?
+  `
+  try {
+    let [result] = await db.query(sql, [id])
+    console.log('>>>>> file: indicatorManageHandler.js ~ method: getIndicatorDetail <<<<<\n', result) // TODO: 删除
+    res.send({
+      status: 200,
+      msg: 'success',
+      data: result[0],
     })
   } catch (e) {
     console.error(e)

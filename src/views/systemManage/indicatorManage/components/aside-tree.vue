@@ -63,6 +63,7 @@ import { addIndicatorApi, getIndicatorDetail, getIndicatorListApi, removeIndicat
 import ZkForm from '@/components/zk-form.vue'
 import { GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
 import { addChildNodeFormConfig, addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
+import { IndicatorConfigFormData } from '@/views/systemManage/types.ts'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
@@ -73,11 +74,10 @@ const emit = defineEmits<{
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
 const addRootDialogShow = ref(false)
-const indicatorConfigFormData = reactive({
-  parent: '',
+const clickedNode = reactive<IndicatorConfigFormData>({
+  parentName: '',
   indicatorName: '',
   indicatorDesc: '',
-  type: '',
   config: JSON.stringify(indicatorTemplate, null, 2),
 })
 const addRootFormData = reactive({
@@ -125,16 +125,7 @@ const getIndicatorList = async (id = 0): Promise<ResponseData<GetIndicatorListAp
 }
 // 查看节点
 const viewNode = async (data: Data, node: Node) => {
-  const self = data
-  const parent = node.parent?.data
-  const res = await getIndicatorDetail({ nodeId: self.id })
-  const { indicatorName, description, type, config, formConfig } = res.data
-  indicatorConfigFormData.parent = parent?.label
-  indicatorConfigFormData.indicatorName = indicatorName
-  indicatorConfigFormData.indicatorDesc = description
-  indicatorConfigFormData.type = type
-  indicatorConfigFormData.config = config
-  indicatorConfigFormData.config = formConfig
+  emit('view-node', data, node)
 }
 // 打开添加根节点弹窗
 const addRoot = () => {

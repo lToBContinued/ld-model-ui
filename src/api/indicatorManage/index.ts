@@ -1,5 +1,10 @@
 import request from '@/utils/request.ts'
-import { AddIndicatorApiRes, AddIndicatorApiSend, GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
+import {
+  AddIndicatorApiRes,
+  AddIndicatorApiSend,
+  GetIndicatorDetailRes,
+  GetIndicatorListApiRes,
+} from '@/api/indicatorManage/types.ts'
 
 /**
  * @description 获取指标列表
@@ -37,9 +42,13 @@ export const removeIndicatorApi = (data: { id: number }) => {
   })
 }
 
-export const getIndicatorDetail = (params: { nodeId: string }) => {
-  return request({
-    url: '/api/getIndicatorDetail',
+/**
+ * @description 获取指标详情
+ * @param { number } params.id 指标id
+ */
+export const getIndicatorDetail = (params: { id: number }) => {
+  return request<any, ResponseData<GetIndicatorDetailRes>>({
+    url: '/api/indicatorManage/getIndicatorDetail',
     method: 'get',
     params,
   })

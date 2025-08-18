@@ -5,7 +5,9 @@ export interface GetIndicatorListApiRes {
   parentId: number
   level: number
   isLeaf: number
+  config: string
 }
+
 export interface AddIndicatorApiRes {
   id: number
   indicatorName: string
@@ -14,8 +16,20 @@ export interface AddIndicatorApiRes {
   level: number
   isLeaf: number
 }
+
 export interface AddIndicatorApiSend {
   indicatorName: string
   indicatorDesc: string
   parentId?: number
+}
+
+export interface GetIndicatorDetailRes {
+  config: string
+  id: number
+  indicatorDesc: string
+  indicatorName: string
+  isLeaf: number
+  level: number
+  parentId: number
+  parentName: string
 }

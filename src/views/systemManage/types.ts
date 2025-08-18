@@ -68,3 +68,14 @@ export interface RootTreeItem {
   isLeaf?: number
   children?: RootTreeItem[]
 }
+
+export interface IndicatorConfigFormData {
+  config?: any
+  id?: number
+  indicatorDesc?: string
+  indicatorName?: string
+  isLeaf?: number
+  level?: number
+  parentId?: number
+  parentName?: string
+}

@@ -1,6 +1,6 @@
 export const indicatorConfigFormCofnig = [
   {
-    prop: 'parent',
+    prop: 'parentName',
     label: '父级指标',
     type: 'input',
     config: {
@@ -14,6 +14,7 @@ export const indicatorConfigFormCofnig = [
     prop: 'indicatorName',
     label: '指标名称',
     type: 'input',
+    rules: [{ required: true, message: '请输入指标名称', trigger: ['blur'] }],
     config: {
       style: {
         width: '240px',
@@ -21,7 +22,7 @@ export const indicatorConfigFormCofnig = [
     },
   },
   {
-    prop: 'description',
+    prop: 'indicatorDesc',
     label: '指标描述',
     type: 'input',
     config: {
@@ -29,13 +30,13 @@ export const indicatorConfigFormCofnig = [
     },
   },
   {
-    prop: 'type',
+    prop: 'isLeaf',
     label: '节点类型',
     type: 'radio',
     config: {
       options: [
-        { label: '录入节点', value: '0' },
-        { label: '计算节点', value: '1' },
+        { label: '计算节点', value: 0 },
+        { label: '录入节点', value: 1 },
       ],
     },
   },
@@ -53,7 +54,7 @@ export const addRootFormConfig = [
     type: 'input',
   },
   {
-    prop: 'description',
+    prop: 'indicatorDesc',
     label: '指标描述',
     type: 'input',
     config: {

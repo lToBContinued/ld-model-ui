@@ -34,6 +34,7 @@
             <zk-json-editor
               v-else-if="item.type === 'jsonEditor'"
               v-model="_formData[item.prop]"
+              lang="json5"
               v-bind="item.config"
             ></zk-json-editor>
             <!-- 输入框 -->
