@@ -58,3 +58,13 @@ export interface AddSchemeFormData {
   indicatorId: string
   schemeDesc: string
 }
+
+export interface RootTreeItem {
+  id?: number
+  indicatorName?: string
+  indicatorDesc?: string
+  parentId?: number
+  level?: number
+  isLeaf?: number
+  children?: RootTreeItem[]
+}

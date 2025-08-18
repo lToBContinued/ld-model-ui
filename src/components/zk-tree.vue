@@ -64,7 +64,7 @@ import { FilterNodeMethodFunction, RenderContentContext, TreeInstance } from 'el
 import ZkForm from '@/components/zk-form.vue'
 
 interface ZkTreeProps {
-  data: TreeData
+  data?: TreeData
   customProps?: TreeOptionProps
   maxWidth?: string
   showCheckbox?: boolean
@@ -106,6 +106,9 @@ const PROPS: Record<string, any> = {
   isLeaf: props.customProps.isLeaf || 'isLeaf',
   class: props.customProps.class,
 }
+const emit = defineEmits<{
+  'remove-node': [node: Node, data: Data]
+}>()
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
@@ -178,7 +181,7 @@ const remove = (node: Node, data: Data) => {
   } else {
     children.splice(index, 1)
   }*/
-  const currentNode = ElTreeRef.value?.getNode(node)
+  /*const currentNode = ElTreeRef.value?.getNode(node)
   if (currentNode!.level === 1) {
     ElMessageBox.confirm('此节点为根节点，请检查是否有子节点后，在确定是否删除！', '警告', {
       confirmButtonText: '确定删除',
@@ -199,7 +202,8 @@ const remove = (node: Node, data: Data) => {
     })
   } else {
     ElTreeRef.value?.remove(node)
-  }
+  }*/
+  emit('remove-node', node, data)
 }
 // 修改节点
 const edit = (data: Data) => {

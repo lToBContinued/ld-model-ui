@@ -34,6 +34,7 @@ export default [
         ElMessageBox: 'readonly',
         ValidFormRules: 'readonly',
         UndefinedType: 'readonly',
+        ResponseData: 'readonly',
       },
     },
     // 🟡 recommended.plugins: ['prettier']
