@@ -60,7 +60,7 @@ import type { LoadFunction } from 'element-plus'
 import { RenderContentContext } from 'element-plus'
 import { addIndicatorApi, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage'
 import ZkForm from '@/components/zk-form.vue'
-import { GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
+import { AddIndicatorApiSend, GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
 import { addChildNodeFormConfig, addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
 
 type Node = RenderContentContext['node']
@@ -134,7 +134,7 @@ const closeRootDialog = () => {
 const submitAddRootDialog = async () => {
   try {
     await addRootFormRef.value?.ElFormRef?.validate()
-    await addIndicatorApi(addRootFormData)
+    await addIndicatorApi(addRootFormData as AddIndicatorApiSend)
     refreshTree()
     closeRootDialog()
   } catch (e) {
@@ -176,7 +176,7 @@ const submitAddChildNodeDialog = async () => {
     indicatorName: addChildNodeFormData.indicatorName,
     indicatorDesc: addChildNodeFormData.indicatorDesc,
     parentId,
-  }
+  } as AddIndicatorApiSend
   const res = await addIndicatorApi(data)
   if (res.status === 200) {
     ElMessage.success('添加成功')
