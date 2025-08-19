@@ -218,3 +218,44 @@ export const updateIndicatorDetail = async (req, res, next) => {
     })
   }
 }
+
+// 获取指标体系列表
+export const getIndicatorSystemList = async (req, res, next) => {
+  const sql = 'select * from indicators where level = 0'
+  try {
+    let [result] = await db.query(sql)
+    res.send({
+      status: 200,
+      msg: 'success',
+      data: result,
+    })
+  } catch (e) {
+    console.error(e)
+    next({ e })
+  }
+}
+
+// 前端传过来一个指标的id，根据这个id查询该指标的所有子节点（不论几级），并返回一个数组，如果没有返回空数组
+export const getIndicatorAndDescendants = async (req, res, next) => {
+  const { id } = req.query
+  const sql = `
+    WITH RECURSIVE cte AS (
+      SELECT * FROM indicators WHERE parentId = ?
+      UNION ALL
+      SELECT i.* FROM indicators i
+      JOIN cte ON i.parentId = cte.id
+    )
+    SELECT * FROM cte
+  `
+  try {
+    let [result] = await db.query(sql, [id])
+    res.send({
+      status: 200,
+      msg: 'success',
+      data: result,
+    })
+  } catch (e) {
+    console.error(e)
+    next({ e })
+  }
+}

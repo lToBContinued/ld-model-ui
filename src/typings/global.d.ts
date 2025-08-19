@@ -17,7 +17,7 @@ declare global {
   type EChartsOption = echarts.EChartsOption
 
   /** 表单校验类型 */
-  type ValidFormRules<T> = FormRules<T>
+  type ValidFormRules<T = any> = FormRules<T>
 
   /** 响应参数 */
   type ResponseData<T = any> = {

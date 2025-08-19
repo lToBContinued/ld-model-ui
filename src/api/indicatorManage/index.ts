@@ -2,8 +2,10 @@ import request from '@/utils/request.ts'
 import {
   AddIndicatorApiRes,
   AddIndicatorApiSend,
+  GetIndicatorAndDescendantsApiRes,
   GetIndicatorDetailRes,
   GetIndicatorListApiRes,
+  GetIndicatorSystemListRes,
   UpdateIndicatorDetailRes,
   UpdateIndicatorDetailSend,
 } from '@/api/indicatorManage/types.ts'
@@ -70,5 +72,25 @@ export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
     url: '/api/indicatorManage/updateIndicatorDetail',
     method: 'post',
     data,
+  })
+}
+
+/**
+ * @description 获取指标体系列表
+ */
+export const getIndicatorSystemListApi = () => {
+  return request<any, ResponseData<GetIndicatorSystemListRes[]>>({
+    url: '/api/indicatorManage/getIndicatorSystemList',
+  })
+}
+
+/**
+ * @description 获取指定指标以及所有子指标
+ * @param { number } params.id 指标id
+ */
+export const getIndicatorAndDescendantsApi = (params: { id: number }) => {
+  return request<any, ResponseData<GetIndicatorAndDescendantsApiRes[]>>({
+    url: '/api/indicatorManage/getIndicatorAndDescendants',
+    params,
   })
 }

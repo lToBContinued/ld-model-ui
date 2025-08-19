@@ -181,7 +181,6 @@ const submitAddChildNodeDialog = async () => {
   if (res.status === 200) {
     ElMessage.success('添加成功')
     refreshTree()
-    console.log('>>>>> file: aside-tree.vue ~ method: submitAddChildNodeDialog <<<<<\n', defaultExpandIds.value)
     closeAddChildNodeDialog()
   } else {
     ElMessage.error('添加失败')

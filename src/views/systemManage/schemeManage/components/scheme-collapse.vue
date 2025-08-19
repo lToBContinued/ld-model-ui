@@ -10,8 +10,8 @@
           </div>
         </div>
       </template>
-      <div :class="`content-${item.level}`">
-        <span :class="`desc-${item.level}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
+      <div :class="`content-${item.level! + 1}`">
+        <span :class="`desc-${item.level! + 1}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
         <scheme-collapse v-if="item.children && item.children.length > 0" v-model="item.children"></scheme-collapse>
       </div>
     </el-collapse-item>
@@ -22,6 +22,7 @@
     @cancel="closeAddChildIndicatorDialog"
     @close="closeAddChildIndicatorDialog"
     @confirm="confirmAddChildIndicatorDialog"
+    @open="addChildIndicatorDialogOpen"
   >
     <template #title>
       <span style="font-size: 18px">添加子指标</span>
@@ -37,37 +38,72 @@
 
 <script setup lang="ts">
 import { watch, ref, reactive } from 'vue'
-import { BuildSchemeTreeItem } from '@/views/systemManage/types.ts'
-import { addChildIndicatorFormConfig } from '@/views/systemManage/schemeManage/configs/formConfigs.ts'
+import { AddSecondIndicatorFormConfigItem, SchemeIndicatorConfigItem } from '@/views/systemManage/types.ts'
 import ZkForm from '@/components/zk-form.vue'
+import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage'
 
 interface DefineProps {
-  modelValue?: BuildSchemeTreeItem[]
+  modelValue?: SchemeIndicatorConfigItem[]
+  indicatorOptions?: { label: string; value: number }[]
 }
 
 const props = withDefaults(defineProps<DefineProps>(), {})
 const emit = defineEmits<{
-  'model-value': [value: BuildSchemeTreeItem[]]
+  'model-value': [value: SchemeIndicatorConfigItem[]]
 }>()
-const tree = ref<BuildSchemeTreeItem[]>(props.modelValue!)
+const tree = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
 const addChildIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 const addChildIndicatorDialogShow = ref(false)
-const parentNode = ref<BuildSchemeTreeItem>()
-const addChildIndicatorFormData = reactive<BuildSchemeTreeItem>({
-  indicatorName: '',
+const parentNode = ref<SchemeIndicatorConfigItem>()
+const addChildIndicatorFormData = reactive<SchemeIndicatorConfigItem>({
+  indicatorId: undefined,
   indicatorDesc: '',
 })
+const addChildIndicatorFormConfig = ref<AddSecondIndicatorFormConfigItem[]>([
+  {
+    prop: 'indicatorId',
+    label: '指标名称',
+    type: 'select',
+    rules: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
+    config: {
+      options: [],
+    },
+  },
+  {
+    prop: 'indicatorDesc',
+    label: '指标描述',
+    type: 'input',
+    config: {
+      type: 'textarea',
+    },
+  },
+])
+const parentOptions = ref<{ label: string; value: number }[]>([])
 
 watch(
   () => props.modelValue,
   (newVal) => {
-    tree.value = newVal as BuildSchemeTreeItem[]
+    tree.value = newVal as SchemeIndicatorConfigItem[]
   },
   { deep: true },
 )
 
+const addChildIndicatorDialogOpen = async () => {
+  const res = await getIndicatorAndDescendantsApi({ id: parentNode.value?.indicatorId as number })
+  const indicatorIdSelectConfig = addChildIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
+  parentOptions.value = res.data!.map((item) => {
+    return {
+      label: item.indicatorName,
+      value: item.id,
+    }
+  })
+  indicatorIdSelectConfig!.config!.options = parentOptions.value
+}
+const getIndicatorName = (id: number) => {
+  return parentOptions.value.find((item) => item.value === id)?.label
+}
 // 添加节点
-const openAddChildIndicatorDialog = (node: BuildSchemeTreeItem) => {
+const openAddChildIndicatorDialog = (node: SchemeIndicatorConfigItem) => {
   addChildIndicatorDialogShow.value = true
   parentNode.value = node
 }
@@ -75,10 +111,10 @@ const confirmAddChildIndicatorDialog = async () => {
   try {
     await addChildIndicatorRef.value?.ElFormRef?.validate()
     const data = {
-      id: `${Date.now()}`,
       level: parentNode.value!.level! + 1,
       children: [],
       ...addChildIndicatorFormData,
+      indicatorName: getIndicatorName(addChildIndicatorFormData.indicatorId as number),
     }
     confirmAdd(tree.value, data)
     closeAddChildIndicatorDialog()
@@ -86,7 +122,7 @@ const confirmAddChildIndicatorDialog = async () => {
     console.error(e)
   }
 }
-const confirmAdd = (tree: BuildSchemeTreeItem[], newNode: BuildSchemeTreeItem) => {
+const confirmAdd = (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndicatorConfigItem) => {
   for (let i = 0; i < tree.length; i++) {
     if (tree[i].indicatorId === parentNode.value!.indicatorId) {
       if (!tree[i].children) {
@@ -105,7 +141,7 @@ const closeAddChildIndicatorDialog = () => {
   addChildIndicatorDialogShow.value = false
 }
 // 删除节点
-const removeNode = (node: BuildSchemeTreeItem) => {
+const removeNode = (node: SchemeIndicatorConfigItem) => {
   if (node.children && node.children.length > 0) {
     ElMessageBox.confirm('这个节点下有子节点，确定删除吗？', '提示', {
       confirmButtonText: '确定',
@@ -118,7 +154,7 @@ const removeNode = (node: BuildSchemeTreeItem) => {
     confirmRemoveNode(tree.value, node.indicatorId!)
   }
 }
-const confirmRemoveNode = (tree: BuildSchemeTreeItem[], id: string): BuildSchemeTreeItem[] => {
+const confirmRemoveNode = (tree: SchemeIndicatorConfigItem[], id: number): SchemeIndicatorConfigItem[] => {
   for (let i = 0; i < tree.length; i++) {
     if (tree[i].indicatorId === id) {
       tree.splice(i, 1)

@@ -34,39 +34,25 @@ export interface UserFormData {
 }
 
 export interface SchemeListItem {
-  id?: string | number
-  schemeName?: string
-  schemeDesc?: string
-  indicatorId?: string
+  id: number
+  schemeName: string
+  schemeDesc: string
 }
 
 export interface BuildSchemeTreeItem {
-  indicatorId?: string
-  indicatorName?: string
-  indicatorDesc?: string
-  level?: number
-  children?: BuildSchemeTreeItem[]
+  schemeId?: string
+  config?: string
 }
 
 export interface AddSecondIndicatorFormData {
-  indicatorName: string
+  indicatorId: UndefinedType<number>
   indicatorDesc: string
 }
 
 export interface AddSchemeFormData {
   schemeName: string
-  indicatorId: string
+  indicatorSystem: UndefinedType<number>
   schemeDesc: string
-}
-
-export interface RootTreeItem {
-  id?: number
-  indicatorName?: string
-  indicatorDesc?: string
-  parentId?: number
-  level?: number
-  isLeaf?: number
-  children?: RootTreeItem[]
 }
 
 export interface IndicatorConfigFormData {
@@ -78,4 +64,53 @@ export interface IndicatorConfigFormData {
   level?: number
   parentId?: number
   parentName?: string
+}
+
+export interface AddSchemeFormItem {
+  prop: string
+  label: string
+  type: string
+  rules?: any[]
+  config?: {
+    options?: Array<{ label: string; value: number }>
+    type?: string
+  }
+}
+
+export interface SelectedScheme {
+  config?: string
+  id?: number
+  indicatorSystem?: number
+  schemeDesc?: string
+  schemeName?: string
+}
+
+export interface SchemeIndicatorConfigItem {
+  indicatorId?: UndefinedType<number>
+  indicatorName?: string
+  level?: number
+  indicatorDesc?: string
+  children?: SchemeIndicatorConfigItem[]
+}
+
+export interface AddSecondIndicatorFormConfig {
+  prop: string
+  label: string
+  type: string
+  rules?: Record<string, any>[]
+  config?: {
+    options?: Array<{ label: string; value: number | string }>
+    type?: string
+  }
+}
+
+export interface AddSecondIndicatorFormConfigItem {
+  prop: string
+  label: string
+  type: string
+  rules?: Record<string, any>[]
+  config?: {
+    options?: Array<{ label: string; value: number | string }>
+    type?: string
+  }
 }

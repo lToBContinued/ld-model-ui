@@ -1,7 +1,8 @@
 import express from 'express'
-import indicatorManageRouter from './router/indicatorManage.js'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import indicatorManageRouter from './router/indicatorManage.js'
+import schemeManageRouter from './router/schemeManage.js'
 
 const app = express()
 
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/indicatorManage', indicatorManageRouter)
+app.use('/schemeManage', schemeManageRouter)
 
 // 错误处理中间件
 app.use((err, req, res, next) => {

@@ -5,6 +5,8 @@ import {
   removeIndicator,
   getIndicatorDetail,
   updateIndicatorDetail,
+  getIndicatorSystemList,
+  getIndicatorAndDescendants,
 } from '../router_handler/indicatorManageHandler.js'
 
 const router = express.Router()
@@ -14,5 +16,7 @@ router.get('/getIndicatorList', getIndicatorList)
 router.post('/removeIndicator', removeIndicator)
 router.get('/getIndicatorDetail', getIndicatorDetail)
 router.post('/updateIndicatorDetail', updateIndicatorDetail)
+router.get('/getIndicatorSystemList', getIndicatorSystemList)
+router.get('/getIndicatorAndDescendants', getIndicatorAndDescendants)
 
 export default router

@@ -1,53 +1,57 @@
-export interface GetIndicatorListApiRes {
+interface indicatorItem {
   id: number
   indicatorName: string
   indicatorDesc: string
+}
+
+export interface GetIndicatorListApiRes extends indicatorItem {
   parentId: number
   level: number
   isLeaf: number
   config: string
 }
 
-export interface AddIndicatorApiRes {
-  id: number
-  indicatorName: string
-  indicatorDesc: string
+export interface AddIndicatorApiRes extends indicatorItem {
   parentId: number
   level: number
   isLeaf: number
 }
 
-export interface AddIndicatorApiSend {
-  indicatorName: string
-  indicatorDesc: string
+export interface AddIndicatorApiSend extends indicatorItem {
   parentId?: number
 }
 
-export interface GetIndicatorDetailRes {
+export interface GetIndicatorDetailRes extends indicatorItem {
   config: string
-  id: number
-  indicatorDesc: string
-  indicatorName: string
   isLeaf: number
   level: number
   parentId: number
   parentName: string
 }
 
-export interface UpdateIndicatorDetailSend {
+export interface UpdateIndicatorDetailSend extends indicatorItem {
   config: string
-  id: number
-  indicatorDesc: string
-  indicatorName: string
 }
 
-export interface UpdateIndicatorDetailRes {
+export interface UpdateIndicatorDetailRes extends indicatorItem {
   config: string
-  id: number
-  indicatorDesc: string
-  indicatorName: string
   isLeaf: number
   level: number
   parentId: number
   parentName: string
+}
+
+export interface GetIndicatorSystemListRes extends indicatorItem {
+  config: string
+  isLeaf: number
+  level: number
+  parentId: number
+  parentName: string
+}
+
+export interface GetIndicatorAndDescendantsApiRes extends indicatorItem {
+  parentId: number
+  level: number
+  isLeaf: number
+  config: string
 }
