@@ -158,7 +158,6 @@ export const getIndicatorDetail = async (req, res, next) => {
   `
   try {
     let [result] = await db.query(sql, [id])
-    console.log('>>>>> file: indicatorManageHandler.js ~ method: getIndicatorDetail <<<<<\n', result) // TODO: 删除
     res.send({
       status: 200,
       msg: 'success',
@@ -167,5 +166,55 @@ export const getIndicatorDetail = async (req, res, next) => {
   } catch (e) {
     console.error(e)
     next({ e })
+  }
+}
+
+// 更新指标
+export const updateIndicatorDetail = async (req, res, next) => {
+  try {
+    const { id, config, indicatorDesc, indicatorName } = req.body
+    // 验证必须参数
+    if (!id) {
+      return res.send({
+        status: 400,
+        msg: '请提供要更新的指标ID',
+      })
+    }
+    // 构建更新数据对象
+    const updateData = {
+      config,
+      indicatorDesc,
+      indicatorName,
+    }
+    // 执行更新
+    let sql = 'UPDATE indicators SET ? WHERE id = ?'
+    const [updateResult] = await db.query(sql, [updateData, id])
+    if (updateResult.affectedRows === 0) {
+      return res.send({
+        status: 404,
+        msg: '未找到指定指标记录',
+      })
+    }
+    // 查询更新后的完整记录（包含关联信息）
+    sql = `
+      SELECT i.*, p.indicatorName AS parentName
+      FROM indicators i
+      LEFT JOIN indicators p ON i.parentId = p.id
+      WHERE i.id = ?
+    `
+    const [result] = await db.query(sql, [id])
+    res.send({
+      status: 200,
+      msg: '指标更新成功',
+      data: result[0], // 返回更新后的完整节点数据
+    })
+  } catch (e) {
+    console.error('更新指标失败:', e)
+    next({ e })
+    res.send({
+      status: 500,
+      msg: '更新指标失败',
+      data: e,
+    })
   }
 }

@@ -4,6 +4,8 @@ import {
   AddIndicatorApiSend,
   GetIndicatorDetailRes,
   GetIndicatorListApiRes,
+  UpdateIndicatorDetailRes,
+  UpdateIndicatorDetailSend,
 } from '@/api/indicatorManage/types.ts'
 
 /**
@@ -46,10 +48,27 @@ export const removeIndicatorApi = (data: { id: number }) => {
  * @description 获取指标详情
  * @param { number } params.id 指标id
  */
-export const getIndicatorDetail = (params: { id: number }) => {
+export const getIndicatorDetailApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorDetailRes>>({
     url: '/api/indicatorManage/getIndicatorDetail',
     method: 'get',
     params,
+  })
+}
+
+/**
+ * @description 更新指标详情
+ * @param { string } data.config 指标配置
+ * @param { number } data.id 指标id
+ * @param { string } data.indicatorDesc 指标描述
+ * @param { string } data.indicatorName 指标名称
+ * @param { boolean } data.isLeaf 是否叶子节点
+ * @param { string } data.parentName 父指标名称
+ */
+export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
+  return request<any, ResponseData<UpdateIndicatorDetailRes>>({
+    url: '/api/indicatorManage/updateIndicatorDetail',
+    method: 'post',
+    data,
   })
 }

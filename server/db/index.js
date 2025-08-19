@@ -5,7 +5,7 @@ const db = mysql.createPool({
   user: 'root',
   database: 'ld_model',
   port: 3306,
-  password: 'root',
+  password: '123456',
   waitForConnections: true,
   connectionLimit: 10,
 })

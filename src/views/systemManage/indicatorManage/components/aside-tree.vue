@@ -181,7 +181,6 @@ const submitAddChildNodeDialog = async () => {
   if (res.status === 200) {
     ElMessage.success('添加成功')
     refreshTree()
-    defaultExpandIds.value[0] = res.data?.id
     console.log('>>>>> file: aside-tree.vue ~ method: submitAddChildNodeDialog <<<<<\n', defaultExpandIds.value)
     closeAddChildNodeDialog()
   } else {
@@ -193,6 +192,8 @@ const refreshTree = () => {
   rootNode.value.childNodes = []
   getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
 }
+
+defineExpose({ refreshTree })
 </script>
 
 <style scoped lang="scss">

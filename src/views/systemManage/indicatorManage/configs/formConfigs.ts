@@ -1,4 +1,4 @@
-export const indicatorConfigFormCofnig = [
+export const indicatorConfigFormConfig = [
   {
     prop: 'parentName',
     label: '父级指标',
@@ -44,6 +44,9 @@ export const indicatorConfigFormCofnig = [
     prop: 'config',
     label: '指标配置',
     type: 'jsonEditor',
+    config: {
+      readonly: true,
+    },
   },
 ]
 

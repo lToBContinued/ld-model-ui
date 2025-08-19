@@ -33,3 +33,21 @@ export interface GetIndicatorDetailRes {
   parentId: number
   parentName: string
 }
+
+export interface UpdateIndicatorDetailSend {
+  config: string
+  id: number
+  indicatorDesc: string
+  indicatorName: string
+}
+
+export interface UpdateIndicatorDetailRes {
+  config: string
+  id: number
+  indicatorDesc: string
+  indicatorName: string
+  isLeaf: number
+  level: number
+  parentId: number
+  parentName: string
+}
