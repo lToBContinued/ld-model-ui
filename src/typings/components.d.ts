@@ -8,6 +8,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CodeEditor: typeof import('./../components/InputFormula/components/CodeEditor/index.vue')['default']
+    ConfirmSysDeleteModal: typeof import('./../components/ConfirmSysDeleteModal.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
@@ -46,11 +48,26 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElTree: typeof import('element-plus/es')['ElTree']
+    Explain: typeof import('./../components/InputFormula/components/Explain.vue')['default']
+    FormulaButton: typeof import('./../components/FormulaButton.vue')['default']
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
+    IndicatorPickerModal: typeof import('./../components/IndicatorPickerModal.vue')['default']
+    IndicatorSystemSidebar: typeof import('./../components/IndicatorSystemSidebar.vue')['default']
+    MindTree: typeof import('./../components/MindTree/MindTree.vue')['default']
+    Modal: typeof import('./../components/InputFormula/components/Modal.vue')['default']
     ModuleTitle: typeof import('./../components/module-title.vue')['default']
+    NewSystemModal: typeof import('./../components/NewSystemModal.vue')['default']
+    NodeEditorModal: typeof import('./../components/MindTree/NodeEditorModal.vue')['default']
+    ParamMindMode: typeof import('./../components/SubtreeRun/ParamMindMode.vue')['default']
+    ParamTableMode: typeof import('./../components/SubtreeRun/ParamTableMode.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SubtreeCreateModal: typeof import('./../components/SubtreeCreateModal.vue')['default']
+    SubtreeParamEditor: typeof import('./../components/SubtreeParamEditor.vue')['default']
+    SubtreeSidebar: typeof import('./../components/SubtreeSidebar.vue')['default']
     SvgIcon: typeof import('./../components/SvgIcon/index.vue')['default']
+    Title: typeof import('./../components/InputFormula/components/Title.vue')['default']
+    Tree: typeof import('./../components/InputFormula/components/Tree.vue')['default']
     ZkButton: typeof import('./../components/zk-button.vue')['default']
     ZkCard: typeof import('./../components/zk-card.vue')['default']
     ZkCheckbox: typeof import('./../components/zk-checkbox.vue')['default']
@@ -70,4 +87,14 @@ declare module 'vue' {
     ZkTransfer: typeof import('./../components/zk-transfer.vue')['default']
     ZkTree: typeof import('./../components/zk-tree.vue')['default']
   }
+}
+
+declare module 'hot-formula-parser'
+declare module '*.vue' {
+  import type { DefineComponent } from 'vue'
+  const component: DefineComponent<{}, {}, any>
+  export default component
+
+  // 允许从Vue组件中导出类型
+  export * from '@vue/runtime-core'
 }

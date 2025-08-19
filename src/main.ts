@@ -9,6 +9,7 @@ import 'virtual:svg-icons-register'
 import Particles from 'particles.vue3'
 import '/mock/index.ts'
 import registerDirectives from '@/directives/index.ts'
+import 'ant-design-vue/dist/reset.css'
 // import './permission.ts'
 
 const app = createApp(App)
