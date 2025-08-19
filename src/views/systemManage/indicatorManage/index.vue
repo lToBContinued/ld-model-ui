@@ -13,6 +13,7 @@
               v-model:form-config="indicatorConfigFormConfig"
               label-width="80"
             ></zk-form>
+            <form-configurator v-model="indicatorInputJson" :indicator-id="56"></form-configurator>
             <zk-button style="margin-left: auto" type="primary" @click="saveConfig">保存配置 </zk-button>
           </div>
         </el-col>
@@ -93,6 +94,23 @@ const indicatorConfigFormConfig = ref([
     },
   },
 ])
+const indicatorInputJson = ref(
+  `
+    {
+      "prop": "56",
+      "type": "numberInput",
+      "config": {
+        "min": 0,
+        "max": 100,
+        "step": 1
+      }
+    }
+  `,
+)
+
+watch(indicatorInputJson, (newVal) => {
+  console.log('>>>>> file: index.vue ~ method: indicatorInputJson <<<<<\n', indicatorInputJson.value) // TODO: 删除
+})
 
 watch(
   () => indicatorConfigFormData.isLeaf,

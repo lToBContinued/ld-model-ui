@@ -49,6 +49,7 @@ declare module 'vue' {
     ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElTree: typeof import('element-plus/es')['ElTree']
     Explain: typeof import('./../components/InputFormula/components/Explain.vue')['default']
+    FormConfigurator: typeof import('./../components/formConfigurator.vue')['default']
     FormulaButton: typeof import('./../components/FormulaButton.vue')['default']
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
     IndicatorPickerModal: typeof import('./../components/IndicatorPickerModal.vue')['default']
@@ -87,14 +88,4 @@ declare module 'vue' {
     ZkTransfer: typeof import('./../components/zk-transfer.vue')['default']
     ZkTree: typeof import('./../components/zk-tree.vue')['default']
   }
-}
-
-declare module 'hot-formula-parser'
-declare module '*.vue' {
-  import type { DefineComponent } from 'vue'
-  const component: DefineComponent<{}, {}, any>
-  export default component
-
-  // 允许从Vue组件中导出类型
-  export * from '@vue/runtime-core'
 }
