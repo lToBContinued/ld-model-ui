@@ -22,8 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
-import { indicatorConfigFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
+import { reactive, ref, watch } from 'vue'
 import ZkForm from '@/components/zk-form.vue'
 import AsideTree from '@/views/systemManage/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
@@ -43,16 +42,79 @@ const indicatorConfigFormData = reactive<IndicatorConfigFormData>({
   isLeaf: 0,
   parentName: '',
 })
+const indicatorConfigFormConfig = ref([
+  {
+    prop: 'parentName',
+    label: '父级指标',
+    type: 'input',
+    config: {
+      disabled: true,
+      style: {
+        width: '240px',
+      },
+    },
+  },
+  {
+    prop: 'indicatorName',
+    label: '指标名称',
+    type: 'input',
+    rules: [{ required: true, message: '请输入指标名称', trigger: ['blur'] }],
+    config: {
+      style: {
+        width: '240px',
+      },
+    },
+  },
+  {
+    prop: 'indicatorDesc',
+    label: '指标描述',
+    type: 'input',
+    config: {
+      type: 'textarea',
+    },
+  },
+  {
+    prop: 'isLeaf',
+    label: '节点类型',
+    type: 'radio',
+    config: {
+      options: [
+        { label: '计算节点', value: 0 },
+        { label: '录入节点', value: 1 },
+      ],
+    },
+  },
+  {
+    prop: 'config',
+    label: '指标配置',
+    type: 'jsonEditor',
+    config: {
+      readonly: true,
+    },
+  },
+])
+
+watch(
+  () => indicatorConfigFormData.isLeaf,
+  (newVal) => {
+    const configItem = indicatorConfigFormConfig.value.find((item) => item.prop === 'config')
+    if (configItem) {
+      configItem.config.readonly = newVal === 0
+    }
+  },
+  { immediate: true },
+)
 
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, indicatorDesc, indicatorName, parentName } = res
+  const { config, id, indicatorDesc, indicatorName, parentName, isLeaf } = res
   Object.assign(indicatorConfigFormData, {
     config,
     id,
     indicatorDesc,
     indicatorName,
     parentName,
+    isLeaf,
   })
 }
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
