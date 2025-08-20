@@ -13,8 +13,8 @@
               v-model:form-config="indicatorConfigFormConfig"
               label-width="80"
             ></zk-form>
-            <form-configurator v-model="indicatorInputJson" :indicator-id="56"></form-configurator>
-            <zk-button style="margin-left: auto" type="primary" @click="saveConfig">保存配置 </zk-button>
+            <!--<form-configurator v-model="indicatorInputJson" :indicator-id="56"></form-configurator>-->
+            <zk-button style="margin-left: auto" type="primary" @click="saveConfig">保存配置</zk-button>
           </div>
         </el-col>
       </el-row>

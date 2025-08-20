@@ -10,6 +10,21 @@
       label-width="70"
       style="margin-top: 14px"
     ></zk-form>
+    <el-form class="radio-form" v-if="modeType === 'radio'" v-model="radioFormData">
+      <el-form-item v-for="item in radioArr" label="选项1：">
+        <div class="radio-ele label">
+          <span>标签&nbsp;&nbsp;&nbsp;</span>
+          <zk-input v-model="radioFormData.options1.label"></zk-input>
+        </div>
+        <div class="radio-ele value">
+          <span>值&nbsp;&nbsp;&nbsp;</span>
+          <zk-input v-model="radioFormData.options1.value"></zk-input>
+        </div>
+      </el-form-item>
+      <el-form-item>
+        <zk-button type="primary" link>添加选项</zk-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -36,6 +51,7 @@ const options = ref([
     value: 'radio',
   },
 ])
+
 const inputNumberFormConfig = ref([
   {
     prop: 'min',
@@ -58,7 +74,6 @@ const inputNumberFromData = reactive({
   max: 10,
   step: 1,
 })
-
 const validateMin = (_: any, value: any, callback: any) => {
   if (value === '') {
     callback(new Error('该项不能为空'))
@@ -92,6 +107,39 @@ const inputNumberFormRules: ValidFormRules<typeof inputNumberFromData> = {
   step: [{ validator: validateStep, trigger: 'blur' }],
 }
 
+const radioFormData = ref({
+  options1: {
+    label: '',
+    value: '',
+  },
+})
+const radioArr = ref([
+  {
+    label: '',
+    value: '',
+  },
+])
+
+// 单选框配置示例
+const demo = [
+  {
+    prop: 'demo',
+    type: 'radio',
+    config: {
+      options: [
+        {
+          label: '选项1',
+          value: '1',
+        },
+        {
+          label: '选项2',
+          value: '2',
+        },
+      ],
+    },
+  },
+]
+
 const modeType = ref(JSON.parse(props.modelValue).type)
 const enterBoxConfig = ref(JSON.parse(props.modelValue))
 
@@ -106,7 +154,7 @@ watchEffect(() => {
 })
 
 watch(
-  [modeType, () => inputNumberFromData],
+  [modeType, () => radioFormData],
   ([newMode, newConfig]) => {
     if (newMode === 'numberInput') {
       const json = JSON.stringify({
@@ -119,6 +167,23 @@ watch(
   },
   { deep: true },
 )
+watch([modeType, () => radioFormData], ([newMode, newConfig]) => {}, { deep: true })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.radio-form {
+  ::v-deep(.el-form-item) {
+    display: flex;
+    align-items: center;
+  }
+
+  .radio-ele {
+    display: flex;
+    align-items: center;
+  }
+
+  .label {
+    margin-right: $spacing-size5;
+  }
+}
+</style>
