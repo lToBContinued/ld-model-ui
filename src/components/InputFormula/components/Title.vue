@@ -65,18 +65,21 @@ const onReset = () => {
 
 <style lang="scss" scoped>
 .title {
-  width: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+
   h1 {
-    width: 100%;
-    font-size: 14px;
-    height: 30px;
-    line-height: 16px;
-    margin: -8px 0 0 0;
-    padding: 0;
     display: flex;
     align-items: center;
+
+    width: 100%;
+    height: 30px;
+    margin: -8px 0 0;
+    padding: 0;
+
+    font-size: 14px;
+    line-height: 16px;
   }
 }
 
@@ -89,11 +92,12 @@ const onReset = () => {
   :deep(.ant-input-search) {
     flex: 1;
   }
+
   .clear-btn {
+    width: 25px;
+    height: 100%;
     margin-left: 2px;
     padding: 0;
-    height: 100%;
-    width: 25px;
   }
 }
 </style>

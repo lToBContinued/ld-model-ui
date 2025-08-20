@@ -58,12 +58,24 @@ function confirm() { emit("confirm"); emit("update:open", false); }
 </script>
 
 <style scoped>
-.cm__mask{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:grid; place-items:center; z-index:2000; }
-.cm__dialog{ width:min(520px, calc(100vw - 32px)); background:#fff; border-radius:12px; padding:12px; box-shadow:0 20px 60px rgba(0,0,0,.2); }
+.cm__mask{ position:fixed; z-index:2000; inset:0;
+
+ display:grid; place-items:center;
+
+ background:rgb(0 0 0 / 35%); }
+
+.cm__dialog{ width:min(520px, calc(100vw - 32px)); padding:12px;
+
+ background:#fff; border-radius:12px; box-shadow:0 20px 60px rgb(0 0 0 / 20%); }
 .cm__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .cm__body{ padding:6px 2px; color:#333; }
-.cm__footer{ margin-top:8px; display:flex; justify-content:flex-end; gap:8px; }
-.btn{ border:none; background:#f4f6ff; padding:6px 12px; border-radius:8px; cursor:pointer; }
+.cm__footer{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+
+.btn{ cursor:pointer;
+
+ padding:6px 12px;
+
+ background:#f4f6ff; border:none; border-radius:8px; }
 .btn.ghost{ background:#f7f7f7; }
-.btn.danger{ background:#ffecec; color:#c0392b; }
+.btn.danger{ color:#c0392b; background:#ffecec; }
 </style>

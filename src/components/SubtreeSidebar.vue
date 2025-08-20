@@ -141,26 +141,51 @@ defineExpose({ refresh: fetchPage })
 
 <style scoped>
 /* 容器与头部 */
-.ssb{ width:340px; min-width:300px; border-right:1px solid #eee; background:#fff; display:flex; flex-direction:column; }
+.ssb{ display:flex; flex-direction:column;
+
+ width:340px; min-width:300px;
+
+ background:#fff; border-right:1px solid #eee; }
 .top{ padding:10px; border-bottom:1px solid #f0f0f0; }
 .row{ display:flex; gap:8px; margin:6px 0; }
-.input,.select{ flex:1; border:1px solid #ddd; border-radius:8px; padding:6px 8px; }
+.input,.select{ flex:1; padding:6px 8px; border:1px solid #ddd; border-radius:8px; }
 
 /* 按钮 */
-.btn{ border:none; background:#f4f6ff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-.btn.primary{ background:#4c7dff; color:#fff; }
+.btn{ cursor:pointer;
+
+ padding:6px 10px;
+
+ background:#f4f6ff; border:none; border-radius:8px; }
+.btn.primary{ color:#fff; background:#4c7dff; }
 .btn.ghost{ background:#f7f7f7; }
-.btn.danger{ background:#ffecec; color:#c0392b; }
+.btn.danger{ color:#c0392b; background:#ffecec; }
 
 /* 列表项样式与选中态 */
-.list{ flex:1; overflow:auto; padding:8px; }
-.item{ border:1px solid #eee; border-radius:10px; padding:8px; margin:6px 0; position:relative; cursor:pointer; }
-.item.active{ border-color:#4c7dff; box-shadow:0 0 0 2px rgba(76,125,255,.12); }
-.title{ font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.desc{ font-size:12px; color:#666; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.ops{ position:absolute; right:8px; top:8px; }
+.list{ overflow:auto; flex:1; padding:8px; }
+
+.item{ cursor:pointer;
+
+ position:relative;
+
+ margin:6px 0; padding:8px;
+
+ border:1px solid #eee; border-radius:10px; }
+.item.active{ border-color:#4c7dff; box-shadow:0 0 0 2px rgb(76 125 255 / 12%); }
+.title{ overflow:hidden; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+
+.desc{ overflow:hidden;
+
+ margin-top:2px;
+
+ font-size:12px; color:#666; text-overflow:ellipsis; white-space:nowrap; }
+.ops{ position:absolute; top:8px; right:8px; }
 
 /* 空态与分页条 */
-.empty{ flex:1; display:grid; place-items:center; color:#999; }
-.pager{ border-top:1px solid #f0f0f0; padding:8px; display:flex; align-items:center; gap:8px; justify-content:center; }
+.empty{ display:grid; flex:1; place-items:center; color:#999; }
+
+.pager{ display:flex; gap:8px; align-items:center; justify-content:center;
+
+ padding:8px;
+
+ border-top:1px solid #f0f0f0; }
 </style>

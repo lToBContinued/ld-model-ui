@@ -21,3 +21,8 @@ export interface UpdateSchemeApiSend {
   id: number
   config: string
 }
+
+export interface SchemeListItem {
+  id?: number
+  schemeName?: string
+}

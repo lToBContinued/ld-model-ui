@@ -110,32 +110,45 @@ function save(){
 <style scoped>
 /* 遮罩层：置顶并居中对话框 */
 .sm__mask{
-  position:fixed; inset:0; background:rgba(0,0,0,.35);
-  display:grid; place-items:center; z-index:2200;
+  position:fixed; z-index:2200; inset:0;
+
+  display:grid; place-items:center;
+
+ background:rgb(0 0 0 / 35%);
 }
+
 /* 对话框容器：宽度自适应、圆角与阴影 */
 .sm__dialog{
-  width:min(520px, calc(100vw - 32px));
-  background:#fff; border-radius:12px; padding:12px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  width:min(520px, calc(100vw - 32px)); padding:12px;
+
+  background:#fff; border-radius:12px;
+  box-shadow:0 20px 60px rgb(0 0 0 / 20%);
 }
 .sm__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 .sm__body{ padding:6px 2px; }
 
 /* 表单两列：左标签右输入 */
 .field{
-  display:grid; grid-template-columns:72px 1fr; gap:8px; align-items:center; margin:10px 0;
+  display:grid; grid-template-columns:72px 1fr; gap:8px; align-items:center;
+
+ margin:10px 0;
 }
+
 .input,.textarea{
-  width:100%; border:1px solid #ddd; border-radius:8px; padding:6px 8px;
+  width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:8px;
 }
 
 /* 底部按钮 */
-.sm__footer{ margin-top:8px; display:flex; justify-content:flex-end; gap:8px; }
-.btn{ border:none; background:#f4f6ff; padding:6px 12px; border-radius:8px; cursor:pointer; }
-.btn.primary{ background:#4c7dff; color:#fff; }
+.sm__footer{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+
+.btn{ cursor:pointer;
+
+ padding:6px 12px;
+
+ background:#f4f6ff; border:none; border-radius:8px; }
+.btn.primary{ color:#fff; background:#4c7dff; }
 .btn.ghost{ background:#f7f7f7; }
 
 /* 错误提示（如名称重名） */
-.error{ color:#c0392b; margin-top:6px; }
+.error{ margin-top:6px; color:#c0392b; }
 </style>

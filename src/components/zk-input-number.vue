@@ -9,7 +9,7 @@
 import { computed } from 'vue'
 
 interface ZkInputNumberProps {
-  modelValue: string | number
+  modelValue: string | number | null
   label?: string
   width?: string
 }

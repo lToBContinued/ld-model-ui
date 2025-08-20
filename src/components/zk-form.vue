@@ -11,7 +11,6 @@
               v-else-if="item.type === 'datePicker'"
               v-model="_formData[item.prop]"
               type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择日期时间"
               v-bind="item.config"
             >

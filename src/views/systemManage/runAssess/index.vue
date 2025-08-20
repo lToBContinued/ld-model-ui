@@ -41,7 +41,7 @@
       </section>
 
       <section class="left__history" v-if="currentSubtree">
-        <div class="row" style="justify-content: space-between; align-items: center">
+        <div class="row" style=" align-items: center;justify-content: space-between">
           <strong>填写记录</strong>
           <button class="btn" @click="loadRuns">刷新</button>
         </div>
@@ -352,26 +352,32 @@ onMounted(async () => {
 <style scoped>
 .run-page {
   display: flex;
-  height: 100vh;
   width: 100vw;
+  height: 100vh;
   background: #fafafa;
 }
+
 .left {
-  width: 320px;
-  background: #fff;
-  border-right: 1px solid #eee;
   display: flex;
   flex-direction: column;
+
+  width: 320px;
+
+  background: #fff;
+  border-right: 1px solid #eee;
 }
+
 .left__top {
   padding: 10px;
   border-bottom: 1px solid #f0f0f0;
 }
+
 .row {
   display: flex;
   gap: 8px;
   align-items: center;
 }
+
 .select,
 .search {
   flex: 1;
@@ -379,113 +385,140 @@ onMounted(async () => {
   border: 1px solid #ddd;
   border-radius: 8px;
 }
+
 .btn {
-  border: none;
-  background: #f4f6ff;
-  padding: 6px 10px;
-  border-radius: 8px;
   cursor: pointer;
+
+  padding: 6px 10px;
+
+  background: #f4f6ff;
+  border: none;
+  border-radius: 8px;
 }
+
 .btn.primary {
-  background: #4c7dff;
   color: #fff;
+  background: #4c7dff;
 }
+
 .btn.ghost {
   background: #f7f7f7;
 }
+
 .left__list {
-  flex: 1;
   overflow: auto;
+  flex: 1;
   padding: 8px;
 }
+
 .item {
+  cursor: pointer;
+
+  margin: 6px 0;
   padding: 8px;
+
   border: 1px solid #eee;
   border-radius: 10px;
-  margin: 6px 0;
-  cursor: pointer;
 }
+
 .item.active {
   border-color: #4c7dff;
-  box-shadow: 0 0 0 2px rgba(76, 125, 255, 0.12);
+  box-shadow: 0 0 0 2px rgb(76 125 255 / 12%);
 }
+
 .item .title {
-  font-weight: 600;
-  white-space: nowrap;
   overflow: hidden;
+  font-weight: 600;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 .item .desc {
   font-size: 12px;
   color: #666;
 }
+
 .empty {
-  color: #999;
   padding: 12px;
+  color: #999;
   text-align: center;
 }
 
 .left__history {
-  border-top: 1px solid #f0f0f0;
   padding: 10px;
+  border-top: 1px solid #f0f0f0;
 }
+
 .history {
-  max-height: 40vh;
   overflow: auto;
+  max-height: 40vh;
 }
+
 .hist-item {
-  border: 1px solid #eee;
-  padding: 8px;
-  border-radius: 8px;
-  margin: 6px 0;
   cursor: pointer;
+
+  margin: 6px 0;
+  padding: 8px;
+
+  border: 1px solid #eee;
+  border-radius: 8px;
 }
+
 .hist-title {
   font-weight: 600;
 }
+
 .hist-meta {
-  font-size: 12px;
-  color: #666;
   display: flex;
   gap: 8px;
+  font-size: 12px;
+  color: #666;
 }
 
 .right {
-  flex: 1;
-  min-width: 0;
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
 }
+
 .right__top {
-  height: 56px;
-  padding: 0 12px;
-  border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  height: 56px;
+  padding: 0 12px;
+
   background: #fff;
+  border-bottom: 1px solid #eee;
 }
+
 .title .sys {
-  color: #666;
   margin-left: 6px;
+  color: #666;
 }
+
 .fillwrap {
+  overflow: auto;
   flex: 1;
   min-height: 0;
-  overflow: auto;
   padding: 10px;
 }
+
 .result {
-  border-top: 1px solid #eee;
   padding: 10px;
   background: #fff;
+  border-top: 1px solid #eee;
 }
+
 .sum {
   margin: 6px 0;
 }
+
 .switch {
   display: flex;
-  align-items: center;
   gap: 6px;
+  align-items: center;
 }
 </style>

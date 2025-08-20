@@ -103,31 +103,42 @@ function save(){
 /* 遮罩层：置顶并居中对话框
    z-index 比“选择指标”弹窗略低，避免互相遮挡 */
 .scm__mask{
-  position:fixed; inset:0; background:rgba(0,0,0,.35);
-  display:grid; place-items:center; z-index: 2200;
+  position:fixed; z-index: 2200; inset:0;
+
+  display:grid; place-items:center;
+
+ background:rgb(0 0 0 / 35%);
 }
 
 /* 对话框外观：宽度自适应、圆角、阴影 */
 .scm__dialog{
-  width:min(560px, calc(100vw - 32px));
-  background:#fff; border-radius:12px; padding:12px;
-  box-shadow:0 20px 60px rgba(0,0,0,.2);
+  width:min(560px, calc(100vw - 32px)); padding:12px;
+
+  background:#fff; border-radius:12px;
+  box-shadow:0 20px 60px rgb(0 0 0 / 20%);
 }
 .scm__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
 
 /* 表单：左标签右输入 */
 .field{
-  display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center; margin:10px 0;
-}
-.input,.select,.textarea{
-  width:100%; border:1px solid #ddd; border-radius:8px; padding:6px 8px;
+  display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center;
+
+ margin:10px 0;
 }
 
-.scm__footer{ margin-top:8px; display:flex; justify-content:flex-end; gap:8px; }
+.input,.select,.textarea{
+  width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:8px;
+}
+
+.scm__footer{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
 
 /* 按钮风格 */
-.btn{ border:none; background:#f4f6ff; padding:6px 12px; border-radius:8px; cursor:pointer; }
-.btn.primary{ background:#4c7dff; color:#fff; }
+.btn{ cursor:pointer;
+
+ padding:6px 12px;
+
+ background:#f4f6ff; border:none; border-radius:8px; }
+.btn.primary{ color:#fff; background:#4c7dff; }
 .btn.ghost{ background:#f7f7f7; }
 
 /* 错误提示（由父组件传入） */

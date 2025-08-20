@@ -165,90 +165,115 @@ function confirm() {
 /* 遮罩层：比其它弹窗层级高一点，防止被挡住 */
 .ipm__mask {
   position: fixed;
+  z-index: 2300;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+
   display: grid;
   place-items: center;
-  z-index: 2300;
+
+  background: rgb(0 0 0 / 35%);
 }
+
 /* 对话框盒子 */
 .ipm__dialog {
   width: min(700px, calc(100vw - 40px));
+  padding: 12px;
+
   background: #fff;
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
-  padding: 12px;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 22%);
 }
+
 .ipm__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
+
 /* 搜索 */
 .ipm__toolbar {
   margin-bottom: 8px;
 }
+
 .input {
   width: 100%;
+  padding: 6px 8px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 6px 8px;
 }
+
 /* 列表 */
 .ipm__list {
-  max-height: 60vh;
   overflow: auto;
+
+  max-height: 60vh;
+  padding: 6px;
+
   border: 1px solid #eee;
   border-radius: 10px;
-  padding: 6px;
 }
+
 .ipm__item {
+  cursor: pointer;
+
   display: flex;
   gap: 8px;
+
   padding: 8px;
+
   border-radius: 8px;
-  cursor: pointer;
 }
+
 .ipm__item:hover {
   background: #f8f9ff;
 }
+
 .ipm__item.active {
   background: #eef2ff;
   border: 1px solid #dbe4ff;
 }
+
 .ipm__title {
   font-weight: 600;
 }
+
 .ipm__desc {
+  margin-top: 2px;
   font-size: 12px;
   color: #777;
-  margin-top: 2px;
 }
+
 .ipm__empty {
   padding: 20px;
-  text-align: center;
   color: #999;
+  text-align: center;
 }
+
 /* 底部按钮区 */
 .ipm__footer {
-  margin-top: 10px;
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
+
 .btn {
-  border: none;
-  background: #f4f6ff;
-  padding: 6px 12px;
-  border-radius: 8px;
   cursor: pointer;
+
+  padding: 6px 12px;
+
+  background: #f4f6ff;
+  border: none;
+  border-radius: 8px;
 }
+
 .btn.ghost {
   background: #f7f7f7;
 }
+
 .btn.primary {
-  background: #4c7dff;
   color: #fff;
+  background: #4c7dff;
 }
 </style>

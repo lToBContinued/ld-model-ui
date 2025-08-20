@@ -217,41 +217,61 @@ defineExpose({
 <style scoped>
 /* 侧栏容器 */
 .iss{
-  width:320px; min-width:280px; height:100%;
-  background:#fff; border-right:1px solid #eee;
   display:flex; flex-direction:column;
+
+  width:320px; min-width:280px; height:100%;
+
+  background:#fff; border-right:1px solid #eee;
 }
+
 /* 顶部区域：搜索 + 操作 */
 .iss__top{ padding:10px; border-bottom:1px solid #f0f0f0; }
 .iss__search-row{ display:flex; gap:8px; }
 .iss__search{ flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:8px; }
-.iss__top-actions{ margin-top:8px; display:flex; gap:8px; }
+.iss__top-actions{ display:flex; gap:8px; margin-top:8px; }
 
 /* 通用按钮 */
-.btn{ border:none; background:#f4f6ff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-.btn.primary{ background:#4c7dff; color:#fff; }
-.btn.danger{ background:#ffecec; color:#c0392b; }
+.btn{ cursor:pointer;
+
+ padding:6px 10px;
+
+ background:#f4f6ff; border:none; border-radius:8px; }
+.btn.primary{ color:#fff; background:#4c7dff; }
+.btn.danger{ color:#c0392b; background:#ffecec; }
 .btn.ghost{ background:#f7f7f7; }
-.btn:disabled{ opacity:.6; cursor:not-allowed; }
+.btn:disabled{ cursor:not-allowed; opacity:.6; }
 
 /* 列表（每页只渲染 7 条；容器仍可滚动） */
 .iss__list{
-  overflow-y:auto; padding:6px; flex:1;
+  overflow-y:auto; flex:1; padding:6px;
 }
-.iss__item{
-  display:flex; align-items:flex-start; gap:8px;
-  padding:8px; border:1px solid #eee; border-radius:10px;
-  margin:6px 0; cursor:pointer;
+
+.iss__item{ cursor:pointer;
+
+  display:flex; gap:8px; align-items:flex-start;
+
+  margin:6px 0;
+  padding:8px;
+
+ border:1px solid #eee; border-radius:10px;
 }
-.iss__item.active{ border-color:#4c7dff; box-shadow:0 0 0 2px rgba(76,125,255,.12); }
+.iss__item.active{ border-color:#4c7dff; box-shadow:0 0 0 2px rgb(76 125 255 / 12%); }
 .iss__item-main{ flex:1; min-width:0; }
-.iss__item-title{ font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.iss__item-desc{ font-size:12px; color:#666; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.iss__item-title{ overflow:hidden; font-weight:600; text-overflow:ellipsis; white-space:nowrap; }
+
+.iss__item-desc{ overflow:hidden;
+
+ margin-top:2px;
+
+ font-size:12px; color:#666; text-overflow:ellipsis; white-space:nowrap; }
 
 /* 空态与分页 */
-.iss__empty{ flex:1; display:grid; place-items:center; color:#999; }
-.iss__pager{
-  padding:8px; display:flex; align-items:center; justify-content:space-between;
+.iss__empty{ display:grid; flex:1; place-items:center; color:#999; }
+
+.iss__pager{ display:flex; align-items:center; justify-content:space-between;
+
+  padding:8px;
+
   border-top:1px solid #f0f0f0;
 }
 .pager-right{ display:flex; gap:6px; }

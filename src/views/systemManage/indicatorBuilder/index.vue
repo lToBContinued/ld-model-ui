@@ -623,94 +623,112 @@ async function cloneCurrentSystem() {
 <style scoped>
 .page {
   display: flex;
-  height: 100vh;
   width: 100vw;
+  height: 100vh;
   background: #fafafa;
 }
+
 .sidebar {
   flex: 0 0 320px;
 }
+
 .main {
-  flex: 1;
-  min-width: 0;
   display: flex;
+  flex: 1;
   flex-direction: column;
+  min-width: 0;
 }
+
 .main__top {
-  height: 56px;
-  padding: 0 12px;
-  border-bottom: 1px solid #eee;
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  height: 56px;
+  padding: 0 12px;
+
   background: #fff;
+  border-bottom: 1px solid #eee;
 }
+
 .title {
   font-weight: 700;
 }
+
 .actions .btn {
-  border: none;
-  background: #f4f6ff;
-  padding: 6px 10px;
-  border-radius: 8px;
   cursor: pointer;
+
+  padding: 6px 10px;
+
+  background: #f4f6ff;
+  border: none;
+  border-radius: 8px;
 }
 
 .placeholder {
-  flex: 1;
   display: grid;
+  flex: 1;
   place-items: center;
   color: #888;
 }
+
 .create-root {
-  flex: 1;
   display: grid;
+  flex: 1;
   place-items: center;
 }
+
 .card {
   width: min(560px, calc(100vw - 40px));
+  padding: 12px;
+
   background: #fff;
   border: 1px solid #eee;
   border-radius: 12px;
-  padding: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 8%);
 }
+
 .field {
   display: grid;
   grid-template-columns: 72px 1fr;
   gap: 8px;
   align-items: center;
+
   margin: 10px 0;
 }
+
 .input,
 .textarea {
   width: 100%;
+  padding: 6px 8px;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 6px 8px;
 }
+
 .row {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .treewrap {
+  overflow: auto;
   flex: 1;
   min-height: 0;
-  overflow: auto;
 }
+
 .nem-field {
   display: grid;
   grid-template-columns: 72px 1fr;
   gap: 8px;
   margin: 10px 0;
 }
+
 .nem-input,
 .nem-textarea {
   width: 100%;
+  padding: 6px 8px;
   border: 1px solid #d0d0da;
   border-radius: 8px;
-  padding: 6px 8px;
 }
 </style>

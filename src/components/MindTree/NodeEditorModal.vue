@@ -83,18 +83,40 @@ function save() { emit('save', JSON.parse(JSON.stringify(local.value))) }
 
 <style scoped>
 /* 背景遮罩：居中摆放弹窗 */
-.nem-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:grid; place-items:center; z-index:1000; }
+.nem-backdrop{ position:fixed; z-index:1000; inset:0;
+
+ display:grid; place-items:center;
+
+ background:rgb(0 0 0 / 35%); }
+
 /* 弹窗盒子：白底、圆角、阴影、内边距 */
-.nem-modal{ width:min(600px,calc(100vw - 32px)); background:#fff; border-radius:12px; box-shadow:0 12px 40px rgba(0,0,0,.18); padding:14px; }
+.nem-modal{ width:min(600px,calc(100vw - 32px)); padding:14px;
+
+ background:#fff; border-radius:12px; box-shadow:0 12px 40px rgb(0 0 0 / 18%); }
+
 /* 头部：标题 + 关闭按钮 */
 .nem-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+
 /* 表单行：左标签右输入 */
-.nem-field{ display:grid; grid-template-columns:72px 1fr; gap:8px; align-items:center; margin:10px 0; }
+.nem-field{ display:grid; grid-template-columns:72px 1fr; gap:8px; align-items:center;
+
+ margin:10px 0; }
+
 /* 输入样式 */
-.nem-input,.nem-textarea{ width:100%; border:1px solid #d0d0da; border-radius:8px; padding:6px 8px; font-size:14px; }
+.nem-input,.nem-textarea{ width:100%; padding:6px 8px;
+
+ font-size:14px;
+
+ border:1px solid #d0d0da; border-radius:8px; }
+
 /* 底部按钮行 */
-.nem-actions{ display:flex; justify-content:flex-end; gap:8px; margin-top:12px; }
+.nem-actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+
 /* 按钮样式 */
-.nem-btn{ border:none; background:#f2f4ff; padding:6px 10px; border-radius:8px; cursor:pointer; }
-.nem-primary{ background:#4c7dff; color:#fff; }
+.nem-btn{ cursor:pointer;
+
+ padding:6px 10px;
+
+ background:#f2f4ff; border:none; border-radius:8px; }
+.nem-primary{ color:#fff; background:#4c7dff; }
 </style>

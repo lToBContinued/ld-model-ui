@@ -186,23 +186,26 @@ const resetTree = () => {
 
 <style lang="scss" scoped>
 .tree-content {
-  height: 100%;
   overflow: hidden;
-  width: 100%;
   display: flex;
   flex-direction: column;
 
+  width: 100%;
+  height: 100%;
+
   .tree-title-container {
-    flex-shrink: 0;
     position: sticky;
-    top: 0;
-    background: white;
     z-index: 1;
+    top: 0;
+
+    flex-shrink: 0;
+
+    background: white;
   }
 
   .tree-scroll-container {
-    flex-grow: 1;
     overflow: auto;
+    flex-grow: 1;
     width: 100%;
     min-height: 0;
   }
@@ -214,16 +217,17 @@ const resetTree = () => {
   }
 
   :deep(.ant-tree-treenode) {
-    white-space: nowrap;
     width: auto;
+    white-space: nowrap;
   }
 
   :deep(.ant-tree-node-content-wrapper) {
     .tree-text {
-      width: 100%;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+
+      width: 100%;
       padding: 0;
 
       .text {
@@ -232,6 +236,7 @@ const resetTree = () => {
         word-break: keep-all;
         white-space: nowrap;
       }
+
       .ant-tag {
         margin-left: 10px;
       }
@@ -249,10 +254,11 @@ const resetTree = () => {
   }
 
   .empty {
-    color: #999;
     padding: 8px 10px;
+    color: #999;
   }
 }
+
 :deep(.ant-btn) {
   margin-left: 8px;
 }

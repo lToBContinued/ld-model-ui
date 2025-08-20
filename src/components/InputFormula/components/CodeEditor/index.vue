@@ -286,18 +286,20 @@ defineExpose({
 
 <style lang="scss" scoped>
 #code-editor {
-  height: 100%;
   width: 100%;
+  height: 100%;
   padding: 10px;
 
   .editor-content {
+    overflow-y: auto;
+
+    box-sizing: border-box; /* 确保 padding 不会增加容器总宽度 */
     width: 100%;
     height: calc(100% - 30px);
-    overflow-y: auto;
+    padding: 5px 10px;
+
     background: #f8f8f8 !important;
     border-radius: 6px;
-    padding: 5px 10px;
-    box-sizing: border-box; /* 确保 padding 不会增加容器总宽度 */
 
     .mirror {
       width: 100% !important;
@@ -312,8 +314,8 @@ defineExpose({
       }
 
       :deep(.cm-line) {
-        line-height: 20px;
         margin-bottom: 5px;
+        line-height: 20px;
       }
     }
   }

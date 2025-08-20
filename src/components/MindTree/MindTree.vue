@@ -523,19 +523,24 @@ onMounted(() => {
 /* 基本布局与配色（可按项目 UI 自行调整） */
 .mindtree {
   position: relative;
+
   width: 100%;
   height: 100%;
-  background: #fafafa;
   padding: 20px;
+
+  background: #fafafa;
 }
+
 .mindtree__viewport {
   position: relative;
   overflow: auto;
 }
+
 .mindtree__links {
   position: absolute;
   inset: 0;
 }
+
 .mindtree__link {
   stroke: #c8c8d0;
   stroke-width: 2px;
@@ -546,45 +551,55 @@ onMounted(() => {
   position: absolute;
   box-sizing: border-box;
 }
+
 .mindtree__node-inner {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border-radius: 10px;
-  border: 1px solid #d6d6e0;
-  background: white;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  width: 100%;
+  height: 100%;
   padding: 6px 8px;
+
+  background: white;
+  border: 1px solid #d6d6e0;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 6%);
 }
+
 .mindtree__node.is-selected .mindtree__node-inner {
   border-color: #5b8cff;
-  box-shadow: 0 0 0 2px rgba(91, 140, 255, 0.15);
+  box-shadow: 0 0 0 2px rgb(91 140 255 / 15%);
 }
 
 /* 文本与输入 */
 .mindtree__node-header {
   display: flex;
-  align-items: center;
   gap: 6px;
+  align-items: center;
   min-height: 28px;
 }
+
 .mindtree__label {
   user-select: none;
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
 .mindtree__edit {
-  width: 100%;
-  border: 1px solid #d0d0da;
-  border-radius: 6px;
-  padding: 2px 6px;
-  font-size: 14px;
   position: relative;
   z-index: 1; /* 盖住按钮，避免“错位”感 */
+
+  width: 100%;
+  padding: 2px 6px;
+
+  font-size: 14px;
+
+  border: 1px solid #d0d0da;
+  border-radius: 6px;
 }
+
 .mindtree__node-inner {
   overflow: visible;
 }
@@ -595,59 +610,74 @@ onMounted(() => {
   gap: 6px;
   justify-content: flex-end;
 }
+
 .mindtree__btn {
-  border: none;
-  background: #f2f4ff;
-  padding: 2px 6px;
-  border-radius: 6px;
   cursor: pointer;
+
+  padding: 2px 6px;
+
+  background: #f2f4ff;
+  border: none;
+  border-radius: 6px;
 }
+
 .mindtree__btn-primary {
-  background: #4c7dff;
   color: #fff;
+  background: #4c7dff;
 }
 
 /* 弹窗 */
 .mindtree__modal-backdrop {
   position: fixed;
+  z-index: 10;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+
   display: grid;
   place-items: center;
-  z-index: 10;
+
+  background: rgb(0 0 0 / 35%);
 }
+
 .mindtree__modal {
   width: min(560px, calc(100vw - 32px));
+  padding: 14px;
+
   background: #fff;
   border-radius: 12px;
-  padding: 14px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 12px 40px rgb(0 0 0 / 18%);
 }
+
 .mindtree__modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
 }
+
 .mindtree__field {
   display: grid;
   grid-template-columns: 72px 1fr;
-  align-items: center;
   gap: 8px;
+  align-items: center;
+
   margin: 8px 0;
 }
+
 .mindtree__input,
 .mindtree__textarea {
   width: 100%;
+  padding: 6px 8px;
+
+  font-size: 14px;
+
   border: 1px solid #d0d0da;
   border-radius: 8px;
-  padding: 6px 8px;
-  font-size: 14px;
 }
+
 .mindtree__modal-actions {
   display: flex;
-  justify-content: flex-end;
   gap: 8px;
+  justify-content: flex-end;
   margin-top: 12px;
 }
 
@@ -655,9 +685,11 @@ onMounted(() => {
 .mindtree__node.drop-inside .mindtree__node-inner {
   outline: 2px dashed #4c7dff;
 }
+
 .mindtree__node.drop-before .mindtree__node-inner {
   box-shadow: inset 0 3px 0 #4c7dff;
 }
+
 .mindtree__node.drop-after .mindtree__node-inner {
   box-shadow: inset 0 -3px 0 #4c7dff;
 }

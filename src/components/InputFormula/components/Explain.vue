@@ -26,16 +26,16 @@ const props = defineProps({
 </template>
 <style lang="scss" scoped>
 #explain {
-  padding: 10px;
   width: 100%;
+  padding: 10px;
 
   :deep(.ant-list) {
     width: 100%;
 
     .ant-list-item {
-      white-space: pre-line;
       font-size: 12px;
       color: #7F7F7F;
+      white-space: pre-line;
     }
   }
 }

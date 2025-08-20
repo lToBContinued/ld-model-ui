@@ -82,6 +82,18 @@ export default [
           iconShow: false,
         },
       },
+      {
+        path: '/assessTargetSystem/runAssess',
+        name: 'runAssess',
+        component: () => import('@/views/assessTargetSystem/runAssess/index.vue'),
+        meta: {
+          title: '开始评估',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
   /*{

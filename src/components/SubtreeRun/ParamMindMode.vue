@@ -248,69 +248,111 @@ function saveDlg(){
 <style scoped>
 /* 整体布局：上方树，下方弹窗覆盖 */
 .param-mind{ display:flex; flex-direction:column; height:100%; }
-.mind{ flex:1; min-height:420px; background:#fff; border:1px solid #eee; border-radius:10px; padding:8px; overflow:auto; }
+
+.mind{ overflow:auto; flex:1;
+
+ min-height:420px; padding:8px;
+
+ background:#fff; border:1px solid #eee; border-radius:10px; }
 
 /* 弹窗及表单样式（与项目现有样式风格保持一致） */
-.pmask{ position:fixed; inset:0; background:rgba(0,0,0,.35); display:grid; place-items:center; z-index:3400; }
-.pdlg{ width:min(680px, calc(100vw - 40px)); background:#fff; border-radius:12px; padding:12px; box-shadow:0 24px 80px rgba(0,0,0,.22); }
+.pmask{ position:fixed; z-index:3400; inset:0;
+
+ display:grid; place-items:center;
+
+ background:rgb(0 0 0 / 35%); }
+
+.pdlg{ width:min(680px, calc(100vw - 40px)); padding:12px;
+
+ background:#fff; border-radius:12px; box-shadow:0 24px 80px rgb(0 0 0 / 22%); }
 .phdr{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.pbody{ max-height:min(70vh, 720px); overflow:auto; }
+.pbody{ overflow:auto; max-height:min(70vh, 720px); }
 .plist{ display:flex; flex-direction:column; gap:8px; }
 .prow{ display:grid; grid-template-columns:180px 1fr; gap:10px; align-items:center; }
-.pname .range{ color:#999; margin-left:6px; }
-.pinput{ width:100%; border:1px solid #ddd; border-radius:6px; padding:6px 8px; }
-.btn.tiny{ padding:2px 6px; border:none; background:#eaf1ff; border-radius:6px; cursor:pointer; }
+.pname .range{ margin-left:6px; color:#999; }
+.pinput{ width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:6px; }
+
+.btn.tiny{ cursor:pointer;
+
+ padding:2px 6px;
+
+ background:#eaf1ff; border:none; border-radius:6px; }
 .btn.ghost{ background:#f7f7f7; }
-.pftr{ margin-top:8px; display:flex; justify-content:flex-end; gap:8px; }
+.pftr{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
 .gray{ color:#888; }
-.tag-off{ margin-left:6px; font-size:12px; color:#888; background:#f4f4f4; padding:0 6px; border-radius:6px; }
+
+.tag-off{ margin-left:6px; padding:0 6px;
+
+ font-size:12px; color:#888;
+
+ background:#f4f4f4; border-radius:6px; }
 
 /* 自定义节点样式（卡片风） */
 .pm-node{
+  display: flex; gap: 10px; align-items: center;
+
   box-sizing: border-box;
   width: 100%; height: 100%;
-  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+
   background: #fff;
   border: 1px solid #e6e8f0;
   border-radius: 12px;
-  padding: 8px 10px;
-  box-shadow: 0 1px 3px rgba(16,24,40,.06);
+  box-shadow: 0 1px 3px rgb(16 24 40 / 6%);
+
   transition: border-color .15s ease, box-shadow .15s ease, transform .03s ease;
 }
+
 .pm-node:hover{
   border-color: #9aa6ff;
-  box-shadow: 0 0 0 3px rgba(76,125,255,.14);
+  box-shadow: 0 0 0 3px rgb(76 125 255 / 14%);
 }
-.pm-title{
-  flex: 1; min-width: 0;
-  font-weight: 600;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+
+.pm-title{ overflow: hidden;
+  flex: 1;
+
+ min-width: 0;
+
+  font-weight: 600; text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* 折叠箭头（纯 CSS） */
-.pm-caret{
+.pm-caret{ cursor: pointer;
+
+  position: relative;
+
   width: 26px; height: 26px;
-  border: 1px solid #e6e8f0; border-radius: 50%;
+
   background: #f7f8ff;
-  position: relative; cursor: pointer;
+  border: 1px solid #e6e8f0; border-radius: 50%;
+
   transition: border-color .15s ease, background .15s ease, transform .15s ease;
 }
+
 .pm-caret::before{
-  content: ""; position: absolute; inset: 0; margin: auto;
-  width: 0; height: 0;
-  border-left: 6px solid #4c7dff;
-  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  content: "";
+
+ position: absolute; inset: 0;
   transform: rotate(90deg); /* 展开：向下 */
+
+  width: 0; height: 0; margin: auto;
+
+  border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  border-left: 6px solid #4c7dff;
 }
 .pm-caret.collapsed::before{ transform: rotate(0deg); } /* 折叠：向右 */
-.pm-caret:hover{ border-color:#c7d2fe; background:#eef2ff; }
+.pm-caret:hover{ background:#eef2ff; border-color:#c7d2fe; }
 
 /* “填写参数”胶囊按钮 */
-.pm-chip{
-  border: none; cursor: pointer;
-  padding: 4px 10px; border-radius: 999px;
-  font-size: 12px; line-height: 1;
-  background: #eef2ff; color: #3b5bfd;
+.pm-chip{ cursor: pointer;
+
+  padding: 4px 10px;
+
+  font-size: 12px; line-height: 1; color: #3b5bfd;
+
+  background: #eef2ff;
+  border: none; border-radius: 999px;
 }
 .pm-chip:hover{ background:#e6ebff; }
 
@@ -321,7 +363,7 @@ function saveDlg(){
 .mind{ background: #fafbff; }
 
 /* 小屏压缩节点高度 */
-@media (max-width: 640px){
+@media (width <= 640px){
   :deep(.mindtree__node){ height: 52px !important; }
 }
 </style>
