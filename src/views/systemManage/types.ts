@@ -36,7 +36,6 @@ export interface UserFormData {
 export interface SchemeListItem {
   id: number
   schemeName: string
-  schemeDesc: string
 }
 
 export interface BuildSchemeTreeItem {

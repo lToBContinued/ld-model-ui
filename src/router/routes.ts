@@ -388,6 +388,18 @@ export default [
           iconShow: false,
         },
       },
+      {
+        path: '/systemManage/indicatorAlgorithm',
+        name: 'IndicatorAlgorithm',
+        component: () => import('@/views/systemManage/indicatorAlgorithm/index.vue'),
+        meta: {
+          title: '算法配置',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
     ],
   },
   /*{

@@ -89,9 +89,6 @@ const indicatorConfigFormConfig = ref([
     prop: 'config',
     label: '指标配置',
     type: 'jsonEditor',
-    config: {
-      readonly: true,
-    },
   },
 ])
 const indicatorInputJson = ref(
@@ -112,7 +109,7 @@ watch(indicatorInputJson, (newVal) => {
   console.log('>>>>> file: index.vue ~ method: indicatorInputJson <<<<<\n', indicatorInputJson.value) // TODO: 删除
 })
 
-watch(
+/*watch(
   () => indicatorConfigFormData.isLeaf,
   (newVal) => {
     const configItem = indicatorConfigFormConfig.value.find((item) => item.prop === 'config')
@@ -121,7 +118,7 @@ watch(
     }
   },
   { immediate: true },
-)
+)*/
 
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)

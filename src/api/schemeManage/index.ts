@@ -51,7 +51,7 @@ export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
  * @description 获取方案列表
  */
 export const getSchemeListApi = () => {
-  return request<any, ResponseData<GetSchemeListApiRes>>({
+  return request<any, ResponseData<GetSchemeListApiRes[]>>({
     url: '/api/schemeManage/getSchemeList',
   })
 }
