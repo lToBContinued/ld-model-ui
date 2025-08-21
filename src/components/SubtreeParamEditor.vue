@@ -29,8 +29,14 @@
           </div>
           <div class="spe__item-row spe__item-ops">
             <!-- 前端本地换位后，调用 reorderParams 持久化顺序 -->
-            <button class="link" @click.stop="moveUp(idx)" :disabled="idx===0 || loading || readonly">↑</button>
-            <button class="link" @click.stop="moveDown(idx)" :disabled="idx===params.length-1 || loading || readonly">↓</button>
+            <button class="link" @click.stop="moveUp(idx)" :disabled="idx === 0 || loading || readonly">↑</button>
+            <button
+              class="link"
+              @click.stop="moveDown(idx)"
+              :disabled="idx === params.length - 1 || loading || readonly"
+            >
+              ↓
+            </button>
             <button class="link danger" @click.stop="delParam(p)" :disabled="loading || readonly">删除</button>
           </div>
         </div>
@@ -74,6 +80,18 @@
             <label>默认值</label>
             <input type="number" class="input" v-model.number="currentDraft.defaultValue" :disabled="readonly" />
           </div>
+          <div class="field-row">
+            <label>步长</label>
+            <input
+              type="number"
+              class="input"
+              step="0.000001"
+              placeholder="例如 0.1；最多 6 位小数"
+              v-model.number="currentDraft.step"
+              :disabled="readonly"
+              @blur="onClampStepDraft"
+            />
+          </div>
         </template>
 
         <!-- 映射型：维护 key→value 的映射表，支持上下移动与增删 -->
@@ -97,11 +115,23 @@
                 <input class="input" v-model.trim="m.key" placeholder="如：优秀" :disabled="readonly" />
               </div>
               <div class="col col-val">
-                <input class="input" type="number" v-model.number="m.value" placeholder="如：100" :disabled="readonly" />
+                <input
+                  class="input"
+                  type="number"
+                  v-model.number="m.value"
+                  placeholder="如：100"
+                  :disabled="readonly"
+                />
               </div>
               <div class="col col-ops">
-                <button class="link" @click="mapUp(mi)" :disabled="mi===0 || readonly">↑</button>
-                <button class="link" @click="mapDown(mi)" :disabled="mi===currentDraft.mapEntries.length-1 || readonly">↓</button>
+                <button class="link" @click="mapUp(mi)" :disabled="mi === 0 || readonly">↑</button>
+                <button
+                  class="link"
+                  @click="mapDown(mi)"
+                  :disabled="mi === currentDraft.mapEntries.length - 1 || readonly"
+                >
+                  ↓
+                </button>
                 <button class="link danger" @click="removeMapRow(mi)" :disabled="readonly">删除</button>
               </div>
             </div>
@@ -147,7 +177,7 @@
             </div>
 
             <!-- 数字型创建字段 -->
-            <template v-if="createForm.type===1">
+            <template v-if="createForm.type === 1">
               <div class="field-row">
                 <label>最小值</label>
                 <input type="number" class="input" v-model.number="createForm.minValue" />
@@ -159,6 +189,17 @@
               <div class="field-row">
                 <label>默认值</label>
                 <input type="number" class="input" v-model.number="createForm.defaultValue" />
+              </div>
+              <div class="field-row">
+                <label>步长</label>
+                <input
+                  type="number"
+                  class="input"
+                  step="0.000001"
+                  placeholder="例如 0.1；最多 6 位小数"
+                  v-model.number="createForm.step"
+                  @blur="onClampStepCreate"
+                />
               </div>
             </template>
 
@@ -184,8 +225,10 @@
                     <input class="input" type="number" v-model.number="m.value" placeholder="如：100" />
                   </div>
                   <div class="col col-ops">
-                    <button class="link" @click="createMapUp(mi)" :disabled="mi===0">↑</button>
-                    <button class="link" @click="createMapDown(mi)" :disabled="mi===createForm.mapEntries.length-1">↓</button>
+                    <button class="link" @click="createMapUp(mi)" :disabled="mi === 0">↑</button>
+                    <button class="link" @click="createMapDown(mi)" :disabled="mi === createForm.mapEntries.length - 1">
+                      ↓
+                    </button>
                     <button class="link danger" @click="createRemoveMapRow(mi)">删除</button>
                   </div>
                 </div>
@@ -206,29 +249,30 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
 import {
-  listParamsByNode,      // 拉取某节点下的参数列表
-  createParam,           // 新建参数（可携带映射项）
-  updateParam,           // 更新参数基本信息
-  deleteParam,           // 删除参数
-  listMapEntries,        // 读取映射项
-  replaceMapEntries,     // 覆盖式写入映射项
-  toggleParam,           // （备用）开关启用的旧接口
-  reorderParams,         // 保存参数顺序
-  type SubtreeParamVO,
+  listParamsByNode,
+  createParam,
+  updateParam,
+  deleteParam,
+  listMapEntries,
+  replaceMapEntries,
+  reorderParams,
+  updateParamEnabled,
   type ParamMapEntryDTO,
-  updateParamEnabled     // 首选：通过 ?enabled=1 的 PUT 更新启用状态
-} from '@/api/subtrees'
+} from '@/api/schemeManage/legacySubtree.ts'
 
 /** 输入属性：
  * - nodeId：当前正在编辑的“子树节点”ID
  * - readonly：只读模式下禁止编辑
  */
-const props = withDefaults(defineProps<{
-  nodeId: number | null
-  readonly?: boolean
-}>(), {
-  readonly: false
-})
+const props = withDefaults(
+  defineProps<{
+    nodeId: number | null
+    readonly?: boolean
+  }>(),
+  {
+    readonly: false,
+  },
+)
 
 /** 对外事件：
  * - changed：保存/删除/新增等成功后通知父层刷新其它关联视图
@@ -244,8 +288,8 @@ type ParamVM = SubtreeParamVO & { mapEntries?: ParamMapEntryDTO[] }
 
 /** 本地状态 */
 const loading = ref(false)
-const params = ref<ParamVM[]>([])          // 左侧列表数据
-const selIndex = ref<number>(0)             // 当前选中的列表索引
+const params = ref<ParamVM[]>([]) // 左侧列表数据
+const selIndex = ref<number>(0) // 当前选中的列表索引
 
 const current = computed<ParamVM | undefined>(() => params.value[selIndex.value]) // 选中项
 const currentDraft = ref<any | null>(null) // 右侧编辑草稿（与后端数据解耦）
@@ -253,8 +297,13 @@ const currentDraft = ref<any | null>(null) // 右侧编辑草稿（与后端数�
 /** 新增参数弹窗相关 */
 const createOpen = ref(false)
 const createForm = ref<any>({
-  name: '', type: 1, minValue: null, maxValue: null, defaultValue: null,
-  mapEntries: [] as ParamMapEntryDTO[]
+  name: '',
+  type: 1,
+  minValue: null,
+  maxValue: null,
+  defaultValue: null,
+  step: null,
+  mapEntries: [] as ParamMapEntryDTO[],
 })
 
 /** 是否只读（禁用所有写操作） */
@@ -297,7 +346,7 @@ async function loadParams() {
       out.push({ ...p, mapEntries })
     }
     // 按 orderIndex 排序，和右侧编辑顺序一致
-    params.value = out.sort((a, b) => (a.orderIndex - b.orderIndex))
+    params.value = out.sort((a, b) => a.orderIndex - b.orderIndex)
 
     // 初始化/校正选中项与草稿
     if (params.value.length === 0) {
@@ -319,18 +368,46 @@ async function loadParams() {
 /** 从当前选中项创建可编辑草稿（避免直接改动列表数据） */
 function makeDraftFromCurrent() {
   const p = current.value
-  if (!p) { currentDraft.value = null; return }
+  if (!p) {
+    currentDraft.value = null
+    return
+  }
   currentDraft.value = {
     id: p.id,
     nodeId: p.nodeId,
     name: p.name,
     type: p.type,
-    enabled: p.enabled === 1 ? 1 : 0,   // 规范成 0/1
+    enabled: p.enabled === 1 ? 1 : 0, // 规范成 0/1
     minValue: p.type === 1 ? (p.minValue ?? null) : null,
     maxValue: p.type === 1 ? (p.maxValue ?? null) : null,
     defaultValue: p.type === 1 ? (p.defaultValue ?? null) : null,
-    mapEntries: p.type === 2 ? (p.mapEntries ? p.mapEntries.map(it => ({ ...it })) : []) : []
+    step: p.type === 1 ? (p.step ?? null) : null,
+    mapEntries: p.type === 2 ? (p.mapEntries ? p.mapEntries.map((it) => ({ ...it })) : []) : [],
   }
+}
+
+function clamp6(v: any): number | null {
+  const num = Number(v)
+  if (!Number.isFinite(num)) return null
+  // 四舍五入到 6 位
+  return Math.round(num * 1e6) / 1e6
+}
+
+// ★ 统计小数位数
+function decimalsLen(v: any): number {
+  const s = String(v ?? '')
+  if (!/^-?\d+(\.\d+)?$/.test(s)) return 0
+  const i = s.indexOf('.')
+  return i === -1 ? 0 : s.length - i - 1
+}
+
+// 输入框失焦时自动夹位
+function onClampStepDraft() {
+  currentDraft.value && (currentDraft.value.step = clamp6(currentDraft.value.step))
+}
+
+function onClampStepCreate() {
+  createForm.value.step = clamp6(createForm.value.step)
 }
 
 /** 选择左侧某一项并刷新右侧草稿 */
@@ -341,34 +418,72 @@ function selectIndex(i: number) {
 }
 
 /** 右下角“重置” -> 回到后端最新值 */
-function resetDraft() { makeDraftFromCurrent() }
+function resetDraft() {
+  makeDraftFromCurrent()
+}
 
 /** —— 新增参数（弹窗） —— */
 function startCreate() {
-  createForm.value = { name: '', type: 1, minValue: null, maxValue: null, defaultValue: null, mapEntries: [] }
+  createForm.value = {
+    name: '',
+    type: 1,
+    minValue: null,
+    maxValue: null,
+    defaultValue: null,
+    mapEntries: [],
+  }
   createOpen.value = true
 }
-function closeCreate() { createOpen.value = false }
-function createAddMapRow() { createForm.value.mapEntries.push({ key: '', value: 0 }) }
-function createRemoveMapRow(idx: number) { createForm.value.mapEntries.splice(idx, 1) }
-function createMapUp(idx: number) { if (idx>0) [createForm.value.mapEntries[idx-1], createForm.value.mapEntries[idx]] = [createForm.value.mapEntries[idx], createForm.value.mapEntries[idx-1]] }
-function createMapDown(idx: number) { const arr=createForm.value.mapEntries; if (idx<arr.length-1) [arr[idx],arr[idx+1]]=[arr[idx+1],arr[idx]] }
+
+function closeCreate() {
+  createOpen.value = false
+}
+
+function createAddMapRow() {
+  createForm.value.mapEntries.push({ key: '', value: 0 })
+}
+
+function createRemoveMapRow(idx: number) {
+  createForm.value.mapEntries.splice(idx, 1)
+}
+
+function createMapUp(idx: number) {
+  if (idx > 0)
+    [createForm.value.mapEntries[idx - 1], createForm.value.mapEntries[idx]] = [
+      createForm.value.mapEntries[idx],
+      createForm.value.mapEntries[idx - 1],
+    ]
+}
+
+function createMapDown(idx: number) {
+  const arr = createForm.value.mapEntries
+  if (idx < arr.length - 1) [arr[idx], arr[idx + 1]] = [arr[idx + 1], arr[idx]]
+}
 
 /** 新增提交：前端做同名与范围的快速校验；映射型一次性提交映射项 */
 async function doCreate() {
   if (!props.nodeId) return
   const nid = Number(props.nodeId)
-  if (!Number.isFinite(nid)) { notify('无效的节点ID'); return }
+  if (!Number.isFinite(nid)) {
+    notify('无效的节点ID')
+    return
+  }
   const name = (createForm.value.name || '').trim()
-  if (!name) { notify('请填写参数名称'); return }
+  if (!name) {
+    notify('请填写参数名称')
+    return
+  }
 
   // 前端同层重名预校验（后端仍会二次校验）
-  const dup = (params.value || []).some(p => (p.name || '').trim() === name)
-  if (dup) { notify('同一节点下已存在该名称'); return }
+  const dup = (params.value || []).some((p) => (p.name || '').trim() === name)
+  if (dup) {
+    notify('同一节点下已存在该名称')
+    return
+  }
 
   // 数字型边界检查
   if (createForm.value.type === 1) {
-    const {minValue:min, maxValue:max, defaultValue:def} = createForm.value
+    const { minValue: min, maxValue: max, defaultValue: def } = createForm.value
     if (min != null && max != null && Number(min) > Number(max)) return notify('最小值不能大于最大值')
     if (def != null) {
       const d = Number(def)
@@ -376,6 +491,11 @@ async function doCreate() {
       if (min != null && d < Number(min)) return notify(`默认值不能小于最小值 ${min}`)
       if (max != null && d > Number(max)) return notify(`默认值不能大于最大值 ${max}`)
     }
+  }
+  if (createForm.value.type === 1 && createForm.value.step != null) {
+    const n = Number(createForm.value.step)
+    if (!Number.isFinite(n) || n <= 0) return notify('步长必须是大于 0 的数字')
+    if (decimalsLen(createForm.value.step) > 6) return notify('步长最多 6 位小数')
   }
 
   // 映射型清洗（去空/去重/补 orderIndex）
@@ -402,12 +522,13 @@ async function doCreate() {
       minValue: createForm.value.type === 1 ? (createForm.value.minValue ?? null) : null,
       maxValue: createForm.value.type === 1 ? (createForm.value.maxValue ?? null) : null,
       defaultValue: createForm.value.type === 1 ? (createForm.value.defaultValue ?? null) : null,
+      step: createForm.value.type === 1 ? (clamp6(createForm.value.step) ?? null) : null,
       mapEntries, // 一次性提交，减少额外请求
     })
 
     createOpen.value = false
-    await reload()                     // 刷新列表
-    const idx = params.value.findIndex(p => p.id === newId) // 聚焦新建项
+    await reload() // 刷新列表
+    const idx = params.value.findIndex((p) => p.id === newId) // 聚焦新建项
     if (idx >= 0) selectIndex(idx)
     emit('changed')
   } catch (e: any) {
@@ -424,6 +545,12 @@ const canSave = computed(() => {
   if (!d || !d.name) return false
   if (d.type === 1) {
     if (d.minValue != null && d.maxValue != null && Number(d.minValue) > Number(d.maxValue)) return false
+    // ★ 步长校验：>0 且最多 6 位小数（允许为空）
+    if (d.step != null) {
+      const n = Number(d.step)
+      if (!Number.isFinite(n) || n <= 0) return false
+      if (decimalsLen(d.step) > 6) return false
+    }
   } else {
     if ((d.mapEntries || []).some((m: any) => !m.key)) return false
   }
@@ -441,17 +568,20 @@ async function saveCurrent() {
       enabled: d.enabled ? 1 : 0,
       minValue: d.type === 1 ? (d.minValue ?? null) : null,
       maxValue: d.type === 1 ? (d.maxValue ?? null) : null,
-      defaultValue: d.type === 1 ? (d.defaultValue ?? null) : null
+      defaultValue: d.type === 1 ? (d.defaultValue ?? null) : null,
+      step: d.type === 1 ? (clamp6(d.step) ?? null) : null,
     })
     if (d.type === 2) {
       const items = (d.mapEntries || []).map((it: ParamMapEntryDTO, idx: number) => ({
-        key: String(it.key), value: Number(it.value), orderIndex: idx
+        key: String(it.key),
+        value: Number(it.value),
+        orderIndex: idx,
       }))
       await replaceMapEntries(d.id, items)
     }
     await reload()
-    const idx = params.value.findIndex(p => p.id === d.id)
-    if (idx >= 0) selectIndex(idx)   // 保持选中项不变
+    const idx = params.value.findIndex((p) => p.id === d.id)
+    if (idx >= 0) selectIndex(idx) // 保持选中项不变
     emit('changed')
   } catch (e: any) {
     notify(e.message || '保存失败')
@@ -461,23 +591,26 @@ async function saveCurrent() {
 /** 启用/禁用：先本地乐观更新，再调用接口；失败则回滚 */
 const draftEnabled = computed({
   get: () => !!currentDraft.value?.enabled,
-  set: (v:boolean) => { if (currentDraft.value) currentDraft.value.enabled = v ? 1 : 0 }
+  set: (v: boolean) => {
+    if (currentDraft.value) currentDraft.value.enabled = v ? 1 : 0
+  },
 })
+
 async function onToggleEnabled() {
   if (!currentDraft.value) return
   const id = currentDraft.value.id
-  const next = draftEnabled.value     // true/false
+  const next = draftEnabled.value // true/false
   const prev = !next
 
   // 乐观更新（列表与草稿一起改）
   currentDraft.value.enabled = next ? 1 : 0
-  const idx = params.value.findIndex(p => p.id === id)
+  const idx = params.value.findIndex((p) => p.id === id)
   if (idx >= 0) params.value[idx].enabled = next ? 1 : 0
 
   try {
-    await updateParamEnabled(id, next)  // 走 PUT ?enabled=1 的轻量接口
+    await updateParamEnabled(id, next) // 走 PUT ?enabled=1 的轻量接口
     emit('changed')
-  } catch (e:any) {
+  } catch (e: any) {
     // 回滚 UI
     currentDraft.value.enabled = prev ? 1 : 0
     if (idx >= 0) params.value[idx].enabled = prev ? 1 : 0
@@ -509,6 +642,7 @@ async function moveUp(idx: number) {
   await saveOrder()
   selIndex.value = idx - 1
 }
+
 async function moveDown(idx: number) {
   if (idx >= params.value.length - 1 || !props.nodeId) return
   const a = params.value[idx + 1]
@@ -517,10 +651,14 @@ async function moveDown(idx: number) {
   await saveOrder()
   selIndex.value = idx + 1
 }
+
 async function saveOrder() {
   if (!props.nodeId) return
   try {
-    await reorderParams(props.nodeId, params.value.map(p => p.id))
+    await reorderParams(
+      props.nodeId,
+      params.value.map((p) => p.id),
+    )
   } catch (e: any) {
     notify(e.message || '保存顺序失败')
     await reload()
@@ -528,157 +666,354 @@ async function saveOrder() {
 }
 
 /** 当前草稿里增删/排序映射项（仅本地，保存时 replaceMapEntries 一次性提交） */
-function addMapRow() { currentDraft.value?.mapEntries?.push({ key: '', value: 0 }) }
-function removeMapRow(i: number) { currentDraft.value?.mapEntries?.splice(i, 1) }
+function addMapRow() {
+  currentDraft.value?.mapEntries?.push({ key: '', value: 0 })
+}
+
+function removeMapRow(i: number) {
+  currentDraft.value?.mapEntries?.splice(i, 1)
+}
+
 function mapUp(i: number) {
   if (!currentDraft.value) return
   const arr = currentDraft.value.mapEntries as ParamMapEntryDTO[]
-  if (i > 0) [arr[i-1], arr[i]] = [arr[i], arr[i-1]]
+  if (i > 0) [arr[i - 1], arr[i]] = [arr[i], arr[i - 1]]
 }
+
 function mapDown(i: number) {
   if (!currentDraft.value) return
   const arr = currentDraft.value.mapEntries as ParamMapEntryDTO[]
-  if (i < arr.length - 1) [arr[i], arr[i+1]] = [arr[i+1], arr[i]]
+  if (i < arr.length - 1) [arr[i], arr[i + 1]] = [arr[i + 1], arr[i]]
 }
 
 /** 生命周期：nodeId 变化时自动加载；初次挂载也加载 */
-async function reload() { await loadParams() }
-watch(() => props.nodeId, () => { selIndex.value = 0; loadParams() }, { immediate: true })
+async function reload() {
+  await loadParams()
+}
+
+watch(
+  () => props.nodeId,
+  () => {
+    selIndex.value = 0
+    loadParams()
+  },
+  { immediate: true },
+)
 onMounted(loadParams)
 </script>
 
 <style scoped>
 /* 结构与布局样式（保持你原来的视觉规范） */
-.spe { display: flex; flex-direction: column;
+.spe {
+  display: flex;
+  flex-direction: column;
 
- height: 100%;
+  height: 100%;
 
- background: #fff; border: 1px solid #eee; border-radius: 12px; }
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+}
 
-.spe__top { display: flex; align-items: center; justify-content: space-between;
+.spe__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
- padding: 10px 12px;
+  padding: 10px 12px;
 
- border-bottom: 1px solid #f0f0f0; }
-.spe__title { font-weight: 700; }
-.spe__actions { display: flex; gap: 8px; }
+  border-bottom: 1px solid #f0f0f0;
+}
 
-.spe__body { display: grid; grid-template-columns: 300px 1fr; flex: 1; min-height: 0; }
-.spe__list { overflow-y: auto; padding: 6px; border-right: 1px solid #f0f0f0; }
+.spe__title {
+  font-weight: 700;
+}
 
-.spe__item { cursor: pointer;
+.spe__actions {
+  display: flex;
+  gap: 8px;
+}
 
- margin: 6px 0; padding: 8px;
+.spe__body {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  flex: 1;
+  min-height: 0;
+}
 
- border: 1px solid #eee; border-radius: 10px; }
-.spe__item.active { border-color: #4c7dff; box-shadow: 0 0 0 2px rgb(76 125 255 / 12%); }
-.spe__item-row { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.spe__list {
+  overflow-y: auto;
+  padding: 6px;
+  border-right: 1px solid #f0f0f0;
+}
 
-.spe__item-name { overflow: hidden;
+.spe__item {
+  cursor: pointer;
 
- max-width: 200px;
+  margin: 6px 0;
+  padding: 8px;
 
- font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.spe__item-type { font-size: 12px; color: #666; }
-.spe__item-ops { margin-top: 6px; }
+  border: 1px solid #eee;
+  border-radius: 10px;
+}
 
-.link { cursor: pointer;
+.spe__item.active {
+  border-color: #4c7dff;
+  box-shadow: 0 0 0 2px rgb(76 125 255 / 12%);
+}
 
- padding: 0 4px;
+.spe__item-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
 
- color: #4c7dff;
+.spe__item-name {
+  overflow: hidden;
 
- background: transparent; border: none; }
-.link.danger { color: #c0392b; }
+  max-width: 200px;
 
-.spe__editor { overflow: auto; padding: 12px; }
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-.field-row { display: grid; grid-template-columns: 100px 1fr; gap: 10px; align-items: center;
+.spe__item-type {
+  font-size: 12px;
+  color: #666;
+}
 
- margin: 12px 0; }
-.input { width: 100%; padding: 6px 8px; border: 1px solid #ddd; border-radius: 8px; }
+.spe__item-ops {
+  margin-top: 6px;
+}
+
+.link {
+  cursor: pointer;
+
+  padding: 0 4px;
+
+  color: #4c7dff;
+
+  background: transparent;
+  border: none;
+}
+
+.link.danger {
+  color: #c0392b;
+}
+
+.spe__editor {
+  overflow: auto;
+  padding: 12px;
+}
+
+.field-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 10px;
+  align-items: center;
+
+  margin: 12px 0;
+}
+
+.input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
 
 /* 开关样式 */
-.switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-.switch input { width: 0; height: 0; opacity: 0; }
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
 
-.switch span { cursor: pointer;
+.switch input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
 
- position: absolute; inset: 0;
+.switch span {
+  cursor: pointer;
 
- background: #ddd; border-radius: 24px;
+  position: absolute;
+  inset: 0;
 
- transition: .2s; }
+  background: #ddd;
+  border-radius: 24px;
 
-.switch span::before { content: "";
+  transition: 0.2s;
+}
 
- position: absolute; top: 3px; left: 3px;
+.switch span::before {
+  content: '';
 
- width: 18px; height: 18px;
+  position: absolute;
+  top: 3px;
+  left: 3px;
 
- background: #fff; border-radius: 50%;
+  width: 18px;
+  height: 18px;
 
- transition: .2s; }
-.switch input:checked + span { background: #4c7dff; }
-.switch input:checked + span::before { transform: translateX(20px); }
+  background: #fff;
+  border-radius: 50%;
 
-.editor__actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+  transition: 0.2s;
+}
+
+.switch input:checked + span {
+  background: #4c7dff;
+}
+
+.switch input:checked + span::before {
+  transform: translateX(20px);
+}
+
+.editor__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
 
 /* 映射表格 */
-.map__head { display: flex; align-items: center; justify-content: space-between; margin: 10px 0 4px; }
-.map__title { font-weight: 600; }
-.map__ops { display: flex; gap: 8px; }
-.map__table { overflow: hidden; border: 1px solid #eee; border-radius: 8px; }
+.map__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0 4px;
+}
 
-.map__row { display: grid; grid-template-columns: 1fr 200px 160px; gap: 8px; align-items: center;
+.map__title {
+  font-weight: 600;
+}
 
- padding: 8px;
+.map__ops {
+  display: flex;
+  gap: 8px;
+}
 
- border-top: 1px solid #f5f5f5; }
-.map__row--head { font-weight: 600; background: #fafafa; }
-.col { padding: 2px; }
-.col-ops { display: flex; gap: 6px; align-items: center; }
+.map__table {
+  overflow: hidden;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
 
-.spe__empty, .spe__loading { display: grid; flex: 1; place-items: center; color: #888; }
+.map__row {
+  display: grid;
+  grid-template-columns: 1fr 200px 160px;
+  gap: 8px;
+  align-items: center;
+
+  padding: 8px;
+
+  border-top: 1px solid #f5f5f5;
+}
+
+.map__row--head {
+  font-weight: 600;
+  background: #fafafa;
+}
+
+.col {
+  padding: 2px;
+}
+
+.col-ops {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.spe__empty,
+.spe__loading {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  color: #888;
+}
 
 /* 按钮 */
-.btn { cursor: pointer;
+.btn {
+  cursor: pointer;
 
- padding: 6px 10px;
+  padding: 6px 10px;
 
- background: #f4f6ff; border: none; border-radius: 8px; }
-.btn.primary { color: #fff; background: #4c7dff; }
-.btn.ghost { background: #f7f7f7; }
+  background: #f4f6ff;
+  border: none;
+  border-radius: 8px;
+}
+
+.btn.primary {
+  color: #fff;
+  background: #4c7dff;
+}
+
+.btn.ghost {
+  background: #f7f7f7;
+}
 
 /* 状态小标签 */
-.tag { display: inline-block;
+.tag {
+  display: inline-block;
 
- margin-right: 6px; padding: 0 6px;
+  margin-right: 6px;
+  padding: 0 6px;
 
- font-size: 12px;
+  font-size: 12px;
 
- border-radius: 6px; }
-.tag--muted { color: #666; background: #f0f0f0; }
+  border-radius: 6px;
+}
+
+.tag--muted {
+  color: #666;
+  background: #f0f0f0;
+}
 
 /* 新增参数弹窗（z-index 提高，盖住其它对话框） */
 .spe-mask {
-  position: fixed; z-index: 3400; inset: 0;
+  position: fixed;
+  z-index: 3400;
+  inset: 0;
 
-  display: grid; place-items: center;
+  display: grid;
+  place-items: center;
 
- background: rgb(0 0 0 / 40%);
+  background: rgb(0 0 0 / 40%);
 }
 
 .spe-dialog {
   overflow: auto;
 
   width: min(720px, calc(100vw - 40px));
-  max-height: min(86vh, 860px); padding: 12px;
+  max-height: min(86vh, 860px);
+  padding: 12px;
 
-  background: #fff; border-radius: 12px;
+  background: #fff;
+  border-radius: 12px;
   box-shadow: 0 24px 80px rgb(0 0 0 / 28%);
 }
-.dlg__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-.dlg__body{ padding:6px 2px; }
-.dlg__footer{ display:flex; gap:8px; justify-content:flex-end; margin-top:12px; }
+
+.dlg__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.dlg__body {
+  padding: 6px 2px;
+}
+
+.dlg__footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
 </style>

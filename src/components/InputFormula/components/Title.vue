@@ -1,28 +1,28 @@
 <script setup lang="ts">
 //import {defineProps,defineEmits, ref} from 'vue'
-import {ref} from 'vue'
-import {InputSearch, Row, Button} from 'ant-design-vue'
-import { CloseOutlined } from '@ant-design/icons-vue';
+import { ref } from 'vue'
+import { InputSearch, Row, Button } from 'ant-design-vue'
+import { CloseOutlined } from '@ant-design/icons-vue'
 
 const emits = defineEmits(['handleSearch', 'handleReset'])
 const props = defineProps({
   title: {
     type: String,
-    default: '标题'
+    default: '标题',
   },
   isSearch: {
     type: Boolean,
-    default: true
+    default: true,
   },
   searchPlaceholder: {
     type: String,
-    default: '请输入'
+    default: '请输入',
   },
   // 添加重置按钮显示控制
   showReset: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 })
 const searchText = ref('')
 const onSearch = () => {
@@ -37,26 +37,18 @@ const onReset = () => {
 </script>
 
 <template>
-  <Row
-      class="title"
-      :style="{height:props.isSearch?'60px':'30px'}"
-  >
+  <Row class="title" :style="{ height: props.isSearch ? '60px' : '30px' }">
     <h1>
       {{ props.title }}
     </h1>
     <div v-if="props.isSearch" class="search-container">
       <InputSearch
-          v-model:value="searchText"
-          :placeholder="props.searchPlaceholder"
-          style="zoom:.9;"
-          @search="onSearch"
+        v-model:value="searchText"
+        :placeholder="props.searchPlaceholder"
+        style="zoom: 0.9"
+        @search="onSearch"
       />
-      <Button
-          v-if="props.showReset"
-          size="small"
-          @click="onReset"
-          class="clear-btn"
-      >
+      <Button v-if="props.showReset" size="small" @click="onReset" class="clear-btn">
         <CloseOutlined />
       </Button>
     </div>

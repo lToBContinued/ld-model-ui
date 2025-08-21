@@ -7,6 +7,7 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import VueJsx from 'unplugin-vue-jsx/vite'
 
 const resolve = (url: string) => {
   return path.resolve(__dirname, url)
@@ -20,6 +21,7 @@ export default defineConfig((mode) => {
     base: './',
     plugins: [
       vue(),
+      VueJsx(),
       AutoImport({
         resolvers: [
           ElementPlusResolver(),

@@ -24,7 +24,7 @@
           <!-- 子树名称，必填 -->
           <label class="field">
             <span>名称</span>
-            <input v-model.trim="local.name" class="input" placeholder="子树名称"/>
+            <input v-model.trim="local.name" class="input" placeholder="子树名称" />
           </label>
 
           <!-- 子树描述，选填 -->
@@ -68,33 +68,38 @@ const props = defineProps<{
  * - save：点击创建时把表单数据抛给父组件
  */
 const emit = defineEmits<{
-  (e:'update:open', v:boolean): void
-  (e:'cancel'): void
-  (e:'save', payload:{ systemId:number; name:string; description?:string|null }): void
+  (e: 'update:open', v: boolean): void
+  (e: 'cancel'): void
+  (e: 'save', payload: { systemId: number; name: string; description?: string | null }): void
 }>()
 
 /** 本地表单副本：避免直接修改 props */
-const local = reactive<{ systemId:number; name:string; description?:string|null }>({
-  systemId: 0, name:'', description:''
+const local = reactive<{ systemId: number; name: string; description?: string | null }>({
+  systemId: 0,
+  name: '',
+  description: '',
 })
 
 /** 每次弹窗打开时，重置表单（确保是干净状态） */
-watch(()=>props.open, (o)=>{
-  if(o){
-    local.systemId = 0
-    local.name = ''
-    local.description = ''
-  }
-})
+watch(
+  () => props.open,
+  (o) => {
+    if (o) {
+      local.systemId = 0
+      local.name = ''
+      local.description = ''
+    }
+  },
+)
 
 /** 关闭弹窗：通知父组件，并修改 v-model:open */
-function cancel(){
+function cancel() {
   emit('cancel')
   emit('update:open', false)
 }
 
 /** 点击“创建”：把当前表单内容抛给父组件，由父组件决定如何发请求与处理错误 */
-function save(){
+function save() {
   emit('save', { ...local })
 }
 </script>
@@ -102,45 +107,82 @@ function save(){
 <style scoped>
 /* 遮罩层：置顶并居中对话框
    z-index 比“选择指标”弹窗略低，避免互相遮挡 */
-.scm__mask{
-  position:fixed; z-index: 2200; inset:0;
+.scm__mask {
+  position: fixed;
+  z-index: 2200;
+  inset: 0;
 
-  display:grid; place-items:center;
+  display: grid;
+  place-items: center;
 
- background:rgb(0 0 0 / 35%);
+  background: rgb(0 0 0 / 35%);
 }
 
 /* 对话框外观：宽度自适应、圆角、阴影 */
-.scm__dialog{
-  width:min(560px, calc(100vw - 32px)); padding:12px;
+.scm__dialog {
+  width: min(560px, calc(100vw - 32px));
+  padding: 12px;
 
-  background:#fff; border-radius:12px;
-  box-shadow:0 20px 60px rgb(0 0 0 / 20%);
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgb(0 0 0 / 20%);
 }
-.scm__header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+
+.scm__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
 
 /* 表单：左标签右输入 */
-.field{
-  display:grid; grid-template-columns:90px 1fr; gap:8px; align-items:center;
+.field {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 8px;
+  align-items: center;
 
- margin:10px 0;
+  margin: 10px 0;
 }
 
-.input,.select,.textarea{
-  width:100%; padding:6px 8px; border:1px solid #ddd; border-radius:8px;
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
 }
 
-.scm__footer{ display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+.scm__footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
 
 /* 按钮风格 */
-.btn{ cursor:pointer;
+.btn {
+  cursor: pointer;
 
- padding:6px 12px;
+  padding: 6px 12px;
 
- background:#f4f6ff; border:none; border-radius:8px; }
-.btn.primary{ color:#fff; background:#4c7dff; }
-.btn.ghost{ background:#f7f7f7; }
+  background: #f4f6ff;
+  border: none;
+  border-radius: 8px;
+}
+
+.btn.primary {
+  color: #fff;
+  background: #4c7dff;
+}
+
+.btn.ghost {
+  background: #f7f7f7;
+}
 
 /* 错误提示（由父组件传入） */
-.error{ color:#c0392b; }
+.error {
+  color: #c0392b;
+}
 </style>

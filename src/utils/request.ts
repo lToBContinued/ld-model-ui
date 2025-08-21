@@ -3,7 +3,7 @@ import router from '@/router/index.js'
 import { GET_TOKEN, REMOVE_TOKEN } from '@/utils/common/token.ts'
 
 const instance = axios.create({
-  // baseURL: import.meta.env.VITE_BASE_API,
+  baseURL: import.meta.env.VITE_BASE_API,
   timeout: 6000,
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
