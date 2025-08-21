@@ -32,6 +32,7 @@ export interface BaseFormConfigItem {
   prop: string
   label: string
   type: string
+  rules?: Record<string, any>[]
   config?: {
     type?: string
     options?: Record<string, any>
