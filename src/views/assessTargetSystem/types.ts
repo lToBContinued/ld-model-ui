@@ -50,6 +50,7 @@ export interface IndicatorListItem {
     value: NullType<number | string>
     result: NullType<number | string>
     config?: {
+      options?: { label: string; value: string | number }[]
       min?: number
       max?: number
       step?: number

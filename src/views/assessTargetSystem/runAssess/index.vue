@@ -43,7 +43,6 @@ import AssessList from '@/views/assessTargetSystem/runAssess/components/assess-l
 import { SchemeListItem } from '@/api/schemeManage/types.ts'
 import { getRunAssessConfig } from '@/views/assessTargetSystem/runAssessConfig.ts'
 import { getSchemeListApi } from '@/api/schemeManage'
-import findNodeInTree from '@/utils/common/findNodeInTree.ts'
 
 // 参训单位列表
 const companyList = ref<Record<string, any>>([])
@@ -90,15 +89,15 @@ const scheme = ref<UndefinedType<number>>()
 const schemeList = ref<SchemeListItem[]>([])
 const indicatorList = ref<IndicatorListItem[]>([])
 
-watch(
-  () => indicatorList.value,
-  (newVal) => {
-    console.log('>>>>> file: assess-card.vue ~ method: watch <<<<<\n', newVal) // TODO: 删除
-  },
-  {
-    deep: true,
-  },
-)
+// watch(
+//   () => indicatorList.value,
+//   (newVal) => {
+//     console.log('>>>>> file: assess-card.vue ~ method: watch <<<<<\n', newVal) // TODO: 删除
+//   },
+//   {
+//     deep: true,
+//   },
+// )
 
 const submitBaseForm = () => {
   console.log('>>>>> file: assess-card.vue ~ method: submitBaseForm <<<<<\n', baseFormData) // TODO: 删除
@@ -121,7 +120,6 @@ const getCompanyList = () => {
 const getPageConfig = async () => {
   const res = await getRunAssessConfig()
   indicatorList.value = res.data as IndicatorListItem[]
-  const node = findNodeInTree(indicatorList.value, 'indicatorId', 18)
 }
 // 获取方案列表
 const getSchemeList = async () => {
@@ -134,7 +132,40 @@ const getSchemeList = async () => {
   }) as SchemeListItem[]
 }
 // 提交评估
-const submitAssess = () => {}
+const submitAssess = () => {
+  const scoreList = pickIdAndValue(indicatorList.value)
+  const data = {
+    baseInfo: baseFormData,
+    scoreList,
+  }
+  console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', data) // TODO: 删除
+}
+/**
+ * @description 获取树的indicatorId和value，并以数组形式返回
+ * @param {IndicatorListItem[]} tree
+ */
+const pickIdAndValue = (
+  tree: IndicatorListItem[],
+): {
+  indicatorId: number
+  value: NullType<number | string>
+}[] => {
+  const result: { indicatorId: number; value: NullType<number | string> }[] = []
+  const pick = (nodes: IndicatorListItem[]) => {
+    nodes.forEach((node) => {
+      const nodeInfo = {
+        indicatorId: node.indicatorId,
+        value: node.formConfig.value,
+      }
+      result.push(nodeInfo)
+      if (node.children && node.children.length > 0) {
+        pick(node.children)
+      }
+    })
+  }
+  pick(tree)
+  return result
+}
 
 getCompanyList()
 getPageConfig()

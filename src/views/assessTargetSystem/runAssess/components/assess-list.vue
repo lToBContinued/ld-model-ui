@@ -6,20 +6,34 @@
         <div class="indicator-main">
           <p class="indicator-name">{{ indicator.indicatorName }}</p>
           <div class="input-box">
-            <span class="label">分值</span>
+            <span class="label">请填写</span>
             <!-- 根据配置渲染不同类型的输入框 -->
             <zk-input-number
               v-if="indicator.formConfig?.type === 'numberInput'"
+              v-model="indicator.formConfig.value"
               :max="indicator.formConfig?.config?.max"
               :min="indicator.formConfig?.config?.min"
-              :model-value="indicator.formConfig.value"
               :step="indicator.formConfig?.config?.step"
               style="width: 160px"
+              step-strictly
               @change="handleValueChange(indicator, $event)"
             ></zk-input-number>
-            <zk-button :loading="itemCalc" size="small" style="margin-left: 24px" @click="handelCalc(indicator)">
-              计算
-            </zk-button>
+            <zk-radio
+              v-else-if="indicator.formConfig?.type === 'radio'"
+              v-model="indicator.formConfig.value as string | number"
+              :options="indicator.formConfig?.config?.options"
+              @change="handleValueChange(indicator, $event)"
+            ></zk-radio>
+            <zk-select
+              v-else-if="indicator.formConfig?.type === 'select'"
+              v-model="indicator.formConfig.value as string | number"
+              :options="indicator.formConfig?.config?.options"
+              style="width: 160px"
+              @change="handleValueChange(indicator, $event)"
+            ></zk-select>
+            <!--<zk-button :loading="itemCalc" size="small" style="margin-left: 24px" @click="handelCalc(indicator)">-->
+            <!--  计算-->
+            <!--</zk-button>-->
           </div>
         </div>
         <p class="indicator-desc">{{ indicator.indicatorDesc || '无描述' }}</p>
@@ -36,7 +50,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { IndicatorListItem } from '@/views/assessTargetSystem/types.ts'
-import AssessList from './assess-list.vue' // 导入自身用于递归
+import AssessList from './assess-list.vue'
+import findNodeInTree from '@/utils/common/findNodeInTree.ts' // 导入自身用于递归
 
 interface DefineProps {
   modelValue: IndicatorListItem[]
@@ -65,11 +80,14 @@ watch(
 )
 
 const handleValueChange = (indicator: IndicatorListItem, value: number) => {
-  indicator.formConfig.value = value
-  emit('update:model-value', indicatorsList.value)
+  console.log(
+    '>>>>> file: assess-list.vue ~ method: handleValueChange <<<<<\n',
+    `指标id: ${indicator.indicatorId}, 值: ${value}`,
+  ) // TODO: 删除
 }
 const handelCalc = (indicator: IndicatorListItem) => {
-  console.log('>>>>> file: assess-list.vue ~ method: handelCalc <<<<<\n', indicator) // TODO: 删除
+  const node = findNodeInTree(indicatorsList.value, 'indicatorId', indicator.indicatorId)
+  console.log('>>>>> file: assess-list.vue ~ method: handelCalc <<<<<\n', node) // TODO: 删除
 }
 </script>
 
@@ -111,7 +129,6 @@ const handelCalc = (indicator: IndicatorListItem) => {
   .indicator-desc {
     margin-bottom: 0;
     padding: $spacing-size2;
-    padding-left: $spacing-size2 + 20px; // 描述文字缩进
     font-size: $font-size-s;
   }
 }

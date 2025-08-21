@@ -10,13 +10,20 @@ export const getRunAssessConfig = () => {
         level: 1,
         formConfig: {
           prop: 'math',
-          type: 'numberInput',
+          type: 'radio',
           value: null,
           result: null,
           config: {
-            min: 0,
-            max: 100,
-            step: 0.01,
+            options: [
+              {
+                label: '满分',
+                value: 1,
+              },
+              {
+                label: '不得分',
+                value: 0,
+              },
+            ],
           },
         },
         children: [],
@@ -34,7 +41,7 @@ export const getRunAssessConfig = () => {
           config: {
             min: 0,
             max: 100,
-            step: 0.01,
+            step: 0.000005,
           },
         },
         children: [
@@ -45,13 +52,28 @@ export const getRunAssessConfig = () => {
             level: 2,
             formConfig: {
               prop: 'math',
-              type: 'numberInput',
+              type: 'select',
               value: null,
               result: null,
               config: {
-                min: 0,
-                max: 100,
-                step: 0.01,
+                options: [
+                  {
+                    label: '优秀',
+                    value: 100,
+                  },
+                  {
+                    label: '良好',
+                    value: 80,
+                  },
+                  {
+                    label: '及格',
+                    value: 60,
+                  },
+                  {
+                    label: '不及格',
+                    value: 0,
+                  },
+                ],
               },
             },
             children: [
