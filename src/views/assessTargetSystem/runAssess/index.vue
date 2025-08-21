@@ -11,9 +11,6 @@
         inline
         label-width="100"
       ></zk-form>
-      <div class="form-bths">
-        <zk-button type="primary" @click="submitBaseForm">确定</zk-button>
-      </div>
     </zk-card>
     <zk-card style="margin-bottom: 14px">
       <div class="select-scheme-wrapper">
@@ -37,13 +34,12 @@
 
 <script setup lang="ts">
 import ZkForm from '@/components/zk-form.vue'
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive } from 'vue'
 import { BaseFormConfigItem, BaseFormData, IndicatorListItem } from '@/views/assessTargetSystem/types.ts'
 import AssessList from '@/views/assessTargetSystem/runAssess/components/assess-list.vue'
 import { SchemeListItem } from '@/api/schemeManage/types.ts'
 import { getRunAssessConfig } from '@/views/assessTargetSystem/runAssessConfig.ts'
 import { getSchemeListApi } from '@/api/schemeManage'
-import findNodeInTree from '@/utils/common/findNodeInTree.ts'
 
 // 参训单位列表
 const companyList = ref<Record<string, any>>([])
@@ -52,6 +48,7 @@ const baseFormConfig = ref<BaseFormConfigItem[]>([
     prop: 'company',
     label: '参训单位',
     type: 'select',
+    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
     config: {
       options: [],
     },
@@ -60,6 +57,7 @@ const baseFormConfig = ref<BaseFormConfigItem[]>([
     prop: 'trainingTime',
     label: '参训时间',
     type: 'datePicker',
+    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
     config: {
       type: 'date',
       format: 'YYYY-MM-DD',
@@ -69,6 +67,7 @@ const baseFormConfig = ref<BaseFormConfigItem[]>([
     prop: 'assessTime',
     label: '评估时间',
     type: 'datePicker',
+    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
     config: {
       type: 'date',
       format: 'YYYY-MM-DD',
@@ -78,6 +77,7 @@ const baseFormConfig = ref<BaseFormConfigItem[]>([
     prop: 'expert',
     label: '专家',
     type: 'input',
+    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
   },
 ])
 const baseFormData = reactive<BaseFormData>({
@@ -89,20 +89,8 @@ const baseFormData = reactive<BaseFormData>({
 const scheme = ref<UndefinedType<number>>()
 const schemeList = ref<SchemeListItem[]>([])
 const indicatorList = ref<IndicatorListItem[]>([])
+const baseFormDataRef = ref<InstanceType<typeof ZkForm>>()
 
-watch(
-  () => indicatorList.value,
-  (newVal) => {
-    console.log('>>>>> file: assess-card.vue ~ method: watch <<<<<\n', newVal) // TODO: 删除
-  },
-  {
-    deep: true,
-  },
-)
-
-const submitBaseForm = () => {
-  console.log('>>>>> file: assess-card.vue ~ method: submitBaseForm <<<<<\n', baseFormData) // TODO: 删除
-}
 // 获取单位列表
 const getCompanyList = () => {
   companyList.value = [
@@ -121,7 +109,6 @@ const getCompanyList = () => {
 const getPageConfig = async () => {
   const res = await getRunAssessConfig()
   indicatorList.value = res.data as IndicatorListItem[]
-  const node = findNodeInTree(indicatorList.value, 'indicatorId', 18)
 }
 // 获取方案列表
 const getSchemeList = async () => {
@@ -134,7 +121,47 @@ const getSchemeList = async () => {
   }) as SchemeListItem[]
 }
 // 提交评估
-const submitAssess = () => {}
+const submitAssess = async () => {
+  baseFormDataRef.value?.ElFormRef?.validate()
+    .then(() => {
+      const scoreList = pickIdAndValue(indicatorList.value)
+      const data = {
+        baseInfo: baseFormData,
+        scoreList,
+      }
+      console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', data) // TODO: 删除
+    })
+    .catch((e) => {
+      ElMessage.error('有表单项未填，请检查！')
+      console.error(e)
+    })
+}
+/**
+ * @description 获取树的indicatorId和value，并以数组形式返回
+ * @param {IndicatorListItem[]} tree
+ */
+const pickIdAndValue = (
+  tree: IndicatorListItem[],
+): {
+  indicatorId: number
+  value: NullType<number | string>
+}[] => {
+  const result: { indicatorId: number; value: NullType<number | string> }[] = []
+  const pick = (nodes: IndicatorListItem[]) => {
+    nodes.forEach((node) => {
+      const nodeInfo = {
+        indicatorId: node.indicatorId,
+        value: node.formConfig.value,
+      }
+      result.push(nodeInfo)
+      if (node.children && node.children.length > 0) {
+        pick(node.children)
+      }
+    })
+  }
+  pick(tree)
+  return result
+}
 
 getCompanyList()
 getPageConfig()

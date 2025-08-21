@@ -13,10 +13,10 @@ interface ZkRadioProps {
   modelValue: string | number | boolean
   options: {
     label: string
-    value: string | number | boolean
+    value: string | number
     disabled?: boolean
   }[]
-  size?: string
+  size?: '' | 'default' | 'small' | 'large'
 }
 
 const props = withDefaults(defineProps<ZkRadioProps>(), {

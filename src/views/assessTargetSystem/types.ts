@@ -49,7 +49,9 @@ export interface IndicatorListItem {
     type: string
     value: NullType<number | string>
     result: NullType<number | string>
+    rules?: Record<string, any>[]
     config?: {
+      options?: { label: string; value: string | number }[]
       min?: number
       max?: number
       step?: number
