@@ -55,6 +55,7 @@ declare module 'vue' {
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
     IndicatorPickerModal: typeof import('./../components/IndicatorPickerModal.vue')['default']
     IndicatorSystemSidebar: typeof import('./../components/IndicatorSystemSidebar.vue')['default']
+    InputFormula: typeof import('./../components/InputFormula/index.vue')['default']
     MindTree: typeof import('./../components/MindTree/MindTree.vue')['default']
     Modal: typeof import('./../components/InputFormula/components/Modal.vue')['default']
     ModuleTitle: typeof import('./../components/module-title.vue')['default']

@@ -3,69 +3,104 @@
     <el-collapse-item v-for="item in tree" :key="item.indicatorId">
       <template #title>
         <div class="title-wrapper">
-          <span class="title">{{ item.indicatorName }}</span>
-          <zk-button size="small" @click.stop="openAlgorithmDialog(item)">指标算法配置</zk-button>
+          <span class="title">{{ item.name }}</span>
+          <zk-button size="small" @click.stop="openDialog(item)">指标算法配置</zk-button>
         </div>
       </template>
-      <div :class="`content-${item.level! + 1}`">
-        <span :class="`desc-${item.level! + 1}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
-        <scheme-collapse v-if="item.children && item.children.length > 0" v-model="item.children"></scheme-collapse>
+      <div :class="`content-${(item.level ?? 0) + 1}`">
+        <span :class="`desc-${(item.level ?? 0) + 1}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
+        <scheme-collapse
+          v-if="item.children?.length"
+          v-model="item.children"
+          :indicator-options="indicatorOptions"
+          :scheme-id="schemeId"
+        />
       </div>
     </el-collapse-item>
   </el-collapse>
-  <zk-dialog
-    v-model="algorithmDialogShow"
-    @cancel="closeAlgorithmDialog"
-    @close="closeAlgorithmDialog"
-    @confirm="confirmAlgorithm"
-  >
-    <template #title>
-      <span style="font-size: 18px">指标算法配置</span>
-    </template>
-  </zk-dialog>
+  <!-- 放在根模板末尾，避免层级和布局干扰 -->
+  <AlgorithmConfigDialog
+    v-model="dlgOpen"
+    :subtree-id="schemeId"
+    :node="currentIndicator"
+    @save="onDialogSave"
+    @changed="bubbleChanged"
+  />
 </template>
 
 <script setup lang="ts">
-import { watch, ref } from 'vue'
-import { SchemeIndicatorConfigItem } from '@/views/systemManage/types.ts'
+import { shallowRef, watch, ref } from 'vue'
+import type { SchemeIndicatorConfigItem } from '@/views/systemManage/types'
+import { ElMessage } from 'element-plus'
+import { updateSubtreeNode } from '@/api/schemeManage/legacySubtree.ts' // ✅ 用节点级保存
+import AlgorithmConfigDialog from './AlgorithmConfigDialog.vue'
+
+defineOptions({ name: 'SchemeCollapse' })
 
 interface DefineProps {
   modelValue?: SchemeIndicatorConfigItem[]
   indicatorOptions?: { label: string; value: number }[]
+  schemeId?: number // subtreeId
 }
+const props = withDefaults(defineProps<DefineProps>(), {
+  modelValue: () => [],
+  indicatorOptions: () => [],
+  schemeId: undefined,
+})
+const emit = defineEmits<{ (e: 'update:modelValue', v: SchemeIndicatorConfigItem[]): void }>()
 
-const props = withDefaults(defineProps<DefineProps>(), {})
-const emit = defineEmits<{
-  'model-value': [value: SchemeIndicatorConfigItem[]]
-}>()
-const tree = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
-const currentIndicator = ref<SchemeIndicatorConfigItem>()
-const algorithmDialogShow = ref(false)
+const tree = shallowRef<SchemeIndicatorConfigItem[]>([])
+const deepClone = <T,>(o: T): T => JSON.parse(JSON.stringify(o))
 
 watch(
   () => props.modelValue,
-  (newVal) => {
-    tree.value = newVal as SchemeIndicatorConfigItem[]
+  (v) => {
+    tree.value = deepClone(v ?? [])
   },
-  { deep: true },
+  { immediate: true },
 )
 
-// 打开指标算法配置弹窗
-const openAlgorithmDialog = (item: SchemeIndicatorConfigItem) => {
+const dlgOpen = ref(false)
+const currentIndicator = ref<SchemeIndicatorConfigItem | null>(null)
+function openDialog(item: SchemeIndicatorConfigItem) {
   currentIndicator.value = item
-  algorithmDialogShow.value = true
+  dlgOpen.value = true
 }
-const closeAlgorithmDialog = () => {
-  algorithmDialogShow.value = false
-}
-// 保存算法配置
-const confirmAlgorithm = () => {
-  // TODO: 保存算法配置
+
+async function onDialogSave(payload: {
+  indicatorId: number
+  enabled: 0 | 1
+  weight: number | null
+  formula: string
+  params: Array<{ name: string; code: string; defaultValue: string }>
+}) {
+  if (!currentIndicator.value) return
+
+  // 1) 立即更新本地树
+  Object.assign(currentIndicator.value, {
+    enabled: payload.enabled,
+    weight: payload.weight,
+    formula: payload.formula,
+    params: payload.params,
+  })
+  emit('update:modelValue', deepClone(tree.value))
+
+  // 2) ★ 只保存当前节点（别再整树保存）
+  try {
+    await updateSubtreeNode(payload.indicatorId, {
+      formula: payload.formula ?? null,
+      weight: payload.weight ?? null,
+      enabled: payload.enabled,
+    })
+    ElMessage.success('已保存')
+  } catch (e: any) {
+    ElMessage.error(e?.message || '保存失败')
+  }
 }
 </script>
 
 <style scoped lang="scss">
-$spacing-indent: 16px; // 缩进间距
+$spacing-indent: 16px;
 
 .scheme-collapse {
   margin-top: $spacing-size2;
@@ -93,7 +128,6 @@ $spacing-indent: 16px; // 缩进间距
     color: $main-text-color2;
   }
 
-  // 不同级别缩进样式
   @for $i from 1 through 10 {
     .content-#{$i} {
       position: relative;
@@ -106,7 +140,6 @@ $spacing-indent: 16px; // 缩进间距
   }
 }
 
-// 子级折叠面板样式
 ::v-deep(.el-collapse) {
   margin-top: $spacing-size1;
 }

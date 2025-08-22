@@ -10,9 +10,9 @@ const props = defineProps({
   treeData: { type: Array, required: true, default: () => [] },
   fieldNames: {
     type: Object,
-    default: () => ({ title: 'label', key: 'value', children: 'children' })
+    default: () => ({ title: 'label', key: 'value', children: 'children' }),
   },
-  onHandleReset: { type: Function, default: () => {} }
+  onHandleReset: { type: Function, default: () => {} },
 })
 
 const emits = defineEmits(['handleExplain', 'handleSelectNode'])
@@ -23,33 +23,28 @@ const searchValue = ref<string>('')
 const defaultTree = ref<any[]>(JSON.parse(JSON.stringify(props.treeData || [])))
 const showTree = ref<any[]>(props.treeData as any[])
 
-const expandedKeys = ref<any[]>(
-    defaultTree.value.length > 0 ? [defaultTree.value[0]?.value] : []
-)
+const expandedKeys = ref<any[]>(defaultTree.value.length > 0 ? [defaultTree.value[0]?.value] : [])
 const selectedKeys = ref<string[]>([])
 const autoExpandParent = ref<boolean>(false)
 
 watch(
-    () => props.treeData,
-    (val: any[] = []) => {
-      // props 更新时，同步默认树 & 显示树
-      defaultTree.value = JSON.parse(JSON.stringify(val || []))
-      showTree.value = JSON.parse(JSON.stringify(val || []))
-      // 安全设置展开项
-      expandedKeys.value =
-          defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined
-              ? [defaultTree.value[0].value]
-              : []
-      selectedKeys.value = []
-      autoExpandParent.value = false
-    },
-    { deep: true, immediate: true }
+  () => props.treeData,
+  (val: any[] = []) => {
+    // props 更新时，同步默认树 & 显示树
+    defaultTree.value = JSON.parse(JSON.stringify(val || []))
+    showTree.value = JSON.parse(JSON.stringify(val || []))
+    // 安全设置展开项
+    expandedKeys.value =
+      defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined ? [defaultTree.value[0].value] : []
+    selectedKeys.value = []
+    autoExpandParent.value = false
+  },
+  { deep: true, immediate: true },
 )
 
 function searchAndFilter(data: any[], keyword: string) {
   return (data || []).filter((item: any) => {
-    const labelMatches =
-        (item.label || '').toUpperCase().includes(keyword.toUpperCase())
+    const labelMatches = (item.label || '').toUpperCase().includes(keyword.toUpperCase())
     if (item.children && item.children.length > 0) {
       item.children = searchAndFilter(item.children, keyword)
     }
@@ -88,16 +83,11 @@ const handleSearch = (text: string) => {
     // 空关键词：恢复原始树
     showTree.value = JSON.parse(JSON.stringify(defaultTree.value || []))
     expandedKeys.value =
-        defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined
-            ? [defaultTree.value[0].value]
-            : []
+      defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined ? [defaultTree.value[0].value] : []
     autoExpandParent.value = false
     selectedKeys.value = []
   } else {
-    const filterData = searchAndFilter(
-        JSON.parse(JSON.stringify(defaultTree.value || [])),
-        text
-    )
+    const filterData = searchAndFilter(JSON.parse(JSON.stringify(defaultTree.value || [])), text)
     expandedKeys.value = filterNodesWithChildren(filterData)
     showTree.value = filterData
     autoExpandParent.value = true
@@ -120,9 +110,7 @@ const resetTree = () => {
   searchValue.value = ''
   showTree.value = JSON.parse(JSON.stringify(defaultTree.value || []))
   expandedKeys.value =
-      defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined
-          ? [defaultTree.value[0].value]
-          : []
+    defaultTree.value.length > 0 && defaultTree.value[0]?.value !== undefined ? [defaultTree.value[0].value] : []
   autoExpandParent.value = false
   selectedKeys.value = []
 
@@ -136,29 +124,29 @@ const resetTree = () => {
     <!-- 固定标题部分 -->
     <div class="tree-title-container">
       <Title
-          v-bind="{
+        v-bind="{
           title: props.title,
           isSearch: props.isSearch,
-          showReset: true
+          showReset: true,
         }"
-          @handleSearch="handleSearch"
-          @handleReset="resetTree"
+        @handleSearch="handleSearch"
+        @handleReset="resetTree"
       />
     </div>
 
     <!-- 可滚动树部分 -->
     <div class="tree-scroll-container">
       <Tree
-          v-if="showTree.length > 0"
-          v-model:expandedKeys="expandedKeys"
-          v-model:selectedKeys="selectedKeys"
-          :autoExpandParent="autoExpandParent"
-          show-line
-          :tree-data="showTree"
-          :fieldNames="props.fieldNames"
-          style="height: auto;"
-          @select="handleSelect"
-          @expand="onExpand"
+        v-if="showTree.length > 0"
+        v-model:expandedKeys="expandedKeys"
+        v-model:selectedKeys="selectedKeys"
+        :autoExpandParent="autoExpandParent"
+        show-line
+        :tree-data="showTree"
+        :fieldNames="props.fieldNames"
+        style="height: auto"
+        @select="handleSelect"
+        @expand="onExpand"
       >
         <template #switcherIcon="{ switcherCls }">
           <down-outlined :class="switcherCls" />

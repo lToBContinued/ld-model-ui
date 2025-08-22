@@ -5,6 +5,7 @@
       "@/*": ["src/*"]
     },
     "jsx": "preserve",
+    "types": ["vite/client", "vue"],
     // 启用实验性的装饰器语法支持,
     "experimentalDecorators": true,
     // 允许从没有默认导出的模块中使用默认导入语法（兼容部分 CommonJS 模块）,
