@@ -26,7 +26,7 @@
 import { reactive, ref, watchEffect } from 'vue'
 import { schemaBasicAssessFormConfig } from '../configs/formConfigs.ts'
 import { SchemaBasicAssessFormData } from '../types.ts'
-import { getAssessSubjectOptionsApi, getParticipateUnitsSelectOptionsApi } from '@/api/assessTargetSystem/schema'
+import { getAssessSubjectOptionsApi, getParticipateUnitsSelectOptionsApi } from '@/api/schema/index.ts'
 import ZkForm from '@/components/zk-form.vue'
 import AssessCard from '@/views/assessTargetSystem/scheme/components/assess-card.vue'
 

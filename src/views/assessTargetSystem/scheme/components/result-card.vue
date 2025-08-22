@@ -38,7 +38,7 @@ import ZkForm from '@/components/zk-form.vue'
 import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOptions } from '@/views/assessTargetSystem/configs/chartOptions.ts'
 import { resultTableColumns } from '@/views/assessTargetSystem/configs/tableConfigs.ts'
-import { getAssessResultApi } from '@/api/assessTargetSystem/schema'
+import { getAssessResultApi } from '@/api/schema/index.ts'
 import { formatLevel } from '@/utils/common/formatData.ts'
 
 interface ResultCardProps {

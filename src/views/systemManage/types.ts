@@ -38,11 +38,6 @@ export interface SchemeListItem {
   schemeName: string
 }
 
-export interface BuildSchemeTreeItem {
-  schemeId?: string
-  config?: string
-}
-
 export interface AddSecondIndicatorFormData {
   indicatorId: UndefinedType<number>
   indicatorDesc: string
