@@ -14,7 +14,7 @@ import {
  */
 export const addSchemeApi = (data: AddSchemeApiSend) => {
   return request<ResponseData<AddSchemeApiRes>>({
-    url: '/api/schemeManage/addScheme',
+    url: '/schemeManage/addScheme',
     method: 'post',
     data,
   })
@@ -26,7 +26,7 @@ export const addSchemeApi = (data: AddSchemeApiSend) => {
  */
 export const removeSchemeApi = (id: number) => {
   return request<any, ResponseData>({
-    url: '/api/schemeManage/removeScheme',
+    url: '/schemeManage/removeScheme',
     method: 'post',
     data: {
       id,
@@ -41,7 +41,7 @@ export const removeSchemeApi = (id: number) => {
  */
 export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
   return request<any, ResponseData>({
-    url: '/api/schemeManage/updateScheme',
+    url: '/schemeManage/updateScheme',
     method: 'post',
     data,
   })
@@ -52,13 +52,13 @@ export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
  */
 export const getSchemeListApi = () => {
   return request<any, ResponseData<GetSchemeListApiRes[]>>({
-    url: '/api/schemeManage/getSchemeList',
+    url: '/schemeManage/getSchemeList',
   })
 }
 
 export const getSchemeDetailApi = (id: number) => {
   return request({
-    url: '/api/schemeManage/getSchemeDetail',
+    url: '/schemeManage/getSchemeDetail',
     params: {
       id,
     },

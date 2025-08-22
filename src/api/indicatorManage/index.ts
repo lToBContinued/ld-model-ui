@@ -16,7 +16,7 @@ import {
  */
 export const getIndicatorListApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorListApiRes[]>>({
-    url: '/api/indicators/treeList',
+    url: '/indicators/treeList',
     method: 'get',
     params: {
       parentId: params.id,
@@ -30,7 +30,7 @@ export const getIndicatorListApi = (params: { id: number }) => {
  */
 export const addIndicatorApi = (data: AddIndicatorApiSend) => {
   return request<any, ResponseData<AddIndicatorApiRes>>({
-    url: '/api/indicators',
+    url: '/indicators',
     method: 'post',
     data,
   })
@@ -42,7 +42,7 @@ export const addIndicatorApi = (data: AddIndicatorApiSend) => {
  */
 export const removeIndicatorApi = (data: { id: number }) => {
   return request<any, ResponseData<{ deletedCount: number; deletedIds: number[] }>>({
-    url: '/api/indicatorManage/removeIndicator',
+    url: '/indicatorManage/removeIndicator',
     method: 'post',
     data,
   })
@@ -54,7 +54,7 @@ export const removeIndicatorApi = (data: { id: number }) => {
  */
 export const getIndicatorDetailApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorDetailRes>>({
-    url: '/api/indicatorManage/getIndicatorDetail',
+    url: '/indicatorManage/getIndicatorDetail',
     method: 'get',
     params,
   })
@@ -71,7 +71,7 @@ export const getIndicatorDetailApi = (params: { id: number }) => {
  */
 export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
   return request<any, ResponseData<UpdateIndicatorDetailRes>>({
-    url: '/api/indicatorManage/updateIndicatorDetail',
+    url: '/indicatorManage/updateIndicatorDetail',
     method: 'post',
     data,
   })
@@ -82,7 +82,7 @@ export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
  */
 export const getIndicatorSystemListApi = () => {
   return request<any, ResponseData<GetIndicatorSystemListRes[]>>({
-    url: '/api/indicatorManage/getIndicatorSystemList',
+    url: '/indicatorManage/getIndicatorSystemList',
   })
 }
 
@@ -92,7 +92,7 @@ export const getIndicatorSystemListApi = () => {
  */
 export const getIndicatorAndDescendantsApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorAndDescendantsApiRes[]>>({
-    url: '/api/indicatorManage/getIndicatorAndDescendants',
+    url: '/indicatorManage/getIndicatorAndDescendants',
     params,
   })
 }
