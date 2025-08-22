@@ -1,7 +1,7 @@
 interface indicatorItem {
   id: number
-  indicatorName: string
-  indicatorDesc: string
+  name: string
+  description: string
 }
 
 export interface GetIndicatorListApiRes extends indicatorItem {
@@ -18,7 +18,8 @@ export interface AddIndicatorApiRes extends indicatorItem {
 }
 
 export interface AddIndicatorApiSend extends indicatorItem {
-  parentId?: number
+  parentId: number
+  systemId: number
 }
 
 export interface GetIndicatorDetailRes extends indicatorItem {

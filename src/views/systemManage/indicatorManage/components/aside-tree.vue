@@ -4,7 +4,7 @@
     <zk-tree
       ref="ZkTreeRef"
       :active="{ append: true, edit: false, remove: true, check: false }"
-      :custom-props="{ label: 'indicatorName' }"
+      :custom-props="{ label: 'name' }"
       :load="getTreeConfig"
       lazy
       node-key="id"
@@ -62,6 +62,7 @@ import { addIndicatorApi, getIndicatorListApi, removeIndicatorApi } from '@/api/
 import ZkForm from '@/components/zk-form.vue'
 import { AddIndicatorApiSend, GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
 import { addChildNodeFormConfig, addRootFormConfig } from '@/views/systemManage/indicatorManage/configs/formConfigs.ts'
+import { AddChildNodeFormData } from '@/views/systemManage/types.ts'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
@@ -73,11 +74,12 @@ const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
 const addRootDialogShow = ref(false)
 const addRootFormData = reactive({
-  indicatorName: '',
-  indicatorDesc: '',
+  name: '',
+  description: '',
+  parentId: 0,
 })
 const addRootFormRules = {
-  indicatorName: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
+  name: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
 }
 const rootNode = ref()
 const rootResolve = ref()
@@ -86,9 +88,10 @@ const currentNode = ref<Node>()
 const currentData = ref<Data>()
 const addChildNodeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addChildNodeDialogShow = ref(false)
-const addChildNodeFormData = reactive({
-  indicatorName: '',
-  indicatorDesc: '',
+const addChildNodeFormData = reactive<AddChildNodeFormData>({
+  name: '',
+  description: '',
+  systemId: '',
 })
 
 // 获取树
@@ -172,9 +175,11 @@ const closeAddChildNodeDialog = () => {
 const submitAddChildNodeDialog = async () => {
   await addChildNodeFormRef.value?.ElFormRef?.validate()
   const parentId = currentData.value!.id
+  const systemId = currentData.value!.systemId
   const data = {
-    indicatorName: addChildNodeFormData.indicatorName,
-    indicatorDesc: addChildNodeFormData.indicatorDesc,
+    name: addChildNodeFormData.name,
+    description: addChildNodeFormData.description,
+    systemId,
     parentId,
   } as AddIndicatorApiSend
   const res = await addIndicatorApi(data)
