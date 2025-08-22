@@ -54,7 +54,7 @@ export const removeIndicatorApi = (data: { id: number }) => {
  */
 export const getIndicatorDetailApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorDetailRes>>({
-    url: '/indicatorManage/getIndicatorDetail',
+    url: '/indicators/info',
     method: 'get',
     params,
   })

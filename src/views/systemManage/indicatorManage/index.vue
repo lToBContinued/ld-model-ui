@@ -38,8 +38,8 @@ const indicatorConfigFormRef = ref<InstanceType<typeof ZkForm>>()
 const asideTreeRef = ref<InstanceType<typeof AsideTree>>()
 const indicatorConfigFormData = reactive<IndicatorConfigFormData>({
   config: '',
-  indicatorDesc: '',
-  indicatorName: '',
+  description: '',
+  name: '',
   isLeaf: 0,
   parentName: '',
 })
@@ -56,7 +56,7 @@ const indicatorConfigFormConfig = ref([
     },
   },
   {
-    prop: 'indicatorName',
+    prop: 'name',
     label: '指标名称',
     type: 'input',
     rules: [{ required: true, message: '请输入指标名称', trigger: ['blur'] }],
@@ -67,7 +67,7 @@ const indicatorConfigFormConfig = ref([
     },
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {
@@ -122,12 +122,12 @@ watch(indicatorInputJson, (newVal) => {
 
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, indicatorDesc, indicatorName, parentName, isLeaf } = res
+  const { config, id, description, name, parentName, isLeaf } = res
   Object.assign(indicatorConfigFormData, {
     config,
     id,
-    indicatorDesc,
-    indicatorName,
+    description,
+    name,
     parentName,
     isLeaf,
   })
