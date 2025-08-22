@@ -57,8 +57,8 @@ export interface AddSchemeFormData {
 export interface IndicatorConfigFormData {
   config?: any
   id?: number
-  indicatorDesc?: string
-  indicatorName?: string
+  description?: string
+  name?: string
   isLeaf?: number
   level?: number
   parentId?: number

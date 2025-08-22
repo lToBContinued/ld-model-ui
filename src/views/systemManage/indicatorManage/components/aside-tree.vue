@@ -69,6 +69,7 @@ type Data = RenderContentContext['data']
 
 const emit = defineEmits<{
   'view-node': [data: Data, node: Node]
+  'remove-node': []
 }>()
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
@@ -138,7 +139,7 @@ const submitAddRootDialog = async () => {
   try {
     await addRootFormRef.value?.ElFormRef?.validate()
     await addIndicatorApi(addRootFormData as AddIndicatorApiSend)
-    refreshTree()
+    refreshStandar('add')
     closeRootDialog()
   } catch (e) {
     console.error(e)
@@ -157,6 +158,7 @@ const removeNode = async (node: Node, data: Data) => {
     if (res.status === 200) {
       ZkTreeRef.value?.ElTreeRef?.remove(node)
       ElMessage.success('删除成功')
+      emit('remove-node')
     } else {
       ElMessage.error('删除失败')
     }
@@ -185,7 +187,7 @@ const submitAddChildNodeDialog = async () => {
   const res = await addIndicatorApi(data)
   if (res.status === 200) {
     ElMessage.success('添加成功')
-    refreshTree()
+    refreshStandar('add')
     closeAddChildNodeDialog()
   } else {
     ElMessage.error('添加失败')
@@ -196,8 +198,17 @@ const refreshTree = () => {
   rootNode.value.childNodes = []
   getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
 }
+const refreshNodeBy = (id: number) => {
+  const node = ZkTreeRef.value?.ElTreeRef?.getNode(id)
+  node!.loaded = false
+  node!.expand()
+}
+const refreshStandar = (data: string) => {
+  let id_ = data === 'add' ? currentData.value!.id : currentData.value!.parentId
+  refreshNodeBy(id_)
+}
 
-defineExpose({ refreshTree })
+defineExpose({ refreshStandar })
 </script>
 
 <style scoped lang="scss">
