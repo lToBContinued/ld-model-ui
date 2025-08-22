@@ -46,8 +46,7 @@
       v-model:page-size="_pageSize"
       :page-sizes="[5, 10, 20, 50]"
       :pager-count="5"
-      background
-      layout="->, total, sizes, prev, pager, next, jumper"
+      layout="->, sizes, prev, pager, next, jumper, total,"
     ></el-pagination>
   </div>
 </template>
@@ -160,5 +159,11 @@ defineExpose({ ElTableRef })
   display: flex;
   justify-content: flex-end;
   padding: 12px 0;
+}
+
+::v-deep(.el-pager) {
+  .is-active {
+    color: $pagination-active-color;
+  }
 }
 </style>
