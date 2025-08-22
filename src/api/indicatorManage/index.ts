@@ -16,9 +16,11 @@ import {
  */
 export const getIndicatorListApi = (params: { id: number }) => {
   return request<any, ResponseData<GetIndicatorListApiRes[]>>({
-    url: '/api/indicatorManage/getIndicatorList',
+    url: '/api/indicators/treeList',
     method: 'get',
-    params,
+    params: {
+      parentId: params.id,
+    },
   })
 }
 
@@ -28,7 +30,7 @@ export const getIndicatorListApi = (params: { id: number }) => {
  */
 export const addIndicatorApi = (data: AddIndicatorApiSend) => {
   return request<any, ResponseData<AddIndicatorApiRes>>({
-    url: '/api/indicatorManage/addIndicator',
+    url: '/api/indicators',
     method: 'post',
     data,
   })

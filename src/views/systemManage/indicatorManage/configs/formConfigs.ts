@@ -52,12 +52,12 @@ export const indicatorConfigFormConfig = [
 
 export const addRootFormConfig = [
   {
-    prop: 'indicatorName',
+    prop: 'name',
     label: '指标名称',
     type: 'input',
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {
@@ -67,13 +67,13 @@ export const addRootFormConfig = [
 ]
 export const addChildNodeFormConfig = [
   {
-    prop: 'indicatorName',
+    prop: 'name',
     label: '指标名称',
     type: 'input',
     rules: [{ required: true, message: '请输入指标名称', trigger: ['blur'] }],
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {

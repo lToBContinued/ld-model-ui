@@ -113,3 +113,9 @@ export interface AddSecondIndicatorFormConfigItem {
     type?: string
   }
 }
+
+export interface AddChildNodeFormData {
+  name: string
+  description: string
+  systemId: string
+}
