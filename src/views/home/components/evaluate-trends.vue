@@ -23,7 +23,6 @@ onMounted(() => {
 <style scoped lang="scss">
 .evaluate-trends {
   height: 400px;
-  margin-bottom: $spacing-size5;
 
   .title {
     margin-bottom: $spacing-size5;

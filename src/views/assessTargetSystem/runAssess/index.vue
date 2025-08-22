@@ -2,7 +2,7 @@
   <div class="assess-card">
     <zk-card style="margin-bottom: 14px">
       <template #header>
-        <span class="card-header bold">基础信息</span>
+        <span class="card-header">基础信息</span>
       </template>
       <zk-form
         ref="baseFormDataRef"

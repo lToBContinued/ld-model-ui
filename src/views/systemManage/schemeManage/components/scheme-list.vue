@@ -135,7 +135,7 @@ getSchemeList()
 .scheme-component-wrapper {
   overflow: hidden;
   height: calc(100vh - 50px - 2 * $spacing-size5);
-  background-color: #fff;
+  background-color: $primary-color;
   border: 1px solid $border-color1;
 
   .scheme-list {

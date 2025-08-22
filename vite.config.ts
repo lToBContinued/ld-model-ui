@@ -24,7 +24,7 @@ export default defineConfig((mode) => {
       VueJsx(),
       AutoImport({
         resolvers: [
-          ElementPlusResolver(),
+          ElementPlusResolver({ importStyle: 'sass' }), // 两处必须都引入{ importStyle: 'sass' }，自定义主题才能生效
           IconsResolver({
             prefix: 'Icon',
           }),
@@ -38,7 +38,7 @@ export default defineConfig((mode) => {
           IconsResolver({
             enabledCollections: ['ep'],
           }),
-          ElementPlusResolver({ importStyle: 'sass' }),
+          ElementPlusResolver({ importStyle: 'sass' }), // 两处必须都引入{ importStyle: 'sass' }，自定义主题才能生效
         ],
         deep: true,
         dts: resolve('src/typings/components.d.ts'),

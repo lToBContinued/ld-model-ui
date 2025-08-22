@@ -11,6 +11,7 @@ import '/mock/index.ts'
 import registerDirectives from '@/directives/index.ts'
 import 'ant-design-vue/dist/reset.css'
 // import './permission.ts'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 
 const app = createApp(App)
 
@@ -24,3 +25,5 @@ app.use(Particles)
 registerDirectives(app)
 
 app.mount('#app')
+
+document.documentElement.className = 'dark'

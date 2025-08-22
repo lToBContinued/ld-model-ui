@@ -78,7 +78,7 @@ const userLogout = async () => {
   height: 50px;
   padding: $spacing-size2 $spacing-size4;
 
-  background-color: #fff;
+  background-color: $primary-color;
   box-shadow: 0 4px 9px 0 rgb(100 100 111 / 14%);
 }
 

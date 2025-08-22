@@ -1,6 +1,5 @@
 <template>
   <div class="library">
-    <module-title title="可用指标库"></module-title>
     <zk-tree :data="metricsTreeData" :active="{ check: true }" lazy :load="loadNodes" @view-node="viewNode"></zk-tree>
     <zk-drawer v-model="drawerShow" :title="selectedMetrics.label">
       <zk-form v-model:form-config="drawerFormConfig" v-model:form-data="drawerFormData"></zk-form>

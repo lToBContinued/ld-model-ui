@@ -52,7 +52,7 @@ getRecentRecord()
 
 <style scoped lang="scss">
 .recent-records {
-  margin-bottom: $spacing-size5;
+  margin-bottom: $spacing-size3;
 
   .title {
     margin-bottom: $spacing-size5;

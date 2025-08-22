@@ -102,7 +102,7 @@ export const useEcharts = (dom: Ref<HTMLDivElement | HTMLCanvasElement | null>, 
   /** 图表配置项 */
   const chartOptions = ref<NullType<EChartsCoreOption>>(null)
 
-  const isDark = useDark()
+  // const isDark = useDark()
 
   /** 当前主题 */
   const currentTheme = computed(() => {
@@ -110,9 +110,8 @@ export const useEcharts = (dom: Ref<HTMLDivElement | HTMLCanvasElement | null>, 
     if (themeMode || isNull(themeMode)) {
       return themeMode
     }
-
-    // 否则根据系统主题自动切换
-    return isDark.value ? 'dark' : null
+    // 否则采用深色
+    return 'dark'
   })
 
   /** Loading 状态控制 */
@@ -149,7 +148,7 @@ export const useEcharts = (dom: Ref<HTMLDivElement | HTMLCanvasElement | null>, 
    */
   const renderChart = (options: EChartsCoreOption, opts: SetOptionOpts = { notMerge: true }) => {
     if (!chartInstance) return
-    const finalOptions = { ...options, backgroundColor: 'transparent' }
+    const finalOptions = { backgroundColor: '#24272C', ...options }
     chartInstance.setOption(finalOptions, opts)
     chartOptions.value = finalOptions
     toggleLoading(false)

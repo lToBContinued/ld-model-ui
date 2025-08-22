@@ -1,8 +1,6 @@
 <template>
   <div class="evaluateResult">
-    <module-title></module-title>
-    <div class="page-title">评估结果管理</div>
-    <zk-card>
+    <zk-card class="module-bottom">
       <div class="search-wrapper">
         <zk-form
           class="search-form"
@@ -17,6 +15,14 @@
           <zk-button type="primary" @click="submitForm">确定</zk-button>
         </div>
       </div>
+    </zk-card>
+    <zk-card class="module-bottom">
+      <template #header>
+        <span class="card-title">评估分布</span>
+      </template>
+      <div class="chart" ref="resultChartInstance"></div>
+    </zk-card>
+    <zk-card class="module-bottom">
       <div class="result-wrapper">
         <zk-table
           :columns="evaluateResultTableConfig"
@@ -38,9 +44,6 @@
         </zk-table>
       </div>
     </zk-card>
-    <zk-card style="margin-top: 24px">
-      <div class="chart" ref="resultChartInstance"></div>
-    </zk-card>
   </div>
 </template>
 
@@ -53,12 +56,12 @@ import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOption } from '@/views/evaluateResult/configs/chartsOption.ts'
 
 const resultChartInstance = ref<NullType<HTMLDivElement>>(null)
-const { renderChart } = useEcharts(resultChartInstance)
+const { renderChart } = useEcharts(resultChartInstance, { themeMode: 'dark' })
 const formData = ref<EvaluateResultFormType>({
-  name: '',
+  companyName: '',
   startDate: new Date(),
   endDate: new Date(),
-  evaluateType: 0,
+  subject: '',
 })
 const state = reactive({
   totalData: Array.from({ length: 100 }, (_, index) => ({
@@ -127,17 +130,10 @@ const formatLevel = (level: number) => {
 .search-wrapper {
   @include flex-center(col-center);
 
-  padding-bottom: $spacing-size5;
-  border-bottom: 1px solid $border-color1;
-
   .search-form {
     display: flex;
     justify-content: center;
   }
-}
-
-.result-wrapper {
-  padding-top: $spacing-size5;
 }
 
 .chart {

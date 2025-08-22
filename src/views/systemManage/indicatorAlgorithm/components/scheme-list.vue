@@ -2,10 +2,8 @@
   <div class="scheme-component-wrapper">
     <!-- 列表区 -->
     <div v-if="loading" class="loading">加载中…</div>
-
     <template v-else>
       <el-empty v-if="schemeList.length === 0" description="暂无方案" />
-
       <ul v-else class="scheme-list">
         <li
           v-for="item in schemeList"
@@ -78,7 +76,7 @@ onMounted(loadList)
 
   height: calc(100vh - 50px - 2 * $spacing-size5);
 
-  background-color: #fff;
+  background-color: $primary-color;
   border: 1px solid $border-color1;
 }
 
@@ -103,7 +101,6 @@ onMounted(loadList)
   padding: $spacing-size2 $spacing-size3;
 
   background: #fff;
-  border: 1px solid #eee;
   border-radius: 10px;
 
   transition: all 0.2s;
