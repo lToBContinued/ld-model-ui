@@ -1,10 +1,1 @@
-@forward 'element-plus/theme-chalk/src/common/var.scss' with (
-  $colors: (
-    'primary': (
-      'base': #43566a,
-    ),
-  ),
-  $tree: (
-    'node-hover-bg-color': #04536a,
-  )
-);
+@use "./dark.scss" as *;

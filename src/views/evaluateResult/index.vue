@@ -64,13 +64,7 @@ const formData = ref<EvaluateResultFormType>({
   subject: '',
 })
 const state = reactive({
-  totalData: Array.from({ length: 100 }, (_, index) => ({
-    name: `用户${index + 1}`,
-    evaluateType: 1,
-    evaluateTime: [new Date(), new Date()],
-    score: 80,
-    level: 1,
-  })),
+  totalData: [],
   pageSize: 10,
   currentPage: 1,
   total: 100,
