@@ -3,7 +3,7 @@
     <zk-card>
       <el-row>
         <el-col :span="10">
-          <aside-tree ref="asideTreeRef" @view-node="viewNode"></aside-tree>
+          <aside-tree ref="asideTreeRef" @view-node="viewNode" @remove-node="removeNode"></aside-tree>
         </el-col>
         <el-col :span="14">
           <div class="panel">
@@ -122,7 +122,7 @@ watch(indicatorInputJson, (newVal) => {
 
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf } = res
+  const { config, id, description, name, parentName, isLeaf, parentId } = res
   Object.assign(indicatorConfigFormData, {
     config,
     id,
@@ -130,6 +130,7 @@ const viewNode = async (data: Data, _: Node) => {
     name,
     parentName,
     isLeaf,
+    parentId,
   })
 }
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
@@ -140,7 +141,16 @@ const saveConfig = async () => {
   await indicatorConfigFormRef.value?.ElFormRef?.validate()
   await updateIndicatorDetailApi(indicatorConfigFormData as UpdateIndicatorDetailSend)
   await getIndicatorDetail(indicatorConfigFormData.id!)
-  asideTreeRef.value?.refreshTree()
+  asideTreeRef.value?.refreshStandar('')
+}
+const removeNode = () => {
+  Object.assign(indicatorConfigFormData, {
+    config: '',
+    description: '',
+    name: '',
+    isLeaf: 0,
+    parentName: '',
+  })
 }
 </script>
 
