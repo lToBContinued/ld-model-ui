@@ -70,7 +70,7 @@ const getSchemeDetail = async (id: number) => {
   margin-left: $spacing-size2;
   padding: $spacing-size3;
 
-  background-color: #fff;
+  background-color: $sub-bg-color;
   border: 1px solid $border-color1;
 
   .header {

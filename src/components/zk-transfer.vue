@@ -2,14 +2,14 @@
   <el-transfer
     ref="ElTransferRef"
     v-model="value"
+    :buttonTest="buttonTest"
     :data="data"
     :filterable="filterable"
-    :titles="titles"
-    :props="props"
-    :buttonTest="buttonTest"
     :format="format"
     :left-default-checked="leftDefaultChecked"
+    :props="props"
     :right-default-checked="rightDefaultChecked"
+    :titles="titles"
     v-bind="$attrs"
   >
     <template v-for="(val, name) in $slots" :key="name" #[name]="scopedData">

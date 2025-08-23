@@ -104,20 +104,15 @@ const getTreeConfig: LoadFunction = async (node, resolve, reject) => {
     rootNode.value = node
     rootResolve.value = resolve
     rootReject.value = reject
-    await getFirstLevelTreeData(resolve)
+    await getTreeNode(0, resolve)
   }
   if (node.level >= 1) {
-    await getIndex(node, resolve)
+    await getTreeNode(node.data.id, resolve)
   }
 }
-// 首次获取根节点数据
-const getFirstLevelTreeData = async (resolve: any) => {
-  const res = await getIndicatorListApi({ id: 0 })
-  resolve(res.data!)
-}
-// 加载叶子结点数据
-const getIndex = async (node: Node, resolve: any) => {
-  const data = await getIndicatorDetail(node.data.id)
+// 生成树节点
+const getTreeNode = async (id: number, resolve: any) => {
+  const data = await getIndicatorDetail(id)
   resolve(data)
 }
 // 获取树的数据
@@ -196,15 +191,11 @@ const submitAddChildNodeDialog = async () => {
     ElMessage.error('添加失败')
   }
 }
-// 刷新树
-const refreshTree = () => {
-  rootNode.value.childNodes = []
-  getTreeConfig(rootNode.value, rootResolve.value, rootReject.value)
-}
+// 刷新节点
 const refreshNodeBy = (id: number) => {
-  const node = ZkTreeRef.value?.ElTreeRef?.getNode(id)
-  node!.loaded = false
-  node!.expand()
+  const node = ZkTreeRef.value?.ElTreeRef?.getNode(id) as Node
+  node.loaded = false
+  node.expand()
 }
 const refreshStandar = (data: string) => {
   let id_ = data === 'add' ? currentData.value!.id : currentData.value!.parentId

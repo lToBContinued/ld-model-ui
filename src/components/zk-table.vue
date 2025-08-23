@@ -6,11 +6,12 @@
     </div>
     <el-table
       ref="ElTableRef"
-      class="table"
-      border
       :data="data"
-      :row-key="rowKey"
       :max-height="maxHeight"
+      :row-key="rowKey"
+      border
+      class="table"
+      stripe
       v-bind="$attrs"
     >
       <template v-for="(col, index) in columns" :key="col.prop || `col-${index}`">
@@ -41,11 +42,11 @@
     </el-table>
     <el-pagination
       v-if="pagination"
-      :total="total"
       v-model:current-page="_currentPage"
       v-model:page-size="_pageSize"
       :page-sizes="[5, 10, 20, 50]"
       :pager-count="5"
+      :total="total"
       layout="->, sizes, prev, pager, next, jumper, total,"
     ></el-pagination>
   </div>

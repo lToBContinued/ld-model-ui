@@ -1,14 +1,14 @@
 <template>
   <v-ace-editor
-    class="edit_box"
-    v-model:value="editValue"
-    v-bind="$attrs"
-    :lang="lang"
-    theme="tomorrow"
-    :readonly="readonly"
     ref="aces"
+    v-model:value="editValue"
     :class="{ border: hasBorder }"
+    :lang="lang"
     :options="options"
+    :readonly="readonly"
+    class="edit_box"
+    theme="tomorrow"
+    v-bind="$attrs"
   />
 </template>
 <script setup lang="ts">

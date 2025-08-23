@@ -28,8 +28,8 @@ import { CheckboxGroupProps } from 'element-plus'
 
 interface ZkCheckboxProps extends Partial<CheckboxGroupProps> {
   options?: {
-    label: string | number | boolean | object
-    value: string | number | boolean | object
+    label: string | number
+    value: string | number
     disabled?: boolean
   }[]
   checkboxButton?: boolean

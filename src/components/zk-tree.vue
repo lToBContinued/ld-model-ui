@@ -3,18 +3,18 @@
     <zk-input v-if="filter" v-model="filterText" placeholder="请输入搜索内容"></zk-input>
     <el-tree
       ref="ElTreeRef"
-      class="user-unselect"
       v-model:data="dataSource"
-      :props="customProps"
-      :show-checkbox="showCheckbox"
-      :lazy="lazy"
-      :node-key="nodeKey"
+      :active="active"
       :default-checked-keys="defaultCheckedKeys"
       :default-expanded-keys="defaultExpandedKeys"
       :expand-on-click-node="expandOnClickNode"
-      :active="active"
-      :highlight-current="highlightCurrent"
       :filter-node-method="filterNode"
+      :highlight-current="highlightCurrent"
+      :lazy="lazy"
+      :node-key="nodeKey"
+      :props="customProps"
+      :show-checkbox="showCheckbox"
+      class="user-unselect"
       v-bind="$attrs"
     >
       <template v-if="active" #default="{ node, data }">
@@ -38,16 +38,16 @@
         </div>
       </template>
     </el-tree>
-    <zk-dialog v-model="dialogShow" width="500px" @cancel="closeDialog" @confirm="confirmAppend" @close="closeDialog">
+    <zk-dialog v-model="dialogShow" width="500px" @cancel="closeDialog" @close="closeDialog" @confirm="confirmAppend">
       <template #header>
         <span style="font-size: 18px">添加节点</span>
       </template>
       <zk-form
         ref="indicatorFormRef"
-        v-model:form-data="indicatorFormData"
         v-model:form-config="indicatorFormConfig"
-        :rules="indicatorFormRules"
+        v-model:form-data="indicatorFormData"
         :label-width="130"
+        :rules="indicatorFormRules"
       ></zk-form>
     </zk-dialog>
   </div>
@@ -265,6 +265,9 @@ defineExpose({ ElTreeRef })
     height: 28px;
     background-color: #1e2023;
     font-size: $font-size-s;
+  }
+  .el-tree__empty-block {
+    background-color: #1e2023;
   }
 }
 </style>

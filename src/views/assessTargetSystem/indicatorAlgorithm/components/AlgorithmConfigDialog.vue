@@ -57,7 +57,7 @@ import type { SchemeIndicatorConfigItem } from '@/views/systemManage/types.ts'
 interface Props {
   modelValue: boolean
   subtreeId?: number
-  node?: SchemeIndicatorConfigItem | null
+  node?: NullType<SchemeIndicatorConfigItem>
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -66,20 +66,26 @@ const props = withDefaults(defineProps<Props>(), {
   node: null,
 })
 const emit = defineEmits<{
-  (e: 'update:modelValue', v: boolean): void
-  (
-    e: 'save',
+  'update:model-value': [value: boolean]
+  save: [
     payload: {
       indicatorId: number
       enabled: 0 | 1
       weight: number | null
       formula: string | null
     },
-  ): void
-  (e: 'changed'): void
+  ]
+  changed: []
 }>()
 
-const visible = computed({ get: () => props.modelValue, set: (v) => emit('update:modelValue', v) })
+const visible = computed({
+  get: () => {
+    return props.modelValue
+  },
+  set: (v) => {
+    emit('update:model-value', v)
+  },
+})
 
 const enabled = ref<0 | 1>(1)
 const weight = ref<number | null>(null)
@@ -89,10 +95,10 @@ const isRoot = computed(() => (props.node?.level ?? 0) === 0)
 
 watch(
   () => props.node,
-  (n) => {
-    enabled.value = (n?.enabled ?? 1) as 0 | 1
-    weight.value = isRoot.value ? null : (n?.weight ?? null)
-    formula.value = n?.formula || ''
+  (newVal) => {
+    enabled.value = (newVal?.enabled ?? 1) as 0 | 1
+    weight.value = isRoot.value ? null : (newVal?.weight ?? null)
+    formula.value = newVal?.formula || ''
   },
   { immediate: true },
 )

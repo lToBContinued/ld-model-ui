@@ -69,6 +69,12 @@ export const trendChartOptions: EChartsOption = {
   yAxis: {
     type: 'value',
     min: 0,
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: '#6e6e6e',
+      },
+    },
   },
   series: [
     {
