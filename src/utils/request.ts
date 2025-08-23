@@ -1,17 +1,20 @@
 import axios from 'axios'
 import router from '@/router/index.js'
+import { GET_TOKEN, REMOVE_TOKEN } from '@/utils/common/token.ts'
 
 const instance = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
   timeout: 6000,
   headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
+    'Content-Type': 'application/json',
   },
 })
 
 // 添加请求拦截器
 instance.interceptors.request.use(
   function (config) {
+    const { headers } = config
+    headers['Authorization'] = `Bearer ${GET_TOKEN()}`
     // 在发送请求之前做些什么
     return config
   },
@@ -35,6 +38,8 @@ instance.interceptors.response.use(
     switch (status) {
       case 401:
         message = 'Token 过期'
+        REMOVE_TOKEN()
+        router.push('/login')
         break
       case 403:
         message = '无权访问'

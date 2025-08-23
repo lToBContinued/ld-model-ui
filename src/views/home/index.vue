@@ -1,12 +1,11 @@
 <template>
   <div>
-    <module-title></module-title>
     <div class="overview-wrapper">
       <statistics-card :data="overviewData" class="overview-card"></statistics-card>
       <statistics-card :data="overviewData" class="overview-card"></statistics-card>
       <statistics-card :data="overviewData" class="overview-card"></statistics-card>
     </div>
-    <div class="charts-wrapper">
+    <div class="charts-wrapper module-bottom">
       <!--能力分布-->
       <ability-analysis class="chart-item"></ability-analysis>
       <!--评估趋势-->
@@ -33,8 +32,8 @@ const overviewData = {
 <style scoped lang="scss">
 .overview-wrapper {
   display: flex;
-  gap: $spacing-size5;
-  margin-bottom: $spacing-size5;
+  gap: $spacing-size3;
+  margin-bottom: $spacing-size3;
 
   .overview-card {
     flex: 1;
@@ -44,7 +43,7 @@ const overviewData = {
 
 .charts-wrapper {
   display: flex;
-  gap: $spacing-size4;
+  gap: $spacing-size3;
 
   .chart-item {
     flex: 1;

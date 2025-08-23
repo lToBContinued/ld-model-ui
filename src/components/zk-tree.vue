@@ -3,26 +3,26 @@
     <zk-input v-if="filter" v-model="filterText" placeholder="请输入搜索内容"></zk-input>
     <el-tree
       ref="ElTreeRef"
-      class="user-unselect"
       v-model:data="dataSource"
-      :props="customProps"
-      :show-checkbox="showCheckbox"
-      :lazy="lazy"
-      :node-key="nodeKey"
+      :active="active"
       :default-checked-keys="defaultCheckedKeys"
       :default-expanded-keys="defaultExpandedKeys"
       :expand-on-click-node="expandOnClickNode"
-      :active="active"
-      :highlight-current="highlightCurrent"
       :filter-node-method="filterNode"
+      :highlight-current="highlightCurrent"
+      :lazy="lazy"
+      :node-key="nodeKey"
+      :props="customProps"
+      :show-checkbox="showCheckbox"
+      class="user-unselect"
       v-bind="$attrs"
     >
       <template v-if="active" #default="{ node, data }">
         <div class="custom-tree-node">
           <span>{{ node.label }}</span>
           <div>
-            <zk-button v-if="active.append" type="primary" link @click.stop="append(data)">添加 </zk-button>
-            <zk-button v-if="active.edit" type="primary" link @click.stop="edit(data)" style="margin-left: 4px">
+            <zk-button v-if="active.append" type="primary" link @click.stop="append(node, data)"> 添加 </zk-button>
+            <zk-button v-if="active.edit" type="primary" link @click.stop="edit(node, data)" style="margin-left: 4px">
               修改
             </zk-button>
             <zk-button
@@ -38,16 +38,16 @@
         </div>
       </template>
     </el-tree>
-    <zk-dialog v-model="dialogShow" width="500px" @cancel="closeDialog" @confirm="confirmAppend" @close="closeDialog">
+    <zk-dialog v-model="dialogShow" width="500px" @cancel="closeDialog" @close="closeDialog" @confirm="confirmAppend">
       <template #header>
         <span style="font-size: 18px">添加节点</span>
       </template>
       <zk-form
         ref="indicatorFormRef"
-        v-model:form-data="indicatorFormData"
         v-model:form-config="indicatorFormConfig"
-        :rules="indicatorFormRules"
+        v-model:form-data="indicatorFormData"
         :label-width="130"
+        :rules="indicatorFormRules"
       ></zk-form>
     </zk-dialog>
   </div>
@@ -64,7 +64,7 @@ import { FilterNodeMethodFunction, RenderContentContext, TreeInstance } from 'el
 import ZkForm from '@/components/zk-form.vue'
 
 interface ZkTreeProps {
-  data: TreeData
+  data?: TreeData
   customProps?: TreeOptionProps
   maxWidth?: string
   showCheckbox?: boolean
@@ -106,37 +106,22 @@ const PROPS: Record<string, any> = {
   isLeaf: props.customProps.isLeaf || 'isLeaf',
   class: props.customProps.class,
 }
-const emit = defineEmits(['view-node'])
+const emit = defineEmits<{
+  'remove-node': [node: Node, data: Data]
+  'append-node': [node: Node, data: Data]
+}>()
 const ElTreeRef = ref<TreeInstance>()
 const dataSource = reactive<TreeData>(props.data)
 const filterText = ref('')
 const dialogShow = ref(false)
 const indicatorFormData = reactive({
   [PROPS.label]: '',
-  [PROPS.isLeaf]: undefined,
 })
 const indicatorFormConfig = reactive([
   {
     prop: PROPS.label,
     label: '节点名称',
     type: 'input',
-  },
-  {
-    prop: 'isLeaf',
-    label: '是否为叶子节点',
-    type: 'radio',
-    config: {
-      options: [
-        {
-          label: '是',
-          value: 0,
-        },
-        {
-          label: '否',
-          value: 1,
-        },
-      ],
-    },
   },
 ])
 const indicatorFormRules = reactive({
@@ -156,9 +141,10 @@ const filterNode: FilterNodeMethodFunction = (value: string, data: any) => {
   return data[PROPS.label].includes(value)
 }
 // 添加节点
-const append = (data: Data) => {
-  dialogShow.value = true
-  currentNodeData.value = data
+const append = (node: Node, data: Data) => {
+  // dialogShow.value = true
+  // currentNodeData.value = data
+  emit('append-node', node, data)
 }
 const confirmAppend = async () => {
   try {
@@ -197,7 +183,7 @@ const remove = (node: Node, data: Data) => {
   } else {
     children.splice(index, 1)
   }*/
-  const currentNode = ElTreeRef.value?.getNode(node)
+  /*const currentNode = ElTreeRef.value?.getNode(node)
   if (currentNode!.level === 1) {
     ElMessageBox.confirm('此节点为根节点，请检查是否有子节点后，在确定是否删除！', '警告', {
       confirmButtonText: '确定删除',
@@ -218,10 +204,11 @@ const remove = (node: Node, data: Data) => {
     })
   } else {
     ElTreeRef.value?.remove(node)
-  }
+  }*/
+  emit('remove-node', node, data)
 }
 // 修改节点
-const edit = (data: Data) => {
+const edit = (node: Node, data: Data) => {
   ElMessageBox.prompt('', '输入节点名称', {
     confirmButtonText: '修改',
     cancelButtonText: '取消',
@@ -270,8 +257,17 @@ defineExpose({ ElTreeRef })
     margin: 8px;
   }
 }
-
-::v-deep(.el-tree-node__content) {
-  height: 40px;
+::v-deep(.el-tree) {
+  .el-tree-node {
+    background: transparent;
+  }
+  .el-tree-node__content {
+    height: 28px;
+    background-color: #1e2023;
+    font-size: $font-size-s;
+  }
+  .el-tree__empty-block {
+    background-color: #1e2023;
+  }
 }
 </style>

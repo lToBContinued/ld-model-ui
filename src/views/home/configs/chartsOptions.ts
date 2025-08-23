@@ -32,12 +32,12 @@ export const abilityChartOptions: EChartsOption = {
   },
   radar: {
     indicator: [
-      { name: '攻击', max: 6500 },
-      { name: '防御', max: 16000 },
-      { name: '速度', max: 30000 },
-      { name: '灵巧', max: 38000 },
-      { name: '旋转', max: 52000 },
-      { name: '法术', max: 25000 },
+      { name: '指标1', max: 6500 },
+      { name: '指标2', max: 16000 },
+      { name: '指标3', max: 30000 },
+      { name: '指标4', max: 38000 },
+      { name: '指标5', max: 52000 },
+      { name: '指标6', max: 25000 },
     ],
     center: ['50%', '50%'],
     radius: '80%',
@@ -69,6 +69,12 @@ export const trendChartOptions: EChartsOption = {
   yAxis: {
     type: 'value',
     min: 0,
+    splitLine: {
+      show: true,
+      lineStyle: {
+        color: '#6e6e6e',
+      },
+    },
   },
   series: [
     {

@@ -2,9 +2,9 @@
   <div class="recent-records">
     <zk-card>
       <div class="title">最近评估记录</div>
-      <zk-table :columns="columns" :data="tableData" max-height="400">
+      <zk-table :columns="recentRecordsColumns" :data="tableState.totalData" max-height="400">
         <template #level="{ row }">
-          <el-tag>{{ row.level }}</el-tag>
+          <zk-tag :type="formatLevel(row.level)?.type">{{ formatLevel(row.level)?.text }}</zk-tag>
         </template>
         <template #operation="{ row }">
           <zk-button type="primary" @click="checkRow(row)">查看</zk-button>
@@ -21,139 +21,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
+import { getRecentRecordsApi } from '@/api/home'
+import { recentRecordsColumns } from '@/views/home/configs/tableConfigs.ts'
+import { RecentRecordTable } from '@/mock/types.ts'
+import { formatLevel } from '@/utils/common/formatData.ts'
 
 const dialogShow = ref(false)
-const columns = ref([
-  {
-    prop: 'name',
-    label: '姓名',
-    width: 180,
-  },
-  {
-    prop: 'date',
-    label: '评估时间',
-    width: 180,
-  },
-  {
-    prop: 'assessType',
-    label: '地址',
-    defaultValue: '暂无地址',
-  },
-  {
-    prop: 'score',
-    label: '得分',
-    defaultValue: '0',
-  },
-  {
-    prop: 'level',
-    label: '评估等级',
-    slot: 'level',
-  },
-  {
-    label: '操作',
-    slot: 'operation',
-  },
-])
-const tableData = ref([
-  {
-    date: '2023-01-01',
-    name: '张三',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-02',
-    name: '李四',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-03',
-    name: '王五',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-01',
-    name: '张三',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-02',
-    name: '李四',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-03',
-    name: '王五',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-01',
-    name: '张三',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-02',
-    name: '李四',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-03',
-    name: '王五',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-01',
-    name: '张三',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-02',
-    name: '李四',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-  {
-    date: '2023-01-03',
-    name: '王五',
-    address: '北京市海淀区',
-    assessType: '评估类型',
-    score: 999,
-    level: '合格',
-  },
-])
+const tableState = reactive<RecentRecordTable>({
+  totalData: [],
+})
 
+const getRecentRecord = async () => {
+  const res = await getRecentRecordsApi()
+  tableState.totalData = res.data
+}
 const checkRow = (row: any) => {
   dialogShow.value = true
   console.log('>>>>> file: recent-records.vue ~ method: checkRow <<<<<\n', row) // TODO: 删除
@@ -164,12 +46,13 @@ const closeDialog = () => {
 const dialogConfirm = () => {
   dialogShow.value = false
 }
+
+getRecentRecord()
 </script>
 
 <style scoped lang="scss">
 .recent-records {
-  height: 600px;
-  margin-bottom: $spacing-size5;
+  margin-bottom: $spacing-size3;
 
   .title {
     margin-bottom: $spacing-size5;

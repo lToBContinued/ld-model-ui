@@ -25,7 +25,11 @@ defineExpose({ ElCardRef })
   height: 100%;
 }
 
-:deep(.el-card__body) {
+::v-deep(.el-card__body) {
   padding: $spacing-size3;
+}
+
+::v-deep(.el-card__header) {
+  font-size: $font-size-l;
 }
 </style>

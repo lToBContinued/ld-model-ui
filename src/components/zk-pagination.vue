@@ -1,12 +1,12 @@
 <template>
   <el-pagination
-    v-bind="$attrs"
     v-model:current-page="_currentPage"
     v-model:page-size="_pageSize"
     :page-sizes="[5, 10, 20, 50]"
+    :total="total"
     background
     layout="->, total, sizes, prev, pager, next, jumper"
-    :total="total"
+    v-bind="$attrs"
   >
     <template v-if="Object.keys($slots).length">
       <slot></slot>

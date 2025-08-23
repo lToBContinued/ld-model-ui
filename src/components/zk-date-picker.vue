@@ -2,16 +2,16 @@
   <el-date-picker
     ref="ElDatePickerRef"
     v-model="date"
-    :style="{ width }"
-    :size="size"
-    :type="type"
-    :format="format"
-    :placeholder="placeholder"
+    :clearable="clearable"
     :default-time="defaultTime"
     :default-value="defaultValue"
     :disabled="disabled"
+    :format="format"
+    :placeholder="placeholder"
     :readonly="readonly"
-    :clearable="clearable"
+    :size="size"
+    :style="{ width }"
+    :type="type"
     v-bind="$attrs"
   ></el-date-picker>
 </template>
@@ -21,7 +21,7 @@ import { ref, computed } from 'vue'
 import { DatePickerInstance } from 'element-plus'
 
 interface ZkDatePickerProps {
-  modelValue: number | string | object | Date | [Date, Date] | [string, string]
+  modelValue: Date | string | [Date, Date] | [string, string]
   width?: string
   size?: 'large' | 'default' | 'small'
   type?: 'year' | 'month' | 'date' | 'datetime' | 'week' | 'datetimerange' | 'daterange'

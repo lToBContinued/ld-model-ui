@@ -1,5 +1,5 @@
 <template>
-  <el-dialog ref="ElDialogRef" v-bind="$attrs" :model-value="modelValue" :width="width" :close-on-click-modal="false">
+  <el-dialog ref="ElDialogRef" :close-on-click-modal="false" :model-value="modelValue" :width="width" v-bind="$attrs">
     <template v-for="(val, name) in $slots" :key="name" #[name]="scopedData">
       <slot :name="name" v-bind="scopedData || {}"></slot>
     </template>
@@ -19,7 +19,7 @@ interface ZkDialogProps {
   showFooter?: boolean
   cancelText?: string
   confirmText?: string
-  confirmBtnType?: string
+  confirmBtnType?: '' | 'default' | 'primary' | 'text' | 'success' | 'warning' | 'info' | 'danger'
   width?: string
 }
 
