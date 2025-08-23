@@ -34,3 +34,8 @@ export const downloadFile = (fileUrl: string, fileName: string) => {
   a.click()
   document.body.removeChild(a)
 }
+
+export const getFileExt = (filename: string) => {
+  const lastDotIndex = filename.lastIndexOf('.')
+  return lastDotIndex <= 0 ? '' : filename.slice(lastDotIndex + 1)
+}
