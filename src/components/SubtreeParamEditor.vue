@@ -257,8 +257,8 @@ import {
   replaceMapEntries,
   reorderParams,
   updateParamEnabled,
-  type ParamMapEntryDTO,
 } from '@/api/schemeManage/legacySubtree.ts'
+import { ParamMapEntryDTO } from '@/api/schemeManage/types.ts'
 
 /** 输入属性：
  * - nodeId：当前正在编辑的“子树节点”ID
@@ -475,7 +475,7 @@ async function doCreate() {
   }
 
   // 前端同层重名预校验（后端仍会二次校验）
-  const dup = (params.value || []).some((p) => (p.name || '').trim() === name)
+  const dup = (params.value || []).some((p: any) => (p.name || '').trim() === name)
   if (dup) {
     notify('同一节点下已存在该名称')
     return

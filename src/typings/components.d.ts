@@ -47,7 +47,6 @@ declare module 'vue' {
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
-    ElTransfer: typeof import('element-plus/es')['ElTransfer']
     ElTree: typeof import('element-plus/es')['ElTree']
     Explain: typeof import('./../components/InputFormula/components/Explain.vue')['default']
     FormConfigurator: typeof import('./../components/formConfigurator.vue')['default']

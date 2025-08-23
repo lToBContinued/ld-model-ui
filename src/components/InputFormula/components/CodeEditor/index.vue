@@ -30,11 +30,11 @@ const props = defineProps({
   },
   entityFields: {
     type: Array,
-    default: [],
+    default: () => [],
   },
   formulaFunctions: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 })
 //关键字
@@ -252,7 +252,6 @@ const getEditorValue = () => {
 const setEditorValue = (docs: string = '') => {
   nextTick(() => {
     let docsLength = editor.value?.state.doc.toString().length
-    // @ts-ignore
     mirrorRef.value.replaceRange(docs, 0, docsLength)
   })
 }

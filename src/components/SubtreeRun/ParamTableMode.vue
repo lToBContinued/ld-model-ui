@@ -38,7 +38,10 @@
 
             <!-- 加载中 -->
             <tr v-if="row.open && row.loading">
-              <td colspan="4" class="loading"><span class="spinner" /> 正在加载参数…</td>
+              <td colspan="4" class="loading">
+                <span class="spinner" />
+                正在加载参数…
+              </td>
             </tr>
             <!-- 展开后无参数 -->
             <tr v-if="row.open && !row.loading && row.params.length === 0">
@@ -46,78 +49,80 @@
             </tr>
 
             <!-- 参数行：只在该节点展开时渲染 -->
-            <tr v-for="p in row.params" v-if="row.open" :key="p.id" class="param-row">
-              <!-- 路径列（显示所在节点路径，便于辨识） -->
-              <td>
-                <div class="cell-path" :title="row.path">{{ row.path }}</div>
-              </td>
+            <template v-if="row.open">
+              <tr v-for="p in row.params" :key="p.id" class="param-row">
+                <!-- 路径列（显示所在节点路径，便于辨识） -->
+                <td>
+                  <div class="cell-path" :title="row.path">{{ row.path }}</div>
+                </td>
 
-              <!-- 参数名 + 范围提示（数字型才显示） -->
-              <td>
-                <div class="cell-name">
-                  <span class="name">{{ p.name }}</span>
-                  <span v-if="p.type === 1 && (p.minValue != null || p.maxValue != null)" class="range">
-                    {{ p.minValue ?? '-∞' }} ~ {{ p.maxValue ?? '+∞' }}
+                <!-- 参数名 + 范围提示（数字型才显示） -->
+                <td>
+                  <div class="cell-name">
+                    <span class="name">{{ p.name }}</span>
+                    <span v-if="p.type === 1 && (p.minValue != null || p.maxValue != null)" class="range">
+                      {{ p.minValue ?? '-∞' }} ~ {{ p.maxValue ?? '+∞' }}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- 类型徽章 -->
+                <td>
+                  <span class="badge" :class="p.type === 1 ? 'blue' : 'purple'">
+                    {{ p.type === 1 ? '数字' : '映射' }}
                   </span>
-                </div>
-              </td>
+                </td>
 
-              <!-- 类型徽章 -->
-              <td>
-                <span class="badge" :class="p.type === 1 ? 'blue' : 'purple'">
-                  {{ p.type === 1 ? '数字' : '映射' }}
-                </span>
-              </td>
-
-              <!-- 取值输入：
+                <!-- 取值输入：
                    数字型：number 输入框（lazy 防抖，回车/失焦更新）
                    映射型：text + datalist 可选项 + 快捷胶囊 -->
-              <td>
-                <div class="field">
-                  <template v-if="p.type === 1">
-                    <input
-                      class="input"
-                      type="number"
-                      step="any"
-                      v-model.lazy="model[p.id]"
-                      :min="p.minValue ?? undefined"
-                      :max="p.maxValue ?? undefined"
-                      :placeholder="p.defaultValue ?? ''"
-                    />
-                  </template>
-
-                  <template v-else>
-                    <div class="map-field">
-                      <!-- 自由输入或从 datalist 选择一个“源键” -->
+                <td>
+                  <div class="field">
+                    <template v-if="p.type === 1">
                       <input
                         class="input"
-                        type="text"
-                        :list="`dl-${p.id}`"
-                        v-model="model[p.id]"
-                        placeholder="输入或选择源键"
+                        type="number"
+                        step="any"
+                        v-model.lazy="model[p.id]"
+                        :min="p.minValue ?? undefined"
+                        :max="p.maxValue ?? undefined"
+                        :placeholder="p.defaultValue ?? ''"
                       />
-                      <datalist :id="`dl-${p.id}`">
-                        <option v-for="m in sortedEntries(p)" :key="m.key" :value="m.key">{{ m.key }}</option>
-                      </datalist>
+                    </template>
 
-                      <!-- 可选：把映射表做成小胶囊，点一下就填入 -->
-                      <div v-if="(p.mapEntries?.length || 0) > 0" class="chips">
-                        <button
-                          v-for="m in sortedEntries(p)"
-                          :key="m.key"
-                          type="button"
-                          class="chip"
-                          @click.prevent="model[p.id] = m.key"
-                          :title="String(m.key)"
-                        >
-                          {{ m.key }}
-                        </button>
+                    <template v-else>
+                      <div class="map-field">
+                        <!-- 自由输入或从 datalist 选择一个“源键” -->
+                        <input
+                          class="input"
+                          type="text"
+                          :list="`dl-${p.id}`"
+                          v-model="model[p.id]"
+                          placeholder="输入或选择源键"
+                        />
+                        <datalist :id="`dl-${p.id}`">
+                          <option v-for="m in sortedEntries(p)" :key="m.key" :value="m.key">{{ m.key }}</option>
+                        </datalist>
+
+                        <!-- 可选：把映射表做成小胶囊，点一下就填入 -->
+                        <div v-if="(p.mapEntries?.length || 0) > 0" class="chips">
+                          <button
+                            v-for="m in sortedEntries(p)"
+                            :key="m.key"
+                            type="button"
+                            class="chip"
+                            @click.prevent="model[p.id] = m.key"
+                            :title="String(m.key)"
+                          >
+                            {{ m.key }}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  </template>
-                </div>
-              </td>
-            </tr>
+                    </template>
+                  </div>
+                </td>
+              </tr>
+            </template>
           </template>
         </tbody>
       </table>

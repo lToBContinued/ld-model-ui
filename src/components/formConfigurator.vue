@@ -11,7 +11,7 @@
       style="margin-top: 14px"
     ></zk-form>
     <el-form class="radio-form" v-if="modeType === 'radio'" v-model="radioFormData">
-      <el-form-item v-for="item in radioArr" label="选项1：">
+      <el-form-item v-for="item in radioArr" :key="item.value" label="选项1：">
         <div class="radio-ele label">
           <span>标签&nbsp;&nbsp;&nbsp;</span>
           <zk-input v-model="radioFormData.options1.label"></zk-input>
