@@ -4,8 +4,10 @@
       <slot :name="name" v-bind="scopedData || {}"></slot>
     </template>
     <template #footer v-if="showFooter">
-      <zk-button plain @click="emit('cancel', false)">{{ cancelText }}</zk-button>
-      <zk-button :type="confirmBtnType" @click="emit('confirm')">{{ confirmText }}</zk-button>
+      <zk-button :disabled="cancelDisabled" plain @click="emit('cancel', false)">{{ cancelText }}</zk-button>
+      <zk-button :disabled="confirmDisabled" :type="confirmBtnType" @click="emit('confirm')">{{
+        confirmText
+      }}</zk-button>
     </template>
   </el-dialog>
 </template>
@@ -21,6 +23,8 @@ interface ZkDialogProps {
   confirmText?: string
   confirmBtnType?: '' | 'default' | 'primary' | 'text' | 'success' | 'warning' | 'info' | 'danger'
   width?: string
+  cancelDisabled?: boolean
+  confirmDisabled?: boolean
 }
 
 withDefaults(defineProps<ZkDialogProps>(), {
@@ -30,6 +34,8 @@ withDefaults(defineProps<ZkDialogProps>(), {
   confirmText: '确定',
   confirmBtnType: 'primary',
   width: '50%',
+  cancelDisabled: false,
+  confirmDisabled: false,
 })
 
 const emit = defineEmits(['cancel', 'confirm'])

@@ -48,6 +48,7 @@ declare module 'vue' {
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTree: typeof import('element-plus/es')['ElTree']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     Explain: typeof import('./../components/InputFormula/components/Explain.vue')['default']
     FormConfigurator: typeof import('./../components/formConfigurator.vue')['default']
     FormulaButton: typeof import('./../components/FormulaButton.vue')['default']
@@ -88,5 +89,6 @@ declare module 'vue' {
     ZkTag: typeof import('./../components/zk-tag.vue')['default']
     ZkTransfer: typeof import('./../components/zk-transfer.vue')['default']
     ZkTree: typeof import('./../components/zk-tree.vue')['default']
+    ZkUpload: typeof import('./../components/zk-upload.vue')['default']
   }
 }
