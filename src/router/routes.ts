@@ -27,7 +27,7 @@ export default [
     },
   },
   {
-    path: '/',
+    path: '',
     component: () => import('@/layout/index.vue'),
     redirect: '/home',
     children: [
@@ -120,7 +120,7 @@ export default [
     ],
   },
   {
-    path: '',
+    path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
       {
@@ -138,7 +138,7 @@ export default [
     ],
   },
   {
-    path: '',
+    path: '/',
     component: () => import('@/layout/index.vue'),
     children: [
       {
