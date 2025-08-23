@@ -172,7 +172,7 @@ export default [
         name: 'traineesManage',
         component: () => import('@/views/systemManage/traineesManage/index.vue'),
         meta: {
-          title: '参训人员管理',
+          title: '参训单位管理',
           icon: '',
           hidden: false,
           disabled: false,

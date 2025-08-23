@@ -17,8 +17,9 @@ export const traineesColumns = [
   },
   {
     label: '操作',
-    slot: 'operations',
-    width: '200px',
+    slot: 'operation',
+    width: '150px',
     headerAlign: 'center',
+    align: 'center',
   },
 ]

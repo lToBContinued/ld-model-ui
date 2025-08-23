@@ -257,15 +257,18 @@ defineExpose({ ElTreeRef })
     margin: 8px;
   }
 }
+
 ::v-deep(.el-tree) {
   .el-tree-node {
     background: transparent;
   }
+
   .el-tree-node__content {
     height: 28px;
-    background-color: #1e2023;
     font-size: $font-size-s;
+    background-color: #1e2023;
   }
+
   .el-tree__empty-block {
     background-color: #1e2023;
   }

@@ -1,4 +1,4 @@
-export const addOneCompanyFormConfig = [
+export const companyFormConfig = [
   {
     prop: 'companyName',
     label: '参训单位',

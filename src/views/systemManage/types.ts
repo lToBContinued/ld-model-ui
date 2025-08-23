@@ -56,9 +56,26 @@ export interface SelectedScheme {
   schemeDesc?: string
   schemeName?: string
 }
-export interface AddOneCompanyFormData {
+
+export interface CompanyFormData {
+  id?: number
   companyName: string
   companyCode: string
   department: string
   byword: string
+}
+
+export interface CompanyTableStateList {
+  id?: number
+  companyName: string
+  companyCode: string
+  department: string
+  byword: string
+}
+
+export interface CompanyTableState {
+  totalData: CompanyTableStateList[]
+  total: number
+  currentPage: number
+  pageSize: number
 }
