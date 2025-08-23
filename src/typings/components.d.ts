@@ -73,6 +73,7 @@ declare module 'vue' {
     ZkButton: typeof import('./../components/zk-button.vue')['default']
     ZkCard: typeof import('./../components/zk-card.vue')['default']
     ZkCheckbox: typeof import('./../components/zk-checkbox.vue')['default']
+    ZkCollapse: typeof import('./../components/zk-collapse.vue')['default']
     ZkDatePicker: typeof import('./../components/zk-date-picker.vue')['default']
     ZkDialog: typeof import('./../components/zk-dialog.vue')['default']
     ZkDrawer: typeof import('./../components/zk-drawer.vue')['default']

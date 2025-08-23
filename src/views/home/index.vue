@@ -1,52 +1,7 @@
 <template>
-  <div>
-    <div class="overview-wrapper">
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
-      <statistics-card :data="overviewData" class="overview-card"></statistics-card>
-    </div>
-    <div class="charts-wrapper module-bottom">
-      <!--能力分布-->
-      <ability-analysis class="chart-item"></ability-analysis>
-      <!--评估趋势-->
-      <evaluate-trends class="chart-item"></evaluate-trends>
-    </div>
-    <!--最近评估记录-->
-    <recent-records></recent-records>
-  </div>
+  <div></div>
 </template>
 
-<script setup lang="ts">
-import StatisticsCard from '@/views/home/components/statistics-card.vue'
-import AbilityAnalysis from '@/views/home/components/ability-analysis.vue'
-import EvaluateTrends from '@/views/home/components/evaluate-trends.vue'
-import RecentRecords from '@/views/home/components/recent-records.vue'
+<script setup lang="ts"></script>
 
-const overviewData = {
-  title: '总评估人数',
-  value: 124,
-  desc: '本月新增：18',
-}
-</script>
-
-<style scoped lang="scss">
-.overview-wrapper {
-  display: flex;
-  gap: $spacing-size3;
-  margin-bottom: $spacing-size3;
-
-  .overview-card {
-    flex: 1;
-    height: 150px;
-  }
-}
-
-.charts-wrapper {
-  display: flex;
-  gap: $spacing-size3;
-
-  .chart-item {
-    flex: 1;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

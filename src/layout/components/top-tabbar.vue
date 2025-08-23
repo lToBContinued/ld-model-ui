@@ -7,19 +7,12 @@
       <el-icon class="fullscreen right-item forbid-user-select cursor-pointer" size="20" @click="changeFullScreen">
         <i-ep-FullScreen />
       </el-icon>
-      <system-notice></system-notice>
     </div>
     <div class="right">
       <el-dropdown>
         <div class="username-wrapper">
-          <span class="username bold">{{ userStore.username }}</span>
           <el-icon><ArrowDownBold /></el-icon>
         </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="userLogout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
       </el-dropdown>
     </div>
   </div>
@@ -30,13 +23,11 @@
 // import { Fold } from '@element-plus/icons-vue'
 // import useSettingStore from '@/stores/modules/setting.js'
 import SystemNotice from '@/layout/components/system-notice.vue'
-import useUserStore from '@/stores/modules/user.js'
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 
 // const settingStore = useSettingStore()
 const router = useRouter()
-const userStore = useUserStore()
 
 /*const changeMenuMode = () => {
   settingStore.changeMenuCollapse()
@@ -48,17 +39,6 @@ const changeFullScreen = () => {
     document.documentElement.requestFullscreen()
   } else {
     document.exitFullscreen()
-  }
-}
-// 退出登录
-const userLogout = async () => {
-  try {
-    await userStore.logout()
-    ElMessage.success('退出登录成果')
-    router.push({ name: 'login' })
-  } catch (e) {
-    ElMessage.error('退出登录失败，请重试')
-    console.log(e)
   }
 }
 </script>
