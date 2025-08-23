@@ -75,7 +75,7 @@ const userLogout = async () => {
   justify-content: space-between;
 
   width: calc(100% - 240px);
-  height: 50px;
+  height: $tabbar-height;
   padding: $spacing-size2 $spacing-size4;
 
   background-color: $primary-color;

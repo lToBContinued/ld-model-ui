@@ -168,6 +168,18 @@ export default [
     },
     children: [
       {
+        path: '/systemManage/traineesManage',
+        name: 'traineesManage',
+        component: () => import('@/views/systemManage/traineesManage/index.vue'),
+        meta: {
+          title: '参训人员管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
         path: '/systemManage/companyManage',
         name: 'companyManage',
         component: () => import('@/views/systemManage/companyManage/index.vue'),

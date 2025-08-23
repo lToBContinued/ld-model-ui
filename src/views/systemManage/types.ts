@@ -56,3 +56,9 @@ export interface SelectedScheme {
   schemeDesc?: string
   schemeName?: string
 }
+export interface AddOneCompanyFormData {
+  companyName: string
+  companyCode: string
+  department: string
+  byword: string
+}
