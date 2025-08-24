@@ -1,6 +1,10 @@
 export const userManageTableColumns = [
   {
     type: 'index',
+    label: '序号',
+    width: '60px',
+    headerAlign: 'center',
+    align: 'center',
   },
   {
     prop: 'username',

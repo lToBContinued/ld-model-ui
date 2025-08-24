@@ -1,7 +1,6 @@
 <template>
   <div>
-    <module-title title="用户管理"></module-title>
-    <zk-card>
+    <zk-card header="用户管理">
       <div class="search-form-wrapper">
         <div class="left">
           <div style="width: 100%">
@@ -264,5 +263,9 @@ getUserList()
   ::v-deep(.el-form-item) {
     margin-bottom: 0;
   }
+}
+
+::v-deep(.el-card) {
+  height: calc(100vh - $tabbar-height - 2 * $spacing-size3);
 }
 </style>
