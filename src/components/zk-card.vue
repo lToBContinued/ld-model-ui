@@ -10,7 +10,7 @@
 import { ref } from 'vue'
 import { CardProps, CardInstance } from 'element-plus'
 
-type ZkCardProps = CardProps & {}
+type ZkCardProps = Partial<CardProps> & {}
 
 const props = withDefaults(defineProps<ZkCardProps>(), {})
 
@@ -25,7 +25,11 @@ defineExpose({ ElCardRef })
   height: 100%;
 }
 
-:deep(.el-card__body) {
+::v-deep(.el-card__body) {
   padding: $spacing-size3;
+}
+
+::v-deep(.el-card__header) {
+  font-size: $font-size-l;
 }
 </style>

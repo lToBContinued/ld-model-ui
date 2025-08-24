@@ -3,13 +3,13 @@ import { evaluateTypeMap } from '@/views/evaluateResult/configs/map.ts'
 
 export const evaluateResultTableConfig = [
   {
-    prop: 'name',
-    label: '姓名',
+    prop: 'companyName',
+    label: '参训单位',
     width: '150px',
   },
   {
-    prop: 'evaluateType',
-    label: '评估类型',
+    prop: 'subject',
+    label: '评估科目',
     render: ({ evaluateType }: { evaluateType: number }) => {
       return evaluateTypeMap[evaluateType]
     },

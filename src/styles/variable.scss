@@ -1,20 +1,22 @@
 /* 颜色变量 */
 // 主题色
-$primary-color: #2c3e50;
+$primary-color: #24272c;
 $success-color: #67c23a;
 $warning-color: #e6a23c;
 $danger-color: #f56c6c;
 $error-color: #f56c6c;
 $info-color: #909399;
+$pagination-active-color: #bf7f19;
 
 // 背景颜色
-$main-bg-color: #f8f9fa;
+$main-bg-color: #272e36;
+$sub-bg-color: #24272c;
 
 // 文字颜色
 $main-text-color1: #000;
-$main-text-color2: #333;
+$main-text-color2: #ccc;
 $main-text-color3: #444;
-$sub-text-color1: #666;
+$sub-text-color1: #999;
 $sub-text-color2: #777;
 $sub-text-color3: #888;
 $sub-text-color4: #999;
@@ -23,7 +25,7 @@ $light-text-color2: #bbb;
 $light-text-color3: #ccc;
 
 // 边框颜色
-$border-color1: #ccc;
+$border-color1: #395165;
 $border-color2: #e0e0e0;
 $border-color3: #e5e5e5;
 $border-color4: #f0f0f0;
@@ -48,6 +50,7 @@ $border-radius-size-m: 8px;
 $border-radius-size-l: 16px;
 $menu-item-height: 40px; // 菜单栏item高度
 $aside-width: 240px; // 菜单栏宽度
+$tabbar-height: 50px;
 
 // flex居中
 @mixin flex-center($mode) {

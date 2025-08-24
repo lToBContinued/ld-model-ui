@@ -2,8 +2,9 @@ import { evaluateTypeMap } from '@/views/evaluateResult/configs/map.ts'
 
 export const evaluateResultFormConfig = [
   {
-    prop: 'name',
-    label: '姓名',
+    prop: 'companyName',
+    label: '公司名称',
+    type: 'select',
   },
   {
     prop: 'startDate',
@@ -24,8 +25,8 @@ export const evaluateResultFormConfig = [
     },
   },
   {
-    prop: 'evaluateType',
-    label: '评估类型',
+    prop: 'subject',
+    label: '评估科目',
     type: 'select',
     config: {
       options: Object.entries(evaluateTypeMap).map(([key, value]) => ({

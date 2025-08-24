@@ -1,6 +1,6 @@
 export interface EvaluateResultFormType {
-  name: string
+  companyName: string
   startDate: Date
   endDate: Date
-  evaluateType: number
+  subject: string
 }

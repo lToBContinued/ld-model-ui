@@ -2,11 +2,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
     "jsx": "preserve",
+    "types": ["vite/client", "vue"],
     // 启用实验性的装饰器语法支持,
     "experimentalDecorators": true,
     // 允许从没有默认导出的模块中使用默认导入语法（兼容部分 CommonJS 模块）,
@@ -43,20 +42,7 @@
     // 允许在导入语句中使用 .json 扩展名,
     "resolveJsonModule": true
   },
-  "lib": [
-    "esnext",
-    "dom",
-    "dom.iterable",
-    "webworker",
-    "scripthost"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/**/__tests__/*"
-  ],
-  "include": [
-    "src/**/*",
-    "src/**/*.vue",
-    "src/**/*.d.ts"
-  ]
+  "lib": ["esnext", "dom", "dom.iterable", "webworker", "scripthost"],
+  "exclude": ["node_modules", "src/**/__tests__/*"],
+  "include": ["src/**/*", "src/**/*.vue", "src/**/*.d.ts"]
 }

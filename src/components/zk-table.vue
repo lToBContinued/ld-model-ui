@@ -6,18 +6,19 @@
     </div>
     <el-table
       ref="ElTableRef"
-      class="table"
-      border
       :data="data"
-      :row-key="rowKey"
       :max-height="maxHeight"
+      :row-key="rowKey"
+      border
+      class="table"
+      stripe
       v-bind="$attrs"
     >
       <template v-for="(col, index) in columns" :key="col.prop || `col-${index}`">
         <!-- 专门处理 index 类型列 -->
         <el-table-column v-if="col.type === 'index'" v-bind="col" />
         <!-- 专门处理 selection 类型列 -->
-        <el-table-column v-if="col.type === 'selection'" reserve-selection v-bind="col" />
+        <el-table-column v-else-if="col.type === 'selection'" reserve-selection v-bind="col" />
         <!-- 处理其他类型列 -->
         <el-table-column v-else v-bind="col">
           <!--表头插槽-->
@@ -41,13 +42,12 @@
     </el-table>
     <el-pagination
       v-if="pagination"
-      :total="total"
       v-model:current-page="_currentPage"
       v-model:page-size="_pageSize"
       :page-sizes="[5, 10, 20, 50]"
       :pager-count="5"
-      background
-      layout="->, total, sizes, prev, pager, next, jumper"
+      :total="total"
+      layout="->, sizes, prev, pager, next, jumper, total,"
     ></el-pagination>
   </div>
 </template>
@@ -160,5 +160,11 @@ defineExpose({ ElTableRef })
   display: flex;
   justify-content: flex-end;
   padding: 12px 0;
+}
+
+::v-deep(.el-pager) {
+  .is-active {
+    color: $pagination-active-color;
+  }
 }
 </style>
