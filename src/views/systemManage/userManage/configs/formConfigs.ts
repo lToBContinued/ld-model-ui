@@ -1,10 +1,63 @@
+import { Search } from '@element-plus/icons-vue'
+
 export const searchUserFormConfig = [
   {
     prop: 'username',
-    label: '用户名',
     type: 'input',
     config: {
+      prefixIcon: Search,
       placeholder: '请输入用户名',
+      width: '200px',
+    },
+  },
+  {
+    prop: 'role',
+    type: 'select',
+    config: {
+      emptyValues: [undefined],
+      options: [
+        {
+          label: '所有角色',
+          value: '',
+        },
+        {
+          label: '管理员',
+          value: 0,
+        },
+        {
+          label: '普通用户',
+          value: 1,
+        },
+      ],
+      valueOnClear: undefined,
+      width: '200px',
+    },
+  },
+  {
+    prop: 'status',
+    type: 'select',
+    config: {
+      emptyValues: [undefined],
+      options: [
+        {
+          label: '所有状态',
+          value: '',
+        },
+        {
+          label: '激活',
+          value: 0,
+        },
+        {
+          label: '未激活',
+          value: 1,
+        },
+        {
+          label: '锁定',
+          value: 2,
+        },
+      ],
+      valueOnClear: undefined,
+      width: '200px',
     },
   },
 ]
@@ -36,11 +89,42 @@ export const userFormConfig = [
     },
   },
   {
-    prop: 'phone',
-    label: '手机号',
-    type: 'input',
+    prop: 'role',
+    label: '角色',
+    type: 'select',
     config: {
-      placeholder: '请输入手机号',
+      options: [
+        {
+          label: '管理员',
+          value: 0,
+        },
+        {
+          label: '普通用户',
+          value: 1,
+        },
+      ],
+    },
+  },
+  {
+    prop: 'department',
+    label: '部门',
+    type: 'input',
+  },
+  {
+    prop: 'status',
+    label: '状态',
+    type: 'select',
+    config: {
+      options: [
+        {
+          label: '激活',
+          value: 0,
+        },
+        {
+          label: '未激活',
+          value: 1,
+        },
+      ],
     },
   },
 ]

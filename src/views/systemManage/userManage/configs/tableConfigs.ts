@@ -7,28 +7,28 @@ export const userManageTableColumns = [
     label: '姓名',
   },
   {
-    prop: 'phone',
-    label: '手机号',
+    prop: 'role',
+    label: '角色',
+  },
+  {
+    prop: 'department',
+    label: '部门',
+  },
+  {
+    prop: 'delFlag',
+    label: '状态',
+    slot: 'delFlag',
+    width: '100px',
+    align: 'center',
   },
   {
     prop: 'createTime',
     label: '创建时间',
   },
   {
-    prop: 'updateTime',
-    label: '更新时间',
-  },
-  {
-    prop: 'delFlag',
-    label: '状态',
-    slot: 'delFlag',
-    width: '80px',
-    align: 'center',
-  },
-  {
     slot: 'operation',
     label: '操作',
-    width: '200px',
+    width: '150px',
     align: 'center',
   },
 ]

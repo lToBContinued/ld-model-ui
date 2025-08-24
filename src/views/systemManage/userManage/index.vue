@@ -4,8 +4,13 @@
     <zk-card>
       <div class="search-form-wrapper">
         <div class="left">
-          <div style="width: 300px">
-            <zk-form v-model:form-config="searchUserFormConfig" v-model:form-data="searchUserFormData"></zk-form>
+          <div style="width: 100%">
+            <zk-form
+              v-model:form-config="searchUserFormConfig"
+              v-model:form-data="searchUserFormData"
+              label-width="0"
+              inline
+            ></zk-form>
           </div>
           <div class="search-btns">
             <zk-button type="primary" @click="search">搜索</zk-button>
@@ -14,54 +19,73 @@
         </div>
         <div class="right">
           <zk-button type="primary" :icon="Plus" @click="openDialog">添加</zk-button>
-          <zk-button type="primary" :icon="Upload">批量添加</zk-button>
+          <zk-button type="success" :icon="Upload" @click="addMoreUserDialogShow = true">批量导入 </zk-button>
         </div>
       </div>
       <zk-table
-        :columns="userManageTableColumns"
-        :data="state.totalData"
-        max-height="600px"
-        :total="state.total"
         v-model:current-page="state.currentPage"
         v-model:page-size="state.pageSize"
+        :columns="userManageTableColumns"
+        :data="state.totalData"
+        :total="state.total"
+        max-height="600px"
+        @update:current-page="currentPageChange"
+        @update:page-size="pageSizeChange"
       >
         <template #delFlag="{ row }">
-          <zk-tag :type="freezeStatus(row.delFlag).type">{{ freezeStatus(row.delFlag).text }} </zk-tag>
+          <zk-tag :type="freezeStatus(row.delFlag).type">
+            {{ freezeStatus(row.delFlag).text }}
+          </zk-tag>
         </template>
         <template #operation="{ row }">
           <zk-button size="small" type="primary" @click="openDialog(row)">编辑</zk-button>
-          <zk-button size="small" type="warning" @click="freeze(row.id)">
-            {{ freezeStatus(row.delFlag).freezeBtnText }}
-          </zk-button>
           <zk-button size="small" type="danger" @click="remove(row)">删除</zk-button>
         </template>
       </zk-table>
     </zk-card>
-    <zk-dialog v-model="dialogShow" @close="closeDialog" @cancel="closeDialog" @confirm="confirmDialog">
-      <template #header>
-        <span style="font-size: 18px">{{ dialogHeader }}用户</span>
-      </template>
-      <div style="width: 300px">
-        <zk-form
-          ref="userFormRef"
-          v-model:form-config="userFormConfig"
-          v-model:form-data="userFormData"
-          :rules="userFormRules"
-        ></zk-form>
-      </div>
+    <zk-dialog
+      class="add-user-dialog"
+      v-model="dialogShow"
+      :title="`${dialogHeader}用户`"
+      width="400px"
+      @cancel="closeDialog"
+      @close="closeDialog"
+      @confirm="confirmDialog"
+    >
+      <zk-form
+        ref="userFormRef"
+        v-model:form-config="userFormConfig"
+        v-model:form-data="userFormData"
+        :rules="userFormRules"
+      ></zk-form>
+    </zk-dialog>
+    <zk-dialog
+      v-model="addMoreUserDialogShow"
+      :cancel-disabled="!currentFile"
+      :confirm-disabled="!currentFile"
+      cancel-text="取消上传"
+      confirm-text="上传"
+      title="上传文件"
+      width="600px"
+      @cancel="cancelUpload"
+      @close="closeAddMoreUserDialog"
+      @confirm="confirmUpload"
+    >
+      <zk-upload ref="UploadRef" v-model="currentFile"></zk-upload>
     </zk-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, h, watchEffect } from 'vue'
+import { ref, reactive, h } from 'vue'
 import { userManageTableColumns } from '@/views/systemManage/userManage/configs/tableConfigs.ts'
 import { getUserListApi } from '@/api/userManage'
 import { UserInfo, UserListTable, SearchUserFormData, UserFormData } from '@/views/systemManage/types.ts'
 import { userFormConfig, searchUserFormConfig } from '@/views/systemManage/userManage/configs/formConfigs.ts'
 import ZkForm from '@/components/zk-form.vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
-import { Action } from 'element-plus'
+import { Action, UploadFile } from 'element-plus'
+import ZkUpload from '@/components/zk-upload.vue'
 
 const dialogShow = ref()
 const dialogHeader = ref('')
@@ -74,45 +98,64 @@ const state = reactive<UserListTable>({
 })
 const searchUserFormData = reactive<SearchUserFormData>({
   username: '',
+  role: undefined,
+  status: undefined,
 })
 const userFormData = reactive<UserFormData>({
   id: '',
   username: '',
   password: '',
-  phone: '',
+  role: undefined,
+  department: '',
+  status: undefined,
 })
 const userFormRules = reactive<ValidFormRules<UserFormData>>({
   username: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+  role: [{ required: true, message: '请选择角色', trigger: 'blur' }],
+  department: [{ required: true, message: '请输入部门', trigger: 'blur' }],
+  status: [{ required: true, message: '请选择状态', trigger: 'blur' }],
 })
+const UploadRef = ref<InstanceType<typeof ZkUpload>>()
+const currentFile = ref<UploadFile>()
+const addMoreUserDialogShow = ref(false)
 
 // 获取用户列表
 const getUserList = async () => {
+  // TODO: 添加分页参数
   const res = await getUserListApi()
   state.total = res.total!
-  state.currentPage = res.currentPage!
-  state.pageSize = res.pageSize!
   state.totalData = res.data!
+}
+const currentPageChange = (currentPage: number) => {
+  state.currentPage = currentPage
+  getUserList()
+}
+const pageSizeChange = (pageSize: number) => {
+  state.pageSize = pageSize
+  getUserList()
 }
 // 格式化冻结状态
 const freezeStatus = (delFlag: number) => {
   if (delFlag === 0) {
     return {
       type: 'success',
-      text: '正常',
+      text: '激活',
       freezeBtnText: '冻结',
+    }
+  } else if (delFlag === 1) {
+    return {
+      type: 'danger',
+      text: '未激活',
+      freezeBtnText: '解冻',
     }
   } else {
     return {
       type: 'danger',
-      text: '冻结',
-      freezeBtnText: '解冻',
+      text: '锁定',
+      freezeBtnText: '删除',
     }
   }
-}
-// 冻结用户
-const freeze = (userId: UserInfo['id']) => {
-  console.log('>>>>> file: index.vue ~ method: freeze <<<<<\n', userId) // TODO: 删除
 }
 // 删除用户
 const remove = (row: UserInfo) => {
@@ -140,8 +183,9 @@ const openDialog = (row?: UserInfo) => {
     dialogHeader.value = '编辑'
     userFormData.id = row?.id
     userFormData.username = row?.username
-    userFormData.phone = row?.phone
-    userFormData.password = row?.password
+    userFormData.role = row?.role
+    userFormData.department = row?.department
+    userFormData.status = row?.status
   } else {
     dialogHeader.value = '添加'
   }
@@ -157,11 +201,16 @@ const confirmDialog = async () => {
 }
 // 搜索用户
 const search = () => {
-  console.log('>>>>> file: index.vue ~ method: search <<<<<\n', searchUserFormData.username) // TODO: 删除
+  console.log('>>>>> file: index.vue ~ method: search <<<<<\n', searchUserFormData) // TODO: 删除
 }
 // 重置搜索框
 const reset = () => {
-  searchUserFormData.username = ''
+  Object.assign(searchUserFormData, {
+    username: '',
+    role: undefined,
+    status: undefined,
+  })
+  getUserList()
 }
 // 关闭弹窗
 const closeDialog = () => {
@@ -175,10 +224,25 @@ const closeDialog = () => {
   dialogShow.value = false
 }
 
-watchEffect(() => {
-  getUserList()
-  console.log('>>>>> file: index.vue ~ method:  <<<<<\n', state.currentPage, state.pageSize) // TODO: 删除
-})
+// 批量导入
+const confirmUpload = () => {
+  UploadRef.value?.ElUploadRef?.submit()
+  // TODO: 上传文件，成功后删除文件，关闭弹窗，重新获取用户列表
+}
+const cancelUpload = () => {
+  if (currentFile.value) {
+    UploadRef.value?.ElUploadRef?.abort(currentFile.value)
+    UploadRef.value?.ElUploadRef?.clearFiles()
+    currentFile.value = undefined
+    ElMessage.success('上传已取消')
+  }
+}
+const closeAddMoreUserDialog = () => {
+  currentFile.value = undefined
+  addMoreUserDialogShow.value = false
+}
+
+getUserList()
 </script>
 
 <style scoped lang="scss">
@@ -193,16 +257,12 @@ watchEffect(() => {
 
     .search-btns {
       margin-left: $spacing-size4;
+      width: 200px;
     }
   }
 
   ::v-deep(.el-form-item) {
     margin-bottom: 0;
   }
-}
-
-::v-deep(.el-dialog__body) {
-  display: flex;
-  justify-content: center;
 }
 </style>

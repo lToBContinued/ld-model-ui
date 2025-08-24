@@ -180,6 +180,18 @@ export default [
         },
       },
       {
+        path: '/systemManage/userManage',
+        name: 'userManage',
+        component: () => import('@/views/systemManage/userManage/index.vue'),
+        meta: {
+          title: '用户管理',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+      {
         path: '/systemManage/companyManage',
         name: 'companyManage',
         component: () => import('@/views/systemManage/companyManage/index.vue'),

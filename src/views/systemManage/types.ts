@@ -9,7 +9,9 @@ export interface UserInfo {
   id: string
   username: string
   password: string
-  phone: string
+  role: number
+  department: string
+  status: number
   createTime: string
   updateTime: string
   delFlag: number
@@ -24,13 +26,17 @@ export interface UserListTable {
 
 export interface SearchUserFormData {
   username: string
+  role: UndefinedType<number>
+  status: UndefinedType<number>
 }
 
 export interface UserFormData {
   id?: string
   username?: string
   password?: string
-  phone?: string
+  role?: number
+  department?: string
+  status?: number
 }
 
 export interface SchemeListItem {
