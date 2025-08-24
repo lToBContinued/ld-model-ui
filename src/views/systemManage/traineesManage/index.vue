@@ -2,8 +2,8 @@
   <div class="trainees-manage">
     <zk-card header="参训单位员列表">
       <div class="feature-area">
-        <zk-button type="primary" @click="addMoreCompanyDialogShow = true">导入参训单位</zk-button>
-        <zk-button type="success" @click="companyDialogShow = true">添加参训单位</zk-button>
+        <zk-button type="primary" :icon="Plus" @click="companyDialogShow = true">添加</zk-button>
+        <zk-button type="success" :icon="Upload" @click="addMoreCompanyDialogShow = true">批量导入</zk-button>
       </div>
       <zk-table
         v-model:current-page="tableState.currentPage"
@@ -65,6 +65,7 @@ import { CompanyFormData, CompanyTableState, CompanyTableStateList } from '@/vie
 import ZkForm from '@/components/zk-form.vue'
 import { UploadFile } from 'element-plus'
 import ZkUpload from '@/components/zk-upload.vue'
+import { Plus, Upload } from '@element-plus/icons-vue'
 
 /*-------------------------------------------------------------------------------------------------------------------**/
 // 表格数据
@@ -133,6 +134,8 @@ const closeAddMoreCompanyDialog = () => {
 
 <style scoped lang="scss">
 .feature-area {
+  display: flex;
+  justify-content: flex-end;
   margin-bottom: $spacing-size3;
 }
 
