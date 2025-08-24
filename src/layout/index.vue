@@ -1,4 +1,3 @@
-k
 <template>
   <div class="layout">
     <el-container>
@@ -39,7 +38,7 @@ const menuStore = useMenuStore()
 </script>
 
 <style scoped lang="scss">
-.common-layout {
+.layout {
   height: 100vh;
 }
 
@@ -95,5 +94,6 @@ const menuStore = useMenuStore()
 
   // 背景颜色
   background: $main-bg-color;
+  overflow-x: hidden;
 }
 </style>
