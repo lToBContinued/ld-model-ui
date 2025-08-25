@@ -3,10 +3,10 @@
     <!-- 基本信息 -->
     <el-form label-width="90px" class="mb-3">
       <el-form-item label="指标名称">
-        <el-input :model-value="node?.indicatorName || ''" disabled />
+        <el-input :model-value="node?.name || ''" disabled />
       </el-form-item>
       <el-form-item label="指标描述">
-        <el-input :model-value="node?.indicatorDesc || ''" type="textarea" :rows="2" disabled />
+        <el-input :model-value="node?.description || ''" type="textarea" :rows="2" disabled />
       </el-form-item>
       <el-row :gutter="12">
         <el-col :span="8">
@@ -33,14 +33,9 @@
         </div>
       </el-form-item>
     </el-form>
-    <div class="param-header">参数配置</div>
-    <!-- 参数配置面板：用你“参考代码”的 SubtreeParamEditor -->
-    <SubtreeParamEditor
-      v-if="node?.indicatorId"
-      :node-id="Number(node!.indicatorId)"
-      @changed="emitChanged"
-      @error="onParamError"
-    />
+    <!--<div class="param-header">参数配置</div>
+    &lt;!&ndash; 参数配置面板：用你“参考代码”的 SubtreeParamEditor &ndash;&gt;
+    <SubtreeParamEditor v-if="node?.id" :node-id="Number(node!.id)" @changed="emitChanged" @error="onParamError" />-->
     <template #footer>
       <el-button @click="visible = false">取 消</el-button>
       <el-button type="primary" :loading="saving" @click="onSave">保 存</el-button>
@@ -63,8 +58,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   modelValue: false,
   subtreeId: undefined,
-  node: null,
 })
+
 const emit = defineEmits<{
   'update:model-value': [value: boolean]
   save: [
@@ -77,7 +72,6 @@ const emit = defineEmits<{
   ]
   changed: []
 }>()
-
 const visible = computed({
   get: () => {
     return props.modelValue
@@ -86,11 +80,9 @@ const visible = computed({
     emit('update:model-value', v)
   },
 })
-
 const enabled = ref<0 | 1>(1)
 const weight = ref<number | null>(null)
 const formula = ref<string>('')
-
 const isRoot = computed(() => (props.node?.level ?? 0) === 0)
 
 watch(
@@ -118,7 +110,7 @@ async function onSave() {
   try {
     saving.value = true
     emit('save', {
-      indicatorId: Number(props.node.indicatorId),
+      indicatorId: Number(props.node.id),
       enabled: enabled.value,
       weight: isRoot.value ? null : (weight.value ?? null),
       formula: (formula.value || '').trim() || null,

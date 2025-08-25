@@ -19,13 +19,7 @@
     </el-collapse-item>
   </el-collapse>
   <!-- 放在根模板末尾，避免层级和布局干扰 -->
-  <AlgorithmConfigDialog
-    v-model="dlgOpen"
-    :subtree-id="schemeId"
-    :node="currentIndicator"
-    @save="onDialogSave"
-    @changed="bubbleChanged"
-  />
+  <AlgorithmConfigDialog v-model="dlgOpen" :subtree-id="schemeId" :node="currentIndicator" @save="onDialogSave" />
 </template>
 
 <script setup lang="ts">
@@ -38,17 +32,18 @@ import AlgorithmConfigDialog from './AlgorithmConfigDialog.vue'
 defineOptions({ name: 'SchemeCollapse' })
 
 interface DefineProps {
-  modelValue?: SchemeIndicatorConfigItem[]
-  indicatorOptions?: { label: string; value: number }[]
-  schemeId?: number // subtreeId
+  modelValue?: SchemeIndicatorConfigItem[] // 指标算法配置
+  indicatorOptions?: { label: string; value: number }[] // 指标选项
+  schemeId?: number // 方案id
 }
+
 const props = withDefaults(defineProps<DefineProps>(), {
   modelValue: () => [],
   indicatorOptions: () => [],
   schemeId: undefined,
 })
-const emit = defineEmits<{ (e: 'update:modelValue', v: SchemeIndicatorConfigItem[]): void }>()
 
+const emit = defineEmits<{ (e: 'update:modelValue', v: SchemeIndicatorConfigItem[]): void }>()
 const tree = shallowRef<SchemeIndicatorConfigItem[]>([])
 const deepClone = <T,>(o: T): T => JSON.parse(JSON.stringify(o))
 
@@ -61,7 +56,7 @@ watch(
 )
 
 const dlgOpen = ref(false)
-const currentIndicator = ref<SchemeIndicatorConfigItem | null>(null)
+const currentIndicator = ref<NullType<SchemeIndicatorConfigItem>>()
 function openDialog(item: SchemeIndicatorConfigItem) {
   currentIndicator.value = item
   dlgOpen.value = true

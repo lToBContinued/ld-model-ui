@@ -10,8 +10,8 @@
           <div v-else>
             <div class="header">
               <p class="title bold">{{ selectedScheme?.name }}</p>
-              <p v-show="selectedScheme?.schemeDesc?.trim() !== ''" class="desc">
-                {{ selectedScheme?.schemeDesc?.trim() }}
+              <p v-show="selectedScheme!.description?.trim() !== ''" class="desc">
+                {{ selectedScheme!.description?.trim() }}
               </p>
             </div>
             <scheme-collapse
@@ -27,33 +27,23 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { SchemeIndicatorConfigItem, SchemeListItem, SelectedScheme } from '@/views/systemManage/types'
 import { getSchemeDetailApi } from '@/api/schemeManage/legacySubtree.ts'
 import SchemeCollapse from './components/scheme-collapse.vue'
 import SchemeList from './components/scheme-list.vue'
 
-const selectedScheme = ref<SelectedScheme>({} as SelectedScheme)
+const selectedScheme = ref<SelectedScheme>({})
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 const indicatorOptions = ref<{ label: string; value: number }[]>([])
-
-watch(
-  () => schemeIndicatorConfig,
-  (newVal) => {
-    console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', newVal.value) // TODO: 删除
-  },
-  { deep: true },
-)
 
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value?.id) return
-  // 先显示列表里的标题/描述
-  selectedScheme.value = scheme as SelectedScheme
-  // 拉详情（树 → config）
-  const detail = await getSchemeDetail(scheme.id)
-  console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', detail) // TODO: 删除
-  schemeIndicatorConfig.value = detail.children
+  selectedScheme.value = scheme
+  console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', selectedScheme.value.id) // TODO: 删除
+  const data = await getSchemeDetail(scheme.id)
+  schemeIndicatorConfig.value = data!.children
 }
 const getSchemeDetail = async (id: number) => {
   const res = await getSchemeDetailApi(id)

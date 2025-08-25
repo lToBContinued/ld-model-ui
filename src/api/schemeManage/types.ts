@@ -43,9 +43,13 @@ export interface GetSchemeListApiRes {
 // 算法配置========================================================================
 export interface SchemeDetail {
   id: number
-  schemeName: string
-  schemeDesc: string
-  config: string
+  refIndicatorId: number
+  name: string
+  description?: string
+  formula?: string
+  enabled: number
+  weight?: number
+  children: SchemeDetail[]
 }
 
 export type ParamMapEntryDTO = {

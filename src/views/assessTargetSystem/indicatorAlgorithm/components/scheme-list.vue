@@ -48,12 +48,6 @@ const loadList = async () => {
     const res = await getSchemeListApi(params)
     listState.total = res.data!.total
     listState.totalData = res.data!.records
-    // 首次自动选中第一条
-    if (listState.totalData.length > 0) {
-      selectScheme(listState.totalData[0])
-    } else {
-      activeId.value = ''
-    }
   } catch (e) {
     console.error(e)
     listState.totalData = []

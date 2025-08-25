@@ -13,7 +13,7 @@ import {
  * @returns {Promise<ResponseData<SchemeDetail>>} 方案详情数据
  */
 export const getSchemeDetailApi = (id: number) => {
-  return request<ResponseData<SchemeDetail>>({
+  return request<any, ResponseData<SchemeDetail>>({
     url: `/subtrees/${id}/tree`,
   })
 }
