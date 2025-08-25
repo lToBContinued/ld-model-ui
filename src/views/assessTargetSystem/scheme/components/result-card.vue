@@ -34,7 +34,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { resultFilterFormConfig } from '@/views/assessTargetSystem/configs/formConfigs.ts'
 import { ResultFilterFormData } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOptions } from '@/views/assessTargetSystem/configs/chartOptions.ts'
 import { resultTableColumns } from '@/views/assessTargetSystem/configs/tableConfigs.ts'

@@ -61,7 +61,7 @@
 import { ref, reactive, watch } from 'vue'
 import { TreeData, TreeKey, TreeOptionProps } from 'element-plus/es/components/tree/src/tree.type'
 import { FilterNodeMethodFunction, RenderContentContext, TreeInstance } from 'element-plus'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 
 interface ZkTreeProps {
   data?: TreeData

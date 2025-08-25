@@ -154,7 +154,7 @@
 import { ref, reactive, computed, watch } from 'vue'
 import { FormInstance, FormRules } from 'element-plus'
 import { CircleClose } from '@element-plus/icons-vue'
-import type ZkForm from '@/components/zk-form.vue'
+import type ZkForm from '@/components/zk/zk-form.vue'
 
 interface ZkFormProps {
   formConfig: any[] | Record<string, any>

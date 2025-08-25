@@ -29,7 +29,7 @@ import { loadSlim } from 'tsparticles-slim'
 import { loginFormConfig } from '@/views/login/configs/formConfigs.ts'
 import SETTING from '@/setting/index.ts'
 import useUserStore from '@/stores/modules/user.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { useRouter } from 'vue-router'
 
 const { login } = useUserStore()

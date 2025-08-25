@@ -81,10 +81,10 @@ import { userManageTableColumns } from '@/views/systemManage/userManage/configs/
 import { getUserListApi } from '@/api/userManage'
 import { UserInfo, UserListTable, SearchUserFormData, UserFormData } from '@/views/systemManage/types.ts'
 import { userFormConfig, searchUserFormConfig } from '@/views/systemManage/userManage/configs/formConfigs.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
 import { Action, UploadFile } from 'element-plus'
-import ZkUpload from '@/components/zk-upload.vue'
+import ZkUpload from '@/components/zk/zk-upload.vue'
 
 const dialogShow = ref()
 const dialogHeader = ref('')

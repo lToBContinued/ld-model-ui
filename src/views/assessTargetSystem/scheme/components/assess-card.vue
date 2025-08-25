@@ -24,7 +24,7 @@
 import { reactive, ref, watch } from 'vue'
 import { assessFormConfig } from '@/views/assessTargetSystem/configs/formConfigs.ts'
 import { AssessFormData } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import ResultCard from '@/views/assessTargetSystem/scheme/components/result-card.vue'
 
 interface AssessCardProps {

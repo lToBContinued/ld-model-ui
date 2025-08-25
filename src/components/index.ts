@@ -1,9 +1,9 @@
 import type { App, Component } from 'vue'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import ModuleTitle from '@/components/module-title.vue'
-import ZkButton from './zk-button.vue'
-import ZkCard from './zk-card.vue'
-import ZkCheckbox from './zk-checkbox.vue'
+import ZkButton from './zk/zk-button.vue'
+import ZkCard from './zk/zk-card.vue'
+import ZkCheckbox from './zk/zk-checkbox.vue'
 
 const allGlobalComponent: Record<string, Component> = {
   ModuleTitle,

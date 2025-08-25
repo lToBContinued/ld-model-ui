@@ -59,7 +59,7 @@ import { getSchemeDetailApi, updateSchemeApi } from '@/api/schemeManage'
 import { Plus } from '@element-plus/icons-vue'
 import SchemeCollapse from '@/views/assessTargetSystem/schemeManage/components/scheme-collapse.vue'
 import SchemeList from '@/views/assessTargetSystem/schemeManage/components/scheme-list.vue'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage'
 
 const selectedScheme = ref<SelectedScheme>({})

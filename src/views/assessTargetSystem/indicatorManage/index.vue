@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import AsideTree from '@/views/assessTargetSystem/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
 import { RenderContentContext } from 'element-plus'

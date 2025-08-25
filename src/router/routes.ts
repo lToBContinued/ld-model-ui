@@ -62,19 +62,7 @@ export default [
         name: 'library',
         component: () => import('@/views/assessTargetSystem/library/index.vue'),
         meta: {
-          title: '评估指标库列表',
-          icon: '',
-          hidden: false,
-          disabled: false,
-          iconShow: false,
-        },
-      },
-      {
-        path: '/assessTargetSystem/scheme',
-        name: 'scheme',
-        component: () => import('@/views/assessTargetSystem/scheme/index.vue'),
-        meta: {
-          title: '评估方案',
+          title: '指标体系简介',
           icon: '',
           hidden: false,
           disabled: false,
@@ -98,7 +86,7 @@ export default [
         name: 'schemeManage',
         component: () => import('@/views/assessTargetSystem/schemeManage/index.vue'),
         meta: {
-          title: '评估方案创建',
+          title: '评估方案排版',
           icon: '',
           hidden: false,
           disabled: false,
@@ -110,7 +98,7 @@ export default [
         name: 'IndicatorAlgorithm',
         component: () => import('@/views/assessTargetSystem/indicatorAlgorithm/index.vue'),
         meta: {
-          title: '算法配置',
+          title: '评估方案算法配置',
           icon: '',
           hidden: false,
           disabled: false,
@@ -128,7 +116,7 @@ export default [
         name: 'runAssess',
         component: () => import('@/views/assessTargetSystem/runAssess/index.vue'),
         meta: {
-          title: '评估管理',
+          title: '评估实施',
           icon: '',
           hidden: false,
           disabled: false,

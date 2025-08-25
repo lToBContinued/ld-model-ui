@@ -62,9 +62,9 @@ import { traineesColumns } from '@/views/systemManage/traineesManage/configs/tab
 import { reactive, ref } from 'vue'
 import { companyFormConfig } from '@/views/systemManage/traineesManage/configs/formConfigs.ts'
 import { CompanyFormData, CompanyTableState, CompanyTableStateList } from '@/views/systemManage/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { UploadFile } from 'element-plus'
-import ZkUpload from '@/components/zk-upload.vue'
+import ZkUpload from '@/components/zk/zk-upload.vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
 
 /*-------------------------------------------------------------------------------------------------------------------**/

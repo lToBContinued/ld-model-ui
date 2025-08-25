@@ -54,12 +54,12 @@
 
 <script setup lang="ts">
 import { Plus } from '@element-plus/icons-vue'
-import ZkTree from '@/components/zk-tree.vue'
+import ZkTree from '@/components/zk/zk-tree.vue'
 import { reactive, ref } from 'vue'
 import type { LoadFunction } from 'element-plus'
 import { RenderContentContext } from 'element-plus'
 import { addIndicatorApi, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage/index.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { AddIndicatorApiSend, GetIndicatorListApiRes } from '@/api/indicatorManage/types.ts'
 import {
   addChildNodeFormConfig,

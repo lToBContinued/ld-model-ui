@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { ref, reactive } from 'vue'
 import { BaseFormConfigItem, BaseFormData, IndicatorListItem } from '@/views/assessTargetSystem/types.ts'
 import AssessList from '@/views/assessTargetSystem/runAssess/components/assess-list.vue'

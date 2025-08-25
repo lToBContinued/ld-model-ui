@@ -39,7 +39,7 @@
 <script setup lang="ts">
 import { watch, ref, reactive } from 'vue'
 import { AddSecondIndicatorFormConfigItem, SchemeIndicatorConfigItem } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage/index.ts'
 
 interface DefineProps {

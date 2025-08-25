@@ -34,7 +34,7 @@
 import { reactive, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
 import { AddSchemeFormData, AddSchemeFormItem, SchemeListItem } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { addSchemeApi, getSchemeListApi, removeSchemeApi } from '@/api/schemeManage/index.ts'
 import { getIndicatorSystemListApi } from '@/api/indicatorManage/index.ts'
 import { AddSchemeApiSend } from '@/api/schemeManage/types.ts'
