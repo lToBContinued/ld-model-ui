@@ -122,6 +122,7 @@ const getIndicatorDetail = async (id: number): Promise<GetIndicatorListApiRes[]>
 }
 // 查看节点
 const viewNode = async (data: Data, node: Node) => {
+  currentData.value = data
   emit('view-node', data, node)
 }
 // 打开添加根节点弹窗

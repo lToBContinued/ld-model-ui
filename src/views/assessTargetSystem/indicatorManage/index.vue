@@ -3,7 +3,12 @@
     <zk-card>
       <el-row>
         <el-col :span="10">
-          <aside-tree ref="asideTreeRef" @view-node="viewNode" @remove-node="removeNode"></aside-tree>
+          <aside-tree
+            v-if="asideTreeShow"
+            ref="asideTreeRef"
+            @view-node="viewNode"
+            @remove-node="removeNode"
+          ></aside-tree>
         </el-col>
         <el-col :span="14">
           <div class="panel">
@@ -22,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { nextTick, reactive, ref, watch } from 'vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import AsideTree from '@/views/assessTargetSystem/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
@@ -103,6 +108,7 @@ const indicatorInputJson = ref(
     }
   `,
 )
+const asideTreeShow = ref(true)
 
 watch(indicatorInputJson, (newVal) => {
   console.log('>>>>> file: index.vue ~ method: indicatorInputJson <<<<<\n', indicatorInputJson.value) // TODO: 删除
@@ -121,7 +127,7 @@ watch(indicatorInputJson, (newVal) => {
 
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf, parentId } = res
+  const { config, id, description, name, parentName, isLeaf, parentId, systemId } = res
   Object.assign(indicatorConfigFormData, {
     config,
     id,
@@ -130,6 +136,7 @@ const viewNode = async (data: Data, _: Node) => {
     parentName,
     isLeaf,
     parentId,
+    systemId,
   })
 }
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
@@ -140,6 +147,11 @@ const saveConfig = async () => {
   await indicatorConfigFormRef.value?.ElFormRef?.validate()
   await updateIndicatorDetailApi(indicatorConfigFormData as UpdateIndicatorDetailSend)
   await getIndicatorDetail(indicatorConfigFormData.id!)
+  if (indicatorConfigFormData.parentId === 0) {
+    asideTreeShow.value = false
+    await nextTick()
+    asideTreeShow.value = true
+  }
   asideTreeRef.value?.refreshStandar('')
 }
 const removeNode = () => {
