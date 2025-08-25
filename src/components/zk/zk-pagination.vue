@@ -3,9 +3,9 @@
     v-model:current-page="_currentPage"
     v-model:page-size="_pageSize"
     :page-sizes="[5, 10, 20, 50]"
+    :pager-count="5"
     :total="total"
-    background
-    layout="->, total, sizes, prev, pager, next, jumper"
+    layout="->, sizes, prev, pager, next, jumper, total,"
     v-bind="$attrs"
   >
     <template v-if="Object.keys($slots).length">
@@ -61,5 +61,11 @@ defineExpose({ ElPaginationRef })
 <style scoped lang="scss">
 .el-pagination {
   margin-top: $spacing-size4;
+}
+
+::v-deep(.el-pager) {
+  .is-active {
+    color: $pagination-active-color;
+  }
 }
 </style>
