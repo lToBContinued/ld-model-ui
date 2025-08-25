@@ -11,8 +11,8 @@
 <style scoped lang="scss">
 .fade-enter-from {
   position: absolute;
-  opacity: 0;
   transform: translateX(-100px);
+  opacity: 0;
 }
 
 .fade-enter-active,
@@ -22,13 +22,13 @@
 
 .fade-enter-to,
 .fade-leave-from {
+  transform: translateX(0);
   opacity: 1;
-  transform: translateX(0px);
 }
 
 .fade-leave-to {
   position: absolute;
-  opacity: 0;
   transform: translateX(100px);
+  opacity: 0;
 }
 </style>

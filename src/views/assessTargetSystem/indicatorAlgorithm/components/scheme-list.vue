@@ -1,63 +1,72 @@
 <template>
   <div class="scheme-component-wrapper">
-    <!-- 列表区 -->
-    <div v-if="loading" class="loading">加载中…</div>
-    <template v-else>
-      <el-empty v-if="schemeList.length === 0" description="暂无方案" />
-      <ul v-else class="scheme-list">
-        <li
-          v-for="item in schemeList"
-          :key="item.id"
-          :class="['scheme-item', String(item.id) === activeId ? 'scheme-item-active' : '']"
-          @click="selectScheme(item)"
-        >
-          <div class="row">
-            <span class="name bold">{{ item.name || '#' + item.id }}</span>
-          </div>
-          <div v-if="item.description" class="desc" :title="item.name">
-            {{ item.description }}
-          </div>
-        </li>
-      </ul>
-    </template>
+    <el-empty v-if="listState.totalData.length === 0" description="暂无方案" />
+    <ul class="scheme-list">
+      <li v-highlight v-for="item in listState.totalData" :key="item.id">
+        <div class="scheme-item bold" @click="selectScheme(item)">
+          <span>{{ item.name }}</span>
+        </div>
+      </li>
+    </ul>
+    <div class="pagination-wrapper">
+      <zk-pagination
+        v-model:current-page="listState.page"
+        :total="listState.total"
+        layout="prev, pager, next,"
+        :page-size="listState.size"
+        @update:current-page="pageChange"
+      ></zk-pagination>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import type { SchemeListItem } from '@/views/assessTargetSystem/types.ts'
-import { getSchemeListApi } from '@/api/schemeManage/legacySubtree.ts' // ★ 直连你的“老后端”
+import { ref, reactive } from 'vue'
+import { ListState, SchemeListItem } from '@/views/assessTargetSystem/types.ts'
+import { getSchemeListApi } from '@/api/schemeManage/index.ts'
 
 const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
 }>()
 
+const listState = reactive<ListState>({
+  total: 0,
+  totalData: [],
+  page: 1,
+  size: 30,
+})
 const loading = ref<boolean>(false)
-const schemeList = ref<SchemeListItem[]>([])
 const activeId = ref<string>('')
 
-async function loadList() {
+const loadList = async () => {
   loading.value = true
   try {
-    const list = await getSchemeListApi()
-    schemeList.value = list.data.records
-    console.log('>>>>> file: scheme-list.vue ~ method: loadList <<<<<\n', schemeList.value) // TODO: 删除
+    const params = {
+      page: listState.page,
+      size: listState.size,
+    }
+    const res = await getSchemeListApi(params)
+    listState.total = res.data!.total
+    listState.totalData = res.data!.records
     // 首次自动选中第一条
-    if (schemeList.value.length > 0) {
-      selectScheme(schemeList.value[0])
+    if (listState.totalData.length > 0) {
+      selectScheme(listState.totalData[0])
     } else {
       activeId.value = ''
     }
   } catch (e) {
-    console.error('[scheme-list] getSchemeListApi error:', e)
-    schemeList.value = []
+    console.error(e)
+    listState.totalData = []
     activeId.value = ''
   } finally {
     loading.value = false
   }
 }
-
-function selectScheme(scheme: SchemeListItem) {
+const pageChange = (page: ListState['page']) => {
+  listState.page = page
+  loadList()
+}
+const selectScheme = (scheme: SchemeListItem) => {
   if (!scheme) return
   const idStr = String(scheme.id)
   if (activeId.value === idStr) return
@@ -65,76 +74,60 @@ function selectScheme(scheme: SchemeListItem) {
   emit('scheme-change', scheme)
 }
 
-onMounted(loadList)
+loadList()
 </script>
 
 <style scoped lang="scss">
 .scheme-component-wrapper {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  position: relative;
 
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+  overflow: hidden;
+
+  height: calc(100vh - 50px - 2 * $spacing-size3);
 
   background-color: $primary-color;
   border: 1px solid $border-color1;
-}
 
-.loading {
-  padding: 12px;
-  color: #666;
-  text-align: center;
+  .pagination-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100%;
+    height: 35px;
+  }
 }
 
 .scheme-list {
   overflow-y: auto;
   height: calc(100% - 40px - $spacing-size3);
-  margin-top: $spacing-size3;
-  padding: 0 $spacing-size2;
-}
+  padding-bottom: 35px;
 
-.scheme-item {
-  cursor: pointer;
+  .scheme-item {
+    @include flex-center(row-between);
 
-  width: 100%;
-  margin-bottom: 8px;
-  padding: $spacing-size2 $spacing-size3;
+    width: 100%;
+    height: 40px;
+    padding: $spacing-size1;
+    padding-left: $spacing-size3;
 
-  background: #fff;
-  border-radius: 10px;
-
-  transition: all 0.2s;
-
-  .row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .name {
     font-size: $font-size-m;
+    line-height: calc(40px - 2 * $spacing-size1);
     color: $main-text-color2;
-  }
 
-  .desc {
-    overflow: hidden;
+    border-top: 1px solid $border-color1;
+    border-bottom: 1px solid $border-color1;
 
-    margin-top: 6px;
+    transition: all 0.3s;
 
-    font-size: $font-size-s;
-    color: $main-text-color3;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &:hover {
-    background-color: #f7faff;
+    &:hover {
+      background-color: $hover-color;
+    }
   }
 }
 
-.scheme-item-active {
-  background: #f8fbff;
-  border-color: #4c7dff;
-  box-shadow: 0 0 0 2px rgb(76 125 255 / 12%);
+.el-pagination {
+  margin-top: 0;
 }
 </style>

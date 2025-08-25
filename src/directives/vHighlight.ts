@@ -1,6 +1,6 @@
 import { App } from 'vue'
 
-const HIGHLIGHT_COLOR = '#e3edff'
+const HIGHLIGHT_COLOR = '#66829D'
 
 export default function (app: App) {
   app.directive('highlight', {
@@ -8,7 +8,7 @@ export default function (app: App) {
       const childrenList: HTMLCollection = el.parentElement?.children as HTMLCollection
       const handelClick = () => {
         for (let i = 0; i < childrenList.length; i++) {
-          ;(childrenList[i] as HTMLElement).style.backgroundColor = '#fff'
+          ;(childrenList[i] as HTMLElement).style.backgroundColor = '#24272c'
         }
         el.style.backgroundColor = HIGHLIGHT_COLOR
       }

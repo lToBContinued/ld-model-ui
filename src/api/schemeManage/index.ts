@@ -3,6 +3,7 @@ import {
   AddSchemeApiRes,
   AddSchemeApiSend,
   GetSchemeListApiRes,
+  GetSchemeListApiSend,
   UpdateSchemeApiSend,
 } from '@/api/schemeManage/types.ts'
 
@@ -50,9 +51,10 @@ export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
 /**
  * @description 获取方案列表
  */
-export const getSchemeListApi = () => {
-  return request<any, ResponseData<GetSchemeListApiRes[]>>({
-    url: '/schemeManage/getSchemeList',
+export const getSchemeListApi = (params: GetSchemeListApiSend) => {
+  return request<any, ResponseData<GetSchemeListApiRes>>({
+    url: '/subtrees/page',
+    params,
   })
 }
 

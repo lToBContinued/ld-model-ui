@@ -88,12 +88,13 @@ const menuStore = useMenuStore()
 ::v-deep(.el-main) {
   position: relative;
 
+  overflow-x: hidden;
+
   width: calc(100% - $aside-width);
   margin-top: 50px;
   padding: $spacing-size3 $spacing-size3 0 $spacing-size3;
 
   // 背景颜色
   background: $main-bg-color;
-  overflow-x: hidden;
 }
 </style>

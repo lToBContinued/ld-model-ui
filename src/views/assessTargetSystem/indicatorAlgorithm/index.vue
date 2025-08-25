@@ -66,7 +66,7 @@ const getSchemeDetail = async (id: number) => {
   overflow-y: auto;
 
   width: 100%;
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+  height: calc(100vh - 50px - 2 * $spacing-size3);
   margin-left: $spacing-size2;
   padding: $spacing-size3;
 

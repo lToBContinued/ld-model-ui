@@ -62,8 +62,20 @@ export interface IndicatorListItem {
 }
 
 export interface SchemeListItem {
+  createAt: string
+  description: string
   id: number
-  schemeName: string
+  name: string
+  rootNodeId: number
+  systemId: number
+  updateAt: string
+}
+
+export interface ListState {
+  total: number
+  totalData: SchemeListItem[]
+  page: number
+  size: number
 }
 
 export interface AddSecondIndicatorFormData {

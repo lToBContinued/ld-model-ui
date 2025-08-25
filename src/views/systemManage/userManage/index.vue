@@ -255,8 +255,8 @@ getUserList()
     align-items: center;
 
     .search-btns {
-      margin-left: $spacing-size4;
       width: 200px;
+      margin-left: $spacing-size4;
     }
   }
 

@@ -169,7 +169,7 @@ const getIndicatorName = (id: number) => {
   overflow-y: auto;
 
   width: 100%;
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+  height: calc(100vh - 50px - 2 * $spacing-size3);
   margin-left: $spacing-size2;
   padding: $spacing-size3;
 
@@ -213,9 +213,5 @@ const getIndicatorName = (id: number) => {
       margin-right: auto;
     }
   }
-}
-
-::v-deep(.el-card__body) {
-  height: calc(100vh - 50px - 2 * $spacing-size5);
 }
 </style>

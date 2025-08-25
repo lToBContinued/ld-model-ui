@@ -1,8 +1,3 @@
-export interface GetSchemeListApiRes {
-  id: number
-  schemeName: string
-}
-
 export interface AddSchemeApiSend {
   schemeName: string
   indicatorSystem: number
@@ -22,10 +17,27 @@ export interface UpdateSchemeApiSend {
   config: string
 }
 
+export interface GetSchemeListApiSend {
+  page: number
+  size: number
+}
+
 export interface SchemeListItem {
-  id?: number
-  schemeName?: string
-  schemeDesc?: string
+  createAt: string
+  description: string
+  id: number
+  name: string
+  rootNodeId: number
+  systemId: number
+  updateAt: string
+}
+
+export interface GetSchemeListApiRes {
+  current: number
+  pages: number
+  records: SchemeListItem[]
+  size: number
+  total: number
 }
 
 // 算法配置========================================================================

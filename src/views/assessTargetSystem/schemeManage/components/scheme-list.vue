@@ -4,11 +4,14 @@
     <ul class="scheme-list">
       <li v-highlight v-for="item in schemeList" :key="item.id">
         <div class="scheme-item bold" @click="selectScheme(item)">
-          <span>{{ item.schemeName }}</span>
+          <span>{{ item.name }}</span>
           <zk-button type="danger" link @click.stop="removeSchema(item)">删除</zk-button>
         </div>
       </li>
     </ul>
+    <div class="pagination-wrapper">
+      <zk-pagination :total="30" layout="prev, pager, next,"></zk-pagination>
+    </div>
     <zk-dialog
       v-model="addSchemeDialogShow"
       width="500px"
@@ -43,6 +46,12 @@ const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
   'remove-scheme': [scheme: SchemeListItem]
 }>()
+const listState = reactive({
+  total: 0,
+  totalData: [],
+  page: 1,
+  size: 30,
+})
 const addSchemeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addSchemeDialogShow = ref(false)
 const schemeList = ref<SchemeListItem[]>([])
@@ -82,7 +91,7 @@ const addSchemeDialogOpen = async () => {
   const res = await getIndicatorSystemListApi()
   const options = res.data!.map((item) => {
     return {
-      label: item.indicatorName,
+      label: item.name,
       value: item.id,
     }
   })
@@ -133,16 +142,31 @@ getSchemeList()
 
 <style scoped lang="scss">
 .scheme-component-wrapper {
+  position: relative;
+
   overflow: hidden;
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+
+  height: calc(100vh - 50px - 2 * $spacing-size3);
+
   background-color: $primary-color;
   border: 1px solid $border-color1;
 
-  .scheme-list {
-    overflow-y: auto;
-    height: calc(100% - 40px - $spacing-size3);
-    margin-top: $spacing-size3;
+  .pagination-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100%;
+    height: 35px;
   }
+}
+
+.scheme-list {
+  overflow-y: auto;
+  height: calc(100% - 40px - $spacing-size3);
+  margin-top: $spacing-size3;
+  padding-bottom: 35px;
 
   .scheme-item {
     @include flex-center(row-between);
@@ -156,15 +180,18 @@ getSchemeList()
     line-height: calc(40px - 2 * $spacing-size1);
     color: $main-text-color2;
 
+    border-top: 1px solid $border-color1;
+    border-bottom: 1px solid $border-color1;
+
     transition: all 0.3s;
 
     &:hover {
-      background-color: #e3edff;
+      background-color: $hover-color;
     }
   }
+}
 
-  .scheme-item-active {
-    background-color: #fff;
-  }
+.el-pagination {
+  margin-top: 0;
 }
 </style>
