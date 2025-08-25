@@ -46,6 +46,42 @@ export default [
     ],
   },
   {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/runAssess',
+        name: 'runAssess',
+        component: () => import('@/views/runAssess/index.vue'),
+        meta: {
+          title: '评估实施',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
+    path: '/',
+    component: () => import('@/layout/index.vue'),
+    children: [
+      {
+        path: '/evaluateResult',
+        name: 'evaluateResult',
+        component: () => import('@/views/evaluateResult/index.vue'),
+        meta: {
+          title: '评估结果',
+          icon: '',
+          hidden: false,
+          disabled: false,
+          iconShow: false,
+        },
+      },
+    ],
+  },
+  {
     path: '/assessTargetSystem',
     component: () => import('@/layout/index.vue'),
     redirect: 'library',
@@ -99,42 +135,6 @@ export default [
         component: () => import('@/views/assessTargetSystem/indicatorAlgorithm/index.vue'),
         meta: {
           title: '评估方案算法配置',
-          icon: '',
-          hidden: false,
-          disabled: false,
-          iconShow: false,
-        },
-      },
-    ],
-  },
-  {
-    path: '/',
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/runAssess',
-        name: 'runAssess',
-        component: () => import('@/views/assessTargetSystem/runAssess/index.vue'),
-        meta: {
-          title: '评估实施',
-          icon: '',
-          hidden: false,
-          disabled: false,
-          iconShow: false,
-        },
-      },
-    ],
-  },
-  {
-    path: '/',
-    component: () => import('@/layout/index.vue'),
-    children: [
-      {
-        path: '/evaluateResult',
-        name: 'evaluateResult',
-        component: () => import('@/views/evaluateResult/index.vue'),
-        meta: {
-          title: '评估结果',
           icon: '',
           hidden: false,
           disabled: false,

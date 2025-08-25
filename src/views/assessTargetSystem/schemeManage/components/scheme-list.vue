@@ -1,6 +1,6 @@
 <template>
   <div class="scheme-component-wrapper">
-    <zk-button @click="addSchemeGroup" :icon="Plus" style="margin: 4px 0 0 4px">添加方案</zk-button>
+    <zk-button @click="addSchemeDialogShow = true" :icon="Plus" style="margin: 4px 0 0 4px">添加方案</zk-button>
     <ul class="scheme-list">
       <li v-highlight v-for="item in schemeList" :key="item.id">
         <div class="scheme-item bold" @click="selectScheme(item)">
@@ -10,7 +10,12 @@
       </li>
     </ul>
     <div class="pagination-wrapper">
-      <zk-pagination :total="30" layout="prev, pager, next,"></zk-pagination>
+      <zk-pagination
+        v-model:current-page="listState.page"
+        :total="listState.total"
+        layout="prev, pager, next,"
+        @update:current-page="currentPageChange"
+      ></zk-pagination>
     </div>
     <zk-dialog
       v-model="addSchemeDialogShow"
@@ -100,14 +105,21 @@ const addSchemeDialogOpen = async () => {
 }
 // 获取方案列表
 const getSchemeList = async () => {
-  const res = await getSchemeListApi()
-  schemeList.value = res.data
+  const params = {
+    page: listState.page,
+    size: listState.size,
+  }
+  const res = await getSchemeListApi(params)
+  console.log('>>>>> file: scheme-list.vue ~ method: getSchemeList <<<<<\n', res.data) // TODO: 删除
+  schemeList.value = res.data!.records
+  listState.total = res.data!.total
+}
+const currentPageChange = (currentPage: number) => {
+  listState.page = currentPage
+  getSchemeList()
 }
 // 方案相关
 const addSchemeGroup = () => {
-  addSchemeDialogShow.value = true
-}
-const closeAddSchemeDialog = () => {
   addSchemeFormRef.value?.ElFormRef?.resetFields()
   addSchemeDialogShow.value = false
 }
@@ -119,7 +131,7 @@ const confirmAddScheme = async () => {
     } as AddSchemeApiSend
     await addSchemeApi(newGroup)
     await getSchemeList()
-    closeAddSchemeDialog()
+    addSchemeGroup()
   } catch (e) {
     console.error(e)
   }
@@ -135,6 +147,10 @@ const removeSchema = async (scheme: SchemeListItem) => {
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
   emit('scheme-change', scheme)
+}
+const closeAddSchemeDialog = () => {
+  addSchemeFormRef.value?.ElFormRef?.resetFields()
+  addSchemeDialogShow.value = false
 }
 
 getSchemeList()

@@ -35,11 +35,11 @@
 <script setup lang="ts">
 import ZkForm from '@/components/zk/zk-form.vue'
 import { ref, reactive } from 'vue'
-import { BaseFormConfigItem, BaseFormData, IndicatorListItem } from '@/views/assessTargetSystem/types.ts'
-import AssessList from '@/views/assessTargetSystem/runAssess/components/assess-list.vue'
+import AssessList from '@/views/runAssess/components/assess-list.vue'
 import { SchemeListItem } from '@/api/schemeManage/types.ts'
 import { getRunAssessConfig } from '@/views/assessTargetSystem/runAssessConfig.ts'
 import { getSchemeListApi } from '@/api/schemeManage'
+import { BaseFormConfigItem, BaseFormData, IndicatorListItem } from '@/views/runAssess/types.ts'
 
 // 参训单位列表
 const companyList = ref<Record<string, any>>([])

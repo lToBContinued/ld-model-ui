@@ -46,9 +46,9 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { IndicatorListItem } from '@/views/assessTargetSystem/types.ts'
 import AssessList from './assess-list.vue'
 import { isNumber, isString } from '@/utils/common/validate.ts'
+import { IndicatorListItem } from '@/views/runAssess/types.ts'
 
 interface DefineProps {
   modelValue: IndicatorListItem[]
