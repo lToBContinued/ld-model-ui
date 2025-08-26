@@ -52,7 +52,7 @@ declare module 'vue' {
     ElTree: typeof import('element-plus/es')['ElTree']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     Explain: typeof import('./../components/InputFormula/components/Explain.vue')['default']
-    FormConfigurator: typeof import('./../components/formConfigurator/index.vue')['default']
+    FormConfigurator: typeof import('./../components/formConfigurator.vue')['default']
     FormulaButton: typeof import('./../components/FormulaButton.vue')['default']
     IEpFullScreen: typeof import('~icons/ep/full-screen')['default']
     IndicatorPickerModal: typeof import('./../components/IndicatorPickerModal.vue')['default']
