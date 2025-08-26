@@ -7,6 +7,7 @@ export interface NumberInputFormData {
   min: number
   max: number
   step: number
+  value: NullType<number>
 }
 
 export interface SelectFormDataItem {

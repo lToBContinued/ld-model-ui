@@ -1,27 +1,60 @@
 <template>
   <div class="form-configurator">
     <!-- 表单类型选择 -->
-    <zk-select v-model="selectedType" :options="typeOptions" placeholder="请选择表单类型"></zk-select>
+    <zk-select v-model="selectedType" :options="typeOptions" placeholder="请选择表单类型" width="200px"></zk-select>
 
     <!-- 数字输入框配置表单 -->
-    <zk-form
+    <el-form
+      ref="numberInputFormRef"
       v-if="selectedType === 'numberInput'"
-      v-model:form-config="numberInputConfig"
-      v-model:form-data="numberInputData"
+      :model="numberInputData"
       :rules="numberInputRules"
-      inline
-      label-width="70"
-      style="margin-top: 14px"
-    ></zk-form>
+      class="number-input-config-form"
+      label-width="60px"
+      style="width: 200px"
+    >
+      <el-form-item class="number-input-item" label="最小值" prop="min">
+        <zk-input-number
+          v-model="numberInputData.min"
+          :controls="false"
+          align="left"
+          style="width: 100%"
+        ></zk-input-number>
+      </el-form-item>
+      <el-form-item class="number-input-item" label="最大值" prop="max">
+        <zk-input-number
+          v-model="numberInputData.max"
+          :controls="false"
+          align="left"
+          style="width: 100%"
+        ></zk-input-number>
+      </el-form-item>
+      <el-form-item class="number-input-item" label="步长" prop="step">
+        <zk-input-number
+          v-model="numberInputData.step"
+          :controls="false"
+          align="left"
+          style="width: 100%"
+        ></zk-input-number>
+      </el-form-item>
+      <el-form-item class="number-input-item" label="默认值" prop="value">
+        <zk-input-number
+          v-model="numberInputData.value"
+          :controls="false"
+          align="left"
+          style="width: 100%"
+        ></zk-input-number>
+      </el-form-item>
+    </el-form>
 
     <!-- 选择框配置表单 -->
     <div v-if="selectedType === 'select'" class="select-config-container">
       <el-form>
         <el-form-item v-for="(item, index) in selectOptions" :key="item.id" class="select-option-item">
-          <el-form-item class="form-item-inner" label="标签名">
+          <el-form-item class="form-item-inner" label="标签名" prop="label">
             <zk-input v-model="item.label" placeholder="请输入标签名"></zk-input>
           </el-form-item>
-          <el-form-item class="form-item-inner" label="值">
+          <el-form-item class="form-item-inner" label="值" prop="value">
             <zk-input-number
               v-model="item.value"
               :controls="false"
@@ -42,9 +75,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, useId, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { Close, Plus } from '@element-plus/icons-vue'
-import { ElMessage } from 'element-plus'
+import { ElMessage, FormInstance } from 'element-plus'
 import {
   DefineProps,
   NumberInputConfig,
@@ -58,52 +91,36 @@ const props = withDefaults(defineProps<DefineProps>(), {
   modelValue: '',
   indicatorId: 0,
 })
+const generateId = () => {
+  return `id-${Date.now()}-${Math.floor(Math.random() * 10000).toString(16)}`
+}
 
 const emit = defineEmits<{
   'update:model-value': [value: string]
 }>()
 /* -----基础配置----- */
 // 表单类型选择相关
-const selectedType = ref<string>('')
+const selectedType = ref<'numberInput' | 'select' | ''>('')
 const typeOptions = ref([
   { label: '数字输入框', value: 'numberInput' },
   { label: '选择框', value: 'select' },
 ])
 /* -----数字输入框配置----- */
-// 配置项结构
-const numberInputConfig = ref([
-  {
-    prop: 'min',
-    label: '最小值',
-    type: 'numberInput',
-    config: { controls: false, align: 'left' },
-  },
-  {
-    prop: 'max',
-    label: '最大值',
-    type: 'numberInput',
-    config: { controls: false, align: 'left' },
-  },
-  {
-    prop: 'step',
-    label: '步长',
-    type: 'numberInput',
-    config: { controls: false, align: 'left' },
-  },
-])
+const numberInputFormRef = ref<FormInstance>()
 // 表单数据
 const numberInputData = reactive<NumberInputFormData>({
   min: 0,
   max: 10,
   step: 1,
+  value: null,
 })
 // 验证规则
-const numberInputRules = {
+const numberInputRules: ValidFormRules<NumberInputFormData> = {
   min: [
     {
       validator: (_: any, value: any, callback: any) => {
-        if (value === '') return callback(new Error('该项不能为空'))
-        if (+value > +numberInputData.max) return callback(new Error('最小值不能大于最大值'))
+        if (value === null) return callback(new Error('该项不能为空'))
+        if (value > numberInputData.max) return callback(new Error('最小值不能大于最大值'))
         callback()
       },
       trigger: 'blur',
@@ -112,8 +129,8 @@ const numberInputRules = {
   max: [
     {
       validator: (_: any, value: any, callback: any) => {
-        if (value === '') return callback(new Error('该项不能为空'))
-        if (+value < +numberInputData.min) return callback(new Error('最大值不能小于最小值'))
+        if (value === null) return callback(new Error('该项不能为空'))
+        if (value < numberInputData.min) return callback(new Error('最大值不能小于最小值'))
         callback()
       },
       trigger: 'blur',
@@ -122,14 +139,39 @@ const numberInputRules = {
   step: [
     {
       validator: (_: any, value: any, callback: any) => {
-        if (value === '') return callback(new Error('该项不能为空'))
-        if (+value <= 0) return callback(new Error('步长必须大于0'))
+        if (value === null) return callback(new Error('该项不能为空'))
+        if (value <= 0) return callback(new Error('步长必须大于0'))
+        callback()
+      },
+      trigger: 'blur',
+    },
+  ],
+  value: [
+    {
+      validator: (_: any, value: any, callback: any) => {
+        if (value === null) return callback()
+        if (value < numberInputData.min) return callback(new Error('默认值不能小于最小值'))
+        if (value > numberInputData.max) return callback(new Error('默认值不能大于最大值'))
         callback()
       },
       trigger: 'blur',
     },
   ],
 }
+
+onMounted(() => {
+  if (props.modelValue) {
+    const config = JSON.parse(props.modelValue)
+    selectedType.value = config.type
+    // 初始化配置
+    if (config.type === 'select') {
+      initSelectConfig(config as SelectConfig)
+    } else if (config.type === 'numberInput') {
+      initNumberInputConfig(config as NumberInputConfig)
+    }
+  }
+})
+
 /* -----选择框配置----- */
 // 选择框选项数据
 const selectOptions = ref<SelectFormItem[]>([])
@@ -146,8 +188,12 @@ const createNumberInputConfig = (): string => {
   return JSON.stringify({
     prop: `${props.indicatorId}`,
     type: 'numberInput',
-    value: null,
-    config: { ...numberInputData },
+    value: numberInputData.value,
+    config: {
+      min: numberInputData.min,
+      max: numberInputData.max,
+      step: numberInputData.step,
+    },
   })
 }
 const createSelectConfig = (): string => {
@@ -162,23 +208,6 @@ const createSelectConfig = (): string => {
   })
 }
 
-onMounted(() => {
-  if (props.modelValue) {
-    try {
-      const config = JSON.parse(props.modelValue)
-      selectedType.value = config.type
-      // 初始化配置
-      if (config.type === 'select') {
-        initSelectConfig(config as SelectConfig)
-      } else if (config.type === 'numberInput') {
-        initNumberInputConfig(config as NumberInputConfig)
-      }
-    } catch (error) {
-      console.error('解析模型值失败:', error)
-    }
-  }
-})
-
 /* 初始化 */
 const initNumberInputConfig = (config: NumberInputConfig) => {
   numberInputData.min = config.config.min
@@ -189,7 +218,7 @@ const initSelectConfig = (config: SelectConfig) => {
   if (config.config.options.length) {
     selectOptions.value = config.config.options.map((item: SelectFormDataItem) => ({
       ...item,
-      id: useId(),
+      id: generateId(),
     }))
   } else {
     selectOptions.value = getDefaultSelectOptions()
@@ -197,16 +226,17 @@ const initSelectConfig = (config: SelectConfig) => {
 }
 // 获取默认选择框选项，默认2个选项
 const getDefaultSelectOptions = (): SelectFormItem[] => {
-  return Array.from({ length: 2 }, () => ({
-    id: useId(),
+  const defaultArr = Array.from({ length: 2 }, () => ({
+    id: generateId(),
     label: '',
     value: null,
   }))
+  return defaultArr
 }
 // 添加选项
 const addOption = (index: number) => {
   selectOptions.value.splice(index + 1, 0, {
-    id: useId(),
+    id: generateId(),
     label: '',
     value: null,
   })
@@ -219,6 +249,13 @@ const removeOption = (index: number) => {
   selectOptions.value.splice(index, 1)
 }
 
+/* 表单校验 */
+const verifyNumberInputForm = async () => {
+  if (selectedType.value === 'numberInput') {
+    await numberInputFormRef.value?.validate()
+  }
+}
+
 /* 监听与响应式处理 - 放在工具函数之后 */
 // 监听表单类型变化
 watch(
@@ -226,8 +263,9 @@ watch(
   (newType, oldType) => {
     // 保存/恢复选择框选项
     if (oldType === 'select' && newType !== 'select') {
-      savedSelectOptions.value = [...selectOptions.value]
+      savedSelectOptions.value = [...selectOptions.value] // 缓存选择框选项
     } else if (newType === 'select') {
+      // 恢复选择框选项
       selectOptions.value = savedSelectOptions.value.length ? savedSelectOptions.value : getDefaultSelectOptions()
     }
     // 生成配置
@@ -245,23 +283,29 @@ watch(
   () => emitConfig(),
   { deep: true },
 )
+
+defineExpose({ verifyNumberInputForm })
 </script>
 
 <style scoped lang="scss">
-.form-configurator {
-  padding: 16px;
+.number-input-config-form {
+  margin-top: $spacing-size3;
+}
+
+.number-input-item {
+  margin-bottom: $spacing-size2;
 }
 
 .select-config-container {
-  margin-top: 12px;
+  margin-top: $spacing-size3;
 }
 
 .select-option-item {
-  margin-bottom: 12px;
+  margin-bottom: $spacing-size2;
 }
 
 .form-item-inner {
-  margin-right: 12px;
+  margin-right: $spacing-size2;
 }
 
 .icon-btn {
