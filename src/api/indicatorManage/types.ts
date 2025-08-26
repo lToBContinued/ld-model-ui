@@ -28,6 +28,7 @@ export interface GetIndicatorDetailRes extends indicatorItem {
   level: number
   parentId: number
   parentName: string
+  systemId: number
 }
 
 export interface UpdateIndicatorDetailSend extends indicatorItem {
