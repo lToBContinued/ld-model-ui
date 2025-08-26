@@ -44,9 +44,9 @@ export interface AddSecondIndicatorFormData {
 }
 
 export interface AddSchemeFormData {
-  schemeName: string
-  indicatorSystem: UndefinedType<number>
-  schemeDesc: string
+  name: string
+  systemId: UndefinedType<number>
+  description: string
 }
 
 export interface IndicatorConfigFormData {

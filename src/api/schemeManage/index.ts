@@ -15,7 +15,7 @@ import {
  */
 export const addSchemeApi = (data: AddSchemeApiSend) => {
   return request<ResponseData<AddSchemeApiRes>>({
-    url: '/schemeManage/addScheme',
+    url: '/subtrees',
     method: 'post',
     data,
   })
@@ -23,12 +23,12 @@ export const addSchemeApi = (data: AddSchemeApiSend) => {
 
 /**
  * @description 删除方案
- * @param { string } id 方案id
+ * @param { number } id 方案id
  */
 export const removeSchemeApi = (id: number) => {
   return request<any, ResponseData>({
-    url: '/schemeManage/removeScheme',
-    method: 'post',
+    url: `/subtrees/${id}`,
+    method: 'delete',
     data: {
       id,
     },
@@ -60,7 +60,7 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
 
 export const getSchemeDetailApi = (id: number) => {
   return request({
-    url: '/schemeManage/getSchemeDetail',
+    url: '/subtrees/page',
     params: {
       id,
     },
