@@ -74,9 +74,9 @@ export interface AddSchemeFormItem {
 export interface SelectedScheme {
   config?: string
   id?: number
-  indicatorSystem?: number
-  schemeDesc?: string
-  schemeName?: string
+  systemId?: number
+  Description?: string
+  name?: string
 }
 
 export interface SchemeIndicatorConfigItem {

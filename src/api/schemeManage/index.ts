@@ -58,11 +58,9 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
   })
 }
 
-export const getSchemeDetailApi = (id: number) => {
+export const getSchemeDetailApi = (nodeId: number) => {
   return request({
-    url: '/subtrees/page',
-    params: {
-      id,
-    },
+    url: `/indicators/treeList/${nodeId}`,
+    method: "get"
   })
 }

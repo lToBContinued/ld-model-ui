@@ -152,7 +152,7 @@ const saveConfig = async () => {
     await nextTick()
     asideTreeShow.value = true
   }
-  asideTreeRef.value?.refreshStandar('')
+  asideTreeRef.value?.refreshAllTree()
 }
 const removeNode = () => {
   Object.assign(indicatorConfigFormData, {
