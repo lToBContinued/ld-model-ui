@@ -33,26 +33,26 @@ instance.interceptors.response.use(
   },
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
-    let message
+    const message = error.response.data.message
     const status = error.response.status
     switch (status) {
       case 401:
-        message = 'Token 过期'
+        // message = 'Token 过期'
         REMOVE_TOKEN()
         router.push('/login')
         break
       case 403:
-        message = '无权访问'
+        // message = '无权访问'
         router.back()
         break
       case 404:
-        message = '请求地址错误'
+        // message = '请求地址错误'
         break
       case 500:
-        message = '服务器出现问题'
+        // message = '服务器出现问题'
         break
       default:
-        message = '网络出现问题'
+      // message = '网络出现问题'
     }
     ElMessage({
       type: 'error',
