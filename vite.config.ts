@@ -8,6 +8,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import Icons from 'unplugin-icons/vite'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import VueJsx from 'unplugin-vue-jsx/vite'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const resolve = (url: string) => {
   return path.resolve(__dirname, url)
@@ -22,6 +23,7 @@ export default defineConfig((mode) => {
     plugins: [
       vue(),
       VueJsx(),
+      visualizer({ open: true }),
       AutoImport({
         resolvers: [
           ElementPlusResolver({ importStyle: 'sass' }), // 两处必须都引入{ importStyle: 'sass' }，自定义主题才能生效
@@ -69,31 +71,45 @@ export default defineConfig((mode) => {
       target: 'es2015',
       outDir: 'dist',
       assetsDir: 'static',
-      minify: true,
-      cssMinify: true,
-      cssCodeSplit: true,
+      minify: 'terser',
       assetsInlineLimit: 10 * 1024,
       rollupOptions: {
         output: {
-          chunkFileNames: 'static/js/[name].[hash:6].chunk.js',
-          entryFileNames: 'static/js/[name].[hash:6].js',
+          chunkFileNames: 'static/js/[name].[hash:8].chunk.js',
+          entryFileNames: 'static/js/[name].[hash:8].js',
           assetFileNames: (assetInfo) => {
-            if (assetInfo.name?.endsWith('.css')) {
-              return 'static/css/[name]-[hash:6][extname]'
+            if (assetInfo.names[0]?.endsWith('.css')) {
+              return 'static/css/[name]-[hash:8][extname]'
             }
             // 其他文件打包到 media 文件夹
-            return 'media/[name]-[hash:6][extname]'
+            return 'media/[ext]/[name]-[hash:8][extname]'
           },
           manualChunks(id) {
+            const modules = [
+              'element-plus',
+              'vue-router',
+              'pinia',
+              'vue',
+              'lodash',
+              'echarts',
+              'ant-design-vue',
+              'xlsx',
+              'codemirror',
+            ]
             if (id.includes('node_modules')) {
-              if (id.includes('element-plus')) {
-                return 'lib/element-plus'
+              for (const module of modules) {
+                if (id.includes(module)) return `lib/${module}`
               }
-              if (id.includes('lodash')) return 'lib/lodash'
               return 'lib/vendor'
             }
           },
           compact: true,
+        },
+      },
+      terserOptions: {
+        compress: {
+          pure_funcs: ['console.log'],
+          drop_debugger: true,
         },
       },
     },
