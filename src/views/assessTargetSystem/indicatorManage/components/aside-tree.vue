@@ -26,8 +26,8 @@
       <div style="width: 400px">
         <zk-form
           ref="addRootFormRef"
-          v-model:form-config="addRootFormConfig"
-          v-model:form-data="addRootFormData"
+          v-model="addRootFormData"
+          :form-config="addRootFormConfig"
           :rules="addRootFormRules"
           label-width="80"
         ></zk-form>
@@ -45,8 +45,8 @@
       </template>
       <zk-form
         ref="addChildNodeFormRef"
-        v-model:form-config="addChildNodeFormConfig"
-        v-model:form-data="addChildNodeFormData"
+        v-model="addChildNodeFormData"
+        :form-config="addChildNodeFormConfig"
         label-width="80"
       ></zk-form>
     </zk-dialog>
@@ -78,7 +78,7 @@ const emit = defineEmits<{
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
 const addRootDialogShow = ref(false)
-const addRootFormData = reactive({
+const addRootFormData = ref({
   name: '',
   description: '',
   parentId: 0,
@@ -93,7 +93,7 @@ const currentNode = ref<Node>()
 const currentData = ref<Data>()
 const addChildNodeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addChildNodeDialogShow = ref(false)
-const addChildNodeFormData = reactive<AddChildNodeFormData>({
+const addChildNodeFormData = ref<AddChildNodeFormData>({
   name: '',
   description: '',
   systemId: '',
@@ -139,7 +139,7 @@ const closeRootDialog = () => {
 const submitAddRootDialog = async () => {
   try {
     await addRootFormRef.value?.ElFormRef?.validate()
-    await addIndicatorApi(addRootFormData as AddIndicatorApiSend)
+    await addIndicatorApi(addRootFormData.value as AddIndicatorApiSend)
     await refreshAllTree()
     closeRootDialog()
   } catch (e) {
@@ -180,8 +180,8 @@ const submitAddChildNodeDialog = async () => {
   const parentId = currentData.value!.id
   const systemId = currentData.value!.systemId
   const data = {
-    name: addChildNodeFormData.name,
-    description: addChildNodeFormData.description,
+    name: addChildNodeFormData.value.name,
+    description: addChildNodeFormData.value.description,
     systemId,
     parentId,
   } as AddIndicatorApiSend

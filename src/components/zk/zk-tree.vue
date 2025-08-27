@@ -44,8 +44,8 @@
       </template>
       <zk-form
         ref="indicatorFormRef"
-        v-model:form-config="indicatorFormConfig"
-        v-model:form-data="indicatorFormData"
+        v-model="indicatorFormData"
+        :form-config="indicatorFormConfig"
         :label-width="130"
         :rules="indicatorFormRules"
       ></zk-form>
@@ -111,10 +111,10 @@ const emit = defineEmits<{
   'append-node': [node: Node, data: Data]
 }>()
 const ElTreeRef = ref<TreeInstance>()
-const dataSource = reactive<TreeData>(props.data)
+const dataSource = ref<TreeData>(props.data)
 const filterText = ref('')
 const dialogShow = ref(false)
-const indicatorFormData = reactive({
+const indicatorFormData = ref({
   [PROPS.label]: '',
 })
 const indicatorFormConfig = reactive([
@@ -152,7 +152,7 @@ const confirmAppend = async () => {
     const newChild = {
       id: Date.now(),
       [PROPS.children]: [],
-      ...indicatorFormData,
+      ...indicatorFormData.value,
     }
     if (!currentNodeData.value![PROPS.children]) {
       currentNodeData.value![PROPS.children] = []

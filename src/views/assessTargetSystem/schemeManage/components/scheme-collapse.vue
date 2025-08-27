@@ -29,7 +29,7 @@
     </template>
     <zk-form
       ref="addChildIndicatorRef"
-      v-model:form-data="addChildIndicatorFormData"
+      v-model="addChildIndicatorFormData"
       :form-config="addChildIndicatorFormConfig"
       label-width="80"
     ></zk-form>
@@ -55,7 +55,7 @@ const tree = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
 const addChildIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 const addChildIndicatorDialogShow = ref(false)
 const parentNode = ref<SchemeIndicatorConfigItem>()
-const addChildIndicatorFormData = reactive<SchemeIndicatorConfigItem>({
+const addChildIndicatorFormData = ref<SchemeIndicatorConfigItem>({
   indicatorId: undefined,
   indicatorDesc: '',
 })
@@ -113,8 +113,8 @@ const confirmAddChildIndicatorDialog = async () => {
     const data = {
       level: parentNode.value!.level! + 1,
       children: [],
-      ...addChildIndicatorFormData,
-      indicatorName: getIndicatorName(addChildIndicatorFormData.indicatorId as number),
+      ...addChildIndicatorFormData.value,
+      indicatorName: getIndicatorName(addChildIndicatorFormData.value.indicatorId as number),
     }
     confirmAdd(tree.value, data)
     closeAddChildIndicatorDialog()

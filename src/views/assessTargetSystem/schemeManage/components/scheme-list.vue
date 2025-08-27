@@ -34,8 +34,8 @@
       </template>
       <zk-form
         ref="addSchemeFormRef"
-        v-model:form-config="addSchemeFormConfig"
-        v-model:form-data="addSchemeFormData"
+        v-model="addSchemeFormData"
+        :form-config="addSchemeFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -64,7 +64,7 @@ const listState = reactive({
 const addSchemeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addSchemeDialogShow = ref(false)
 const schemeList = ref<SchemeListItem[]>([])
-const addSchemeFormData = reactive<AddSchemeFormData>({
+const addSchemeFormData = ref<AddSchemeFormData>({
   systemId: undefined,
   description: '',
   name: '',
@@ -131,7 +131,7 @@ const confirmAddScheme = async () => {
   try {
     await addSchemeFormRef.value?.ElFormRef?.validate()
     const newGroup = {
-      ...addSchemeFormData,
+      ...addSchemeFormData.value,
     } as AddSchemeApiSend
     await addSchemeApi(newGroup)
     await getSchemeList()

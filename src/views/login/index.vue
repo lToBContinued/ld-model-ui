@@ -6,8 +6,8 @@
       <div class="login" style="width: 50%">
         <zk-form
           ref="loginFormRef"
+          v-model="loginFormData"
           :form-config="loginFormConfig"
-          v-model:form-data="loginFormData"
           :rules="loginFormRules"
           label-width="80"
         ></zk-form>
@@ -36,7 +36,7 @@ const { login } = useUserStore()
 const router = useRouter()
 const loginLoading = ref(false)
 const loginFormRef = ref<InstanceType<typeof ZkForm>>()
-const loginFormData = reactive<LoginFormData>({
+const loginFormData = ref<LoginFormData>({
   username: 'admin',
   password: '123456',
 })
@@ -54,7 +54,7 @@ const userLogin = async () => {
   loginLoading.value = true
   try {
     await loginFormRef.value?.ElFormRef?.validate()
-    await login(loginFormData)
+    await login(loginFormData.value)
     ElMessage.success('登录成功')
     setTimeout(() => {
       router.push({ path: '/' })

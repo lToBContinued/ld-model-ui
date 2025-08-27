@@ -38,8 +38,8 @@
       </template>
       <zk-form
         ref="addSecondIndicatorRef"
-        v-model:form-config="addSecondIndicatorFormConfig"
-        v-model:form-data="addSecondIndicatorFormData"
+        v-model="addSecondIndicatorFormData"
+        :form-config="addSecondIndicatorFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -68,7 +68,7 @@ const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 const addSecondIndicatorDialogShow = ref(false)
 const addSecondIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 // 指标配置表单
-const addSecondIndicatorFormData = reactive<AddSecondIndicatorFormData>({
+const addSecondIndicatorFormData = ref<AddSecondIndicatorFormData>({
   indicatorId: undefined,
   indicatorDesc: '',
 })
@@ -143,8 +143,8 @@ const confirmAddChildIndicator = async () => {
   try {
     await addSecondIndicatorRef.value?.ElFormRef?.validate()
     const secondIndicator = {
-      ...addSecondIndicatorFormData,
-      indicatorName: getIndicatorName(addSecondIndicatorFormData.indicatorId as number),
+      ...addSecondIndicatorFormData.value,
+      indicatorName: getIndicatorName(addSecondIndicatorFormData.value.indicatorId as number),
       level: 0,
       children: [],
     }

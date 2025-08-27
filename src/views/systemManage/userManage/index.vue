@@ -4,12 +4,7 @@
       <div class="search-form-wrapper">
         <div class="left">
           <div style="width: 100%">
-            <zk-form
-              v-model:form-config="searchUserFormConfig"
-              v-model:form-data="searchUserFormData"
-              label-width="0"
-              inline
-            ></zk-form>
+            <zk-form v-model="searchUserFormData" :form-config="searchUserFormConfig" label-width="0" inline></zk-form>
           </div>
           <div class="search-btns">
             <zk-button type="primary" @click="search">搜索</zk-button>
@@ -51,12 +46,7 @@
       @close="closeDialog"
       @confirm="confirmDialog"
     >
-      <zk-form
-        ref="userFormRef"
-        v-model:form-config="userFormConfig"
-        v-model:form-data="userFormData"
-        :rules="userFormRules"
-      ></zk-form>
+      <zk-form ref="userFormRef" v-model="userFormData" :form-config="userFormConfig" :rules="userFormRules"></zk-form>
     </zk-dialog>
     <zk-dialog
       v-model="addMoreUserDialogShow"
@@ -95,12 +85,12 @@ const state = reactive<UserListTable>({
   currentPage: 1,
   pageSize: 10,
 })
-const searchUserFormData = reactive<SearchUserFormData>({
+const searchUserFormData = ref<SearchUserFormData>({
   username: '',
   role: undefined,
   status: undefined,
 })
-const userFormData = reactive<UserFormData>({
+const userFormData = ref<UserFormData>({
   id: '',
   username: '',
   password: '',
@@ -180,11 +170,11 @@ const openDialog = (row?: UserInfo) => {
   dialogShow.value = true
   if (row && row.id) {
     dialogHeader.value = '编辑'
-    userFormData.id = row?.id
-    userFormData.username = row?.username
-    userFormData.role = row?.role
-    userFormData.department = row?.department
-    userFormData.status = row?.status
+    userFormData.value.id = row?.id
+    userFormData.value.username = row?.username
+    userFormData.value.role = row?.role
+    userFormData.value.department = row?.department
+    userFormData.value.status = row?.status
   } else {
     dialogHeader.value = '添加'
   }
@@ -193,33 +183,27 @@ const openDialog = (row?: UserInfo) => {
 const confirmDialog = async () => {
   await userFormRef.value?.ElFormRef?.validate()
   if (dialogHeader.value === '添加') {
-    console.log('>>>>> file: index.vue ~ method: confirmDialog <<<<<\n', userFormData) // TODO: 删除
+    console.log('>>>>> file: index.vue ~ method: confirmDialog <<<<<\n', userFormData.value) // TODO: 删除
   } else if (dialogHeader.value === '编辑') {
-    console.log('>>>>> file: index.vue ~ method: confirmDialog <<<<<\n', userFormData) // TODO: 删除
+    console.log('>>>>> file: index.vue ~ method: confirmDialog <<<<<\n', userFormData.value) // TODO: 删除
   }
 }
 // 搜索用户
 const search = () => {
-  console.log('>>>>> file: index.vue ~ method: search <<<<<\n', searchUserFormData) // TODO: 删除
+  console.log('>>>>> file: index.vue ~ method: search <<<<<\n', searchUserFormData.value) // TODO: 删除
 }
 // 重置搜索框
 const reset = () => {
-  Object.assign(searchUserFormData, {
+  searchUserFormData.value = {
     username: '',
     role: undefined,
     status: undefined,
-  })
+  }
   getUserList()
 }
 // 关闭弹窗
 const closeDialog = () => {
   userFormRef.value?.ElFormRef?.resetFields()
-  Object.assign(userFormData, {
-    id: '',
-    username: '',
-    password: '',
-    phone: '',
-  })
   dialogShow.value = false
 }
 

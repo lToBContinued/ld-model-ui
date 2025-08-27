@@ -6,8 +6,8 @@
       </template>
       <zk-form
         ref="baseFormDataRef"
-        v-model:form-config="baseFormConfig"
-        v-model:form-data="baseFormData"
+        v-model="baseFormData"
+        :form-config="baseFormConfig"
         inline
         label-width="100"
       ></zk-form>
@@ -80,7 +80,7 @@ const baseFormConfig = ref<BaseFormConfigItem[]>([
     rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
   },
 ])
-const baseFormData = reactive<BaseFormData>({
+const baseFormData = ref<BaseFormData>({
   company: '',
   trainingTime: null,
   assessTime: null,
@@ -126,7 +126,7 @@ const submitAssess = async () => {
     .then(() => {
       const scoreList = pickIdAndValue(indicatorList.value)
       const data = {
-        baseInfo: baseFormData,
+        baseInfo: baseFormData.value,
         scoreList,
       }
       console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', data) // TODO: 删除
