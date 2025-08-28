@@ -33,18 +33,24 @@ import { getSchemeDetailApi } from '@/api/schemeManage/legacySubtree.ts'
 import SchemeCollapse from './components/scheme-collapse.vue'
 import SchemeList from './components/scheme-list.vue'
 
-const selectedScheme = ref<SelectedScheme>({})
-const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
-const indicatorOptions = ref<{ label: string; value: number }[]>([])
+const selectedScheme = ref<SelectedScheme>({}) // 被选中的方案
+const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([]) // 方案指标配置（页面右侧部分）
+const indicatorOptions = ref<{ label: string; value: number }[]>([]) // 指标选项
 
-// 方案
+/**
+ * @description 查看不同的方案指标配置
+ * @param {SchemeListItem} scheme 方案
+ */
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value?.id) return
   selectedScheme.value = scheme
-  console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', selectedScheme.value.id) // TODO: 删除
   const data = await getSchemeDetail(scheme.id)
   schemeIndicatorConfig.value = data!.children
 }
+/**
+ * @description 获取方案配置详情
+ * @param {number} id 方案id
+ */
 const getSchemeDetail = async (id: number) => {
   const res = await getSchemeDetailApi(id)
   return res.data
@@ -68,10 +74,8 @@ const getSchemeDetail = async (id: number) => {
 
     .title {
       width: fit-content;
-      margin: 0 auto;
-      margin-bottom: $spacing-size2;
-      padding: $spacing-size2;
-      padding-bottom: 0;
+      margin: 0 auto $spacing-size2;
+      padding: $spacing-size2 $spacing-size2 0;
 
       font-size: $font-size-l;
       color: $main-text-color2;
