@@ -71,7 +71,7 @@ export const getIndicatorDetailApi = (params: { id: number }) => {
 export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
   return request<any, ResponseData<UpdateIndicatorDetailRes>>({
     url: '/indicators',
-    method: 'put',
+    method: 'PUT',
     data,
   })
 }

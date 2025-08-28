@@ -274,6 +274,23 @@ watch(
   { immediate: true },
 )
 watch(
+  () => props.modelValue,
+  () => {
+    if (props.modelValue) {
+      const config = JSON.parse(props.modelValue)
+      selectedType.value = config.type
+      // 初始化配置
+      if (config.type === 'select') {
+        initSelectConfig(config as SelectConfig)
+      } else if (config.type === 'numberInput') {
+        initNumberInputConfig(config as NumberInputConfig)
+      }
+    } else {
+      selectedType.value = ''
+    }
+  },
+)
+watch(
   () => numberInputData,
   () => emitConfig(),
   { deep: true },
