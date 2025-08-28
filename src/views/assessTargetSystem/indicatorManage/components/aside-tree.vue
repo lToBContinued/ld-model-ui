@@ -2,6 +2,7 @@
   <div class="tree">
     <zk-button type="primary" @click="addRoot" :icon="Plus" style="margin: 4px 0 0 4px"> 添加指标体系 </zk-button>
     <zk-tree
+      v-if="treeShow"
       ref="ZkTreeRef"
       :active="{ append: true, edit: false, remove: true, check: false }"
       :custom-props="{ label: 'name' }"
@@ -25,8 +26,8 @@
       <div style="width: 400px">
         <zk-form
           ref="addRootFormRef"
-          v-model:form-config="addRootFormConfig"
-          v-model:form-data="addRootFormData"
+          v-model="addRootFormData"
+          :form-config="addRootFormConfig"
           :rules="addRootFormRules"
           label-width="80"
         ></zk-form>
@@ -44,8 +45,8 @@
       </template>
       <zk-form
         ref="addChildNodeFormRef"
-        v-model:form-config="addChildNodeFormConfig"
-        v-model:form-data="addChildNodeFormData"
+        v-model="addChildNodeFormData"
+        :form-config="addChildNodeFormConfig"
         label-width="80"
       ></zk-form>
     </zk-dialog>
@@ -55,7 +56,7 @@
 <script setup lang="ts">
 import { Plus } from '@element-plus/icons-vue'
 import ZkTree from '@/components/zk/zk-tree.vue'
-import { reactive, ref } from 'vue'
+import { nextTick, reactive, ref } from 'vue'
 import type { LoadFunction } from 'element-plus'
 import { RenderContentContext } from 'element-plus'
 import { addIndicatorApi, getIndicatorListApi, removeIndicatorApi } from '@/api/indicatorManage/index.ts'
@@ -77,7 +78,7 @@ const emit = defineEmits<{
 const ZkTreeRef = ref<InstanceType<typeof ZkTree>>()
 const addRootFormRef = ref<InstanceType<typeof ZkForm>>()
 const addRootDialogShow = ref(false)
-const addRootFormData = reactive({
+const addRootFormData = ref({
   name: '',
   description: '',
   parentId: 0,
@@ -92,11 +93,12 @@ const currentNode = ref<Node>()
 const currentData = ref<Data>()
 const addChildNodeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addChildNodeDialogShow = ref(false)
-const addChildNodeFormData = reactive<AddChildNodeFormData>({
+const addChildNodeFormData = ref<AddChildNodeFormData>({
   name: '',
   description: '',
   systemId: '',
 })
+const treeShow = ref(true)
 
 // 获取树
 const getTreeConfig: LoadFunction = async (node, resolve, reject) => {
@@ -137,8 +139,8 @@ const closeRootDialog = () => {
 const submitAddRootDialog = async () => {
   try {
     await addRootFormRef.value?.ElFormRef?.validate()
-    await addIndicatorApi(addRootFormData as AddIndicatorApiSend)
-    refreshStandar('add')
+    await addIndicatorApi(addRootFormData.value as AddIndicatorApiSend)
+    await refreshAllTree()
     closeRootDialog()
   } catch (e) {
     console.error(e)
@@ -178,8 +180,8 @@ const submitAddChildNodeDialog = async () => {
   const parentId = currentData.value!.id
   const systemId = currentData.value!.systemId
   const data = {
-    name: addChildNodeFormData.name,
-    description: addChildNodeFormData.description,
+    name: addChildNodeFormData.value.name,
+    description: addChildNodeFormData.value.description,
     systemId,
     parentId,
   } as AddIndicatorApiSend
@@ -192,18 +194,28 @@ const submitAddChildNodeDialog = async () => {
     ElMessage.error('添加失败')
   }
 }
-// 刷新节点
-const refreshNodeBy = (id: number) => {
-  const node = ZkTreeRef.value?.ElTreeRef?.getNode(id) as Node
-  node.loaded = false
-  node.expand()
-}
+// 刷新节点（当操作子节点的时候使用这个方法刷新）
 const refreshStandar = (data: string) => {
   let id_ = data === 'add' ? currentData.value!.id : currentData.value!.parentId
   refreshNodeBy(id_)
 }
+const refreshNodeBy = (id: number) => {
+  const node = ZkTreeRef.value?.ElTreeRef?.getNode(id) as Node
+  if (node) {
+    node.loaded = false
+    node.expand()
+  } else {
+    refreshAllTree()
+  }
+}
+// 当进行和根节点有关的操作时候用这个方法刷新树（卸载再加载），因为此时没有父节点了，不能再刷新父节点
+const refreshAllTree = async () => {
+  treeShow.value = false
+  await nextTick()
+  treeShow.value = true
+}
 
-defineExpose({ refreshStandar })
+defineExpose({ refreshAllTree })
 </script>
 
 <style scoped lang="scss">

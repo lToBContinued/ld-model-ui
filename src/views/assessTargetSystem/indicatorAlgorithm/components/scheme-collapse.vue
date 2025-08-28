@@ -23,11 +23,11 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef, watch, ref } from 'vue'
+import { shallowRef, watch, ref, defineAsyncComponent } from 'vue'
 import type { SchemeIndicatorConfigItem } from '@/views/assessTargetSystem/types.ts'
 import { ElMessage } from 'element-plus'
 import { updateSubtreeNode } from '@/api/schemeManage/legacySubtree.ts' // ✅ 用节点级保存
-import AlgorithmConfigDialog from './AlgorithmConfigDialog.vue'
+const AlgorithmConfigDialog = defineAsyncComponent(() => import('./AlgorithmConfigDialog.vue'))
 
 defineOptions({ name: 'SchemeCollapse' })
 
@@ -57,6 +57,7 @@ watch(
 
 const dlgOpen = ref(false)
 const currentIndicator = ref<NullType<SchemeIndicatorConfigItem>>()
+
 function openDialog(item: SchemeIndicatorConfigItem) {
   currentIndicator.value = item
   dlgOpen.value = true

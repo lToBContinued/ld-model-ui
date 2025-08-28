@@ -12,13 +12,31 @@
         </el-col>
         <el-col :span="14">
           <div class="panel">
-            <zk-form
-              ref="indicatorConfigFormRef"
-              v-model:form-data="indicatorConfigFormData"
-              v-model:form-config="indicatorConfigFormConfig"
-              label-width="80"
-            ></zk-form>
-            <zk-button style="margin-left: auto" type="primary" @click="saveConfig">保存配置</zk-button>
+            <el-form :model="indicatorConfigFormData" label-width="80px">
+              <el-form-item label="父级指标" prop="parentName">
+                <zk-input v-model="indicatorConfigFormData.parentName" disabled></zk-input>
+              </el-form-item>
+              <el-form-item label="指标名称" prop="name">
+                <zk-input v-model="indicatorConfigFormData.name"></zk-input>
+              </el-form-item>
+              <el-form-item label="指标描述" prop="description">
+                <zk-input v-model="indicatorConfigFormData.description" type="textarea" style="width: 100%"></zk-input>
+              </el-form-item>
+              <el-form-item label="节点类型" prop="isLeaf">
+                <zk-radio
+                  v-model="indicatorConfigFormData.isLeaf"
+                  :options="[
+                    { label: '计算节点', value: 0 },
+                    { label: '录入节点', value: 1 },
+                  ]"
+                  disabled
+                ></zk-radio>
+              </el-form-item>
+              <el-form-item label="指标配置" prop="config">
+                <form-configurator v-model="indicatorConfigFormData.config"></form-configurator>
+              </el-form-item>
+            </el-form>
+            <zk-button style="margin-right: auto" type="primary" @click="saveConfig">保存配置</zk-button>
           </div>
         </el-col>
       </el-row>
@@ -41,78 +59,13 @@ type Data = RenderContentContext['data']
 const indicatorConfigFormRef = ref<InstanceType<typeof ZkForm>>()
 const asideTreeRef = ref<InstanceType<typeof AsideTree>>()
 const indicatorConfigFormData = reactive<IndicatorConfigFormData>({
-  config: '',
+  config: '{"prop":"0","type":"numberInput","value":null,"config":{"min":6,"max":10,"step":1}}',
   description: '',
   name: '',
   isLeaf: 0,
   parentName: '',
 })
-const indicatorConfigFormConfig = ref([
-  {
-    prop: 'parentName',
-    label: '父级指标',
-    type: 'input',
-    config: {
-      disabled: true,
-      style: {
-        width: '240px',
-      },
-    },
-  },
-  {
-    prop: 'name',
-    label: '指标名称',
-    type: 'input',
-    rules: [{ required: true, message: '请输入指标名称', trigger: ['blur'] }],
-    config: {
-      style: {
-        width: '240px',
-      },
-    },
-  },
-  {
-    prop: 'description',
-    label: '指标描述',
-    type: 'input',
-    config: {
-      type: 'textarea',
-    },
-  },
-  {
-    prop: 'isLeaf',
-    label: '节点类型',
-    type: 'radio',
-    config: {
-      options: [
-        { label: '计算节点', value: 0 },
-        { label: '录入节点', value: 1 },
-      ],
-    },
-  },
-  {
-    prop: 'config',
-    label: '指标配置',
-    type: 'jsonEditor',
-  },
-])
-const indicatorInputJson = ref(
-  `
-    {
-      "prop": "56",
-      "type": "numberInput",
-      "config": {
-        "min": 0,
-        "max": 100,
-        "step": 1
-      }
-    }
-  `,
-)
 const asideTreeShow = ref(true)
-
-watch(indicatorInputJson, (newVal) => {
-  console.log('>>>>> file: index.vue ~ method: indicatorInputJson <<<<<\n', indicatorInputJson.value) // TODO: 删除
-})
 
 /*watch(
   () => indicatorConfigFormData.isLeaf,
@@ -152,7 +105,7 @@ const saveConfig = async () => {
     await nextTick()
     asideTreeShow.value = true
   }
-  asideTreeRef.value?.refreshStandar('')
+  asideTreeRef.value?.refreshAllTree()
 }
 const removeNode = () => {
   Object.assign(indicatorConfigFormData, {

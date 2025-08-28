@@ -7,11 +7,11 @@
       </template>
       <zk-form
         ref="schemaBasicAssessFormRef"
-        v-model:form-config="_schemaBasicAssessFormConfig"
-        v-model:form-data="schemaBasicAssessFormData"
+        v-model="schemaBasicAssessFormData"
+        :form-config="_schemaBasicAssessFormConfig"
         :rules="schemaBasicAssessFormRules"
-        label-width="100"
         inline
+        label-width="100"
       ></zk-form>
       <div class="form-bths">
         <zk-button @click="resetSchemaBasicAssessForm">重置</zk-button>
@@ -32,7 +32,7 @@ import AssessCard from '@/views/assessTargetSystem/scheme/components/assess-card
 
 const schemaBasicAssessFormRef = ref<InstanceType<typeof ZkForm>>()
 const _schemaBasicAssessFormConfig = ref(schemaBasicAssessFormConfig)
-const schemaBasicAssessFormData = reactive<SchemaBasicAssessFormData>({
+const schemaBasicAssessFormData = ref<SchemaBasicAssessFormData>({
   participateUnits: '',
   trainingTime: null,
   assessTime: null,
@@ -49,7 +49,7 @@ const schemaBasicAssessFormRules: ValidFormRules<SchemaBasicAssessFormData> = {
 const assessCardHeader = ref<UndefinedType<string>>('')
 
 watchEffect(() => {
-  const subjectCode = schemaBasicAssessFormData.subject
+  const subjectCode = schemaBasicAssessFormData.value.subject
   const subject = _schemaBasicAssessFormConfig.value.find((item) => item.prop === 'subject')
   if (subject) {
     assessCardHeader.value = subject.config?.options?.find((item) => item.value === subjectCode)?.label
@@ -77,7 +77,7 @@ const participateUnitsOptions = async () => {
 const submitSchemaBasicAssessForm = async () => {
   try {
     await schemaBasicAssessFormRef.value?.ElFormRef?.validate()
-    console.log(schemaBasicAssessFormData)
+    console.log(schemaBasicAssessFormData.value)
   } catch (e) {
     console.error(e)
   }

@@ -18,12 +18,6 @@
               style="width: 160px"
               @change="handleValueChange(indicator, $event)"
             ></zk-input-number>
-            <zk-radio
-              v-else-if="indicator.formConfig?.type === 'radio'"
-              v-model="indicator.formConfig.value as string | number"
-              :options="indicator.formConfig?.config?.options"
-              @change="handleValueChange(indicator, $event)"
-            ></zk-radio>
             <zk-select
               v-else-if="indicator.formConfig?.type === 'select'"
               v-model="indicator.formConfig.value as string | number"

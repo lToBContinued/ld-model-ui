@@ -1,14 +1,20 @@
 export interface AddSchemeApiSend {
-  schemeName: string
-  indicatorSystem: number
-  schemeDesc: string
+//private Long systemId;
+//     private String name;
+//     private String description;
+//     private Long rootRefIndicatorId;
+
+  systemId: number
+  name : string
+  description: string
+  rootRefIndicatorId : number
 }
 
 export interface AddSchemeApiRes {
   id: number
-  schemeName: string
-  schemeDesc: string
-  indicatorSystem: number
+  name: string
+  description: string
+  systemId: number
   config?: any
 }
 

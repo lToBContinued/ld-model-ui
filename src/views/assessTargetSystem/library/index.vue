@@ -2,7 +2,7 @@
   <div class="library">
     <zk-tree :data="metricsTreeData" :active="{ check: true }" lazy :load="loadNodes" @view-node="viewNode"></zk-tree>
     <zk-drawer v-model="drawerShow" :title="selectedMetrics.label">
-      <zk-form v-model:form-config="drawerFormConfig" v-model:form-data="drawerFormData"></zk-form>
+      <zk-form v-model="drawerFormData" :form-config="drawerFormConfig"></zk-form>
     </zk-drawer>
   </div>
 </template>
@@ -49,7 +49,7 @@ const metricsTreeData = reactive([
 const selectedMetrics = ref<Data>([])
 const drawerShow = ref(false)
 const drawerFormConfig = reactive({})
-const drawerFormData = reactive({})
+const drawerFormData = ref({})
 
 const viewNode = (node: Node, data: Data) => {
   drawerShow.value = true

@@ -5,7 +5,11 @@
       <li v-highlight v-for="item in schemeList" :key="item.id">
         <div class="scheme-item bold" @click="selectScheme(item)">
           <span>{{ item.name }}</span>
-          <zk-button type="danger" link @click.stop="removeSchema(item)">删除</zk-button>
+          <el-popconfirm title="确定要删除此方案吗？" @confirm="removeSchema(item)">
+            <template #reference>
+              <zk-button type="danger" link>删除</zk-button>
+            </template>
+          </el-popconfirm>
         </div>
       </li>
     </ul>
@@ -30,8 +34,8 @@
       </template>
       <zk-form
         ref="addSchemeFormRef"
-        v-model:form-config="addSchemeFormConfig"
-        v-model:form-data="addSchemeFormData"
+        v-model="addSchemeFormData"
+        :form-config="addSchemeFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -60,20 +64,20 @@ const listState = reactive({
 const addSchemeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addSchemeDialogShow = ref(false)
 const schemeList = ref<SchemeListItem[]>([])
-const addSchemeFormData = reactive<AddSchemeFormData>({
-  indicatorSystem: undefined,
-  schemeDesc: '',
-  schemeName: '',
+const addSchemeFormData = ref<AddSchemeFormData>({
+  systemId: undefined,
+  description: '',
+  name: '',
 })
 const addSchemeFormConfig = ref<AddSchemeFormItem[]>([
   {
-    prop: 'schemeName',
+    prop: 'name',
     label: '方案名称',
     type: 'input',
     rules: [{ required: true, message: '请输入方案名称', trigger: 'blur' }],
   },
   {
-    prop: 'indicatorSystem',
+    prop: 'systemId',
     label: '指标体系',
     type: 'select',
     rules: [{ required: true, message: '请选择指标体系', trigger: 'change' }],
@@ -82,7 +86,7 @@ const addSchemeFormConfig = ref<AddSchemeFormItem[]>([
     },
   },
   {
-    prop: 'schemeDesc',
+    prop: 'description',
     label: '方案描述',
     type: 'input',
     config: {
@@ -100,7 +104,7 @@ const addSchemeDialogOpen = async () => {
       value: item.id,
     }
   })
-  const formItem = addSchemeFormConfig.value.find((item) => item.prop === 'indicatorSystem')
+  const formItem = addSchemeFormConfig.value.find((item) => item.prop === 'systemId')
   formItem!.config!.options = options
 }
 // 获取方案列表
@@ -127,7 +131,7 @@ const confirmAddScheme = async () => {
   try {
     await addSchemeFormRef.value?.ElFormRef?.validate()
     const newGroup = {
-      ...addSchemeFormData,
+      ...addSchemeFormData.value,
     } as AddSchemeApiSend
     await addSchemeApi(newGroup)
     await getSchemeList()

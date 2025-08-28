@@ -81,7 +81,7 @@ export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
  */
 export const getIndicatorSystemListApi = () => {
   return request<any, ResponseData<GetIndicatorSystemListRes[]>>({
-    url: '/indicatorManage/getIndicatorSystemList',
+    url: `/indicators/treeList/0`,
   })
 }
 

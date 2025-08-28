@@ -9,9 +9,9 @@
           <el-empty v-if="Object.keys(selectedScheme).length === 0" description="暂无数据" />
           <div v-else>
             <div class="header">
-              <p class="title bold">{{ selectedScheme?.schemeName }}</p>
-              <p v-show="selectedScheme?.schemeDesc?.trim() !== ''" class="desc">
-                {{ selectedScheme?.schemeDesc?.trim() }}
+              <p class="title bold">{{ selectedScheme?.name }}</p>
+              <p v-show="selectedScheme?.Description?.trim() !== ''" class="desc">
+                {{ selectedScheme?.Description?.trim() }}
               </p>
             </div>
             <div class="btn-group">
@@ -38,8 +38,8 @@
       </template>
       <zk-form
         ref="addSecondIndicatorRef"
-        v-model:form-config="addSecondIndicatorFormConfig"
-        v-model:form-data="addSecondIndicatorFormData"
+        v-model="addSecondIndicatorFormData"
+        :form-config="addSecondIndicatorFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -68,7 +68,7 @@ const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 const addSecondIndicatorDialogShow = ref(false)
 const addSecondIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 // 指标配置表单
-const addSecondIndicatorFormData = reactive<AddSecondIndicatorFormData>({
+const addSecondIndicatorFormData = ref<AddSecondIndicatorFormData>({
   indicatorId: undefined,
   indicatorDesc: '',
 })
@@ -108,8 +108,8 @@ const schemeChange = async (scheme: SchemeListItem) => {
   selectedScheme.value = await getSchemeDetail(scheme.id)
   schemeIndicatorConfig.value = JSON.parse(selectedScheme.value.config as string) || []
 }
-const getSchemeDetail = async (id: number) => {
-  const res = await getSchemeDetailApi(id)
+const getSchemeDetail = async (nodeId: number) => {
+  const res = await getSchemeDetailApi(nodeId)
   return res.data
 }
 const saveScheme = async () => {
@@ -129,11 +129,11 @@ const removeScheme = () => {
 }
 // 二级指标
 const addSecondIndicatorDialogOpen = async () => {
-  const res = await getIndicatorAndDescendantsApi({ id: selectedScheme.value.indicatorSystem as number })
+  const res = await getIndicatorAndDescendantsApi({ id: selectedScheme.value.systemId as number })
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
   indicatorOptions.value = res.data!.map((item) => {
     return {
-      label: item.indicatorName,
+      label: item.name,
       value: item.id,
     }
   })
@@ -143,8 +143,8 @@ const confirmAddChildIndicator = async () => {
   try {
     await addSecondIndicatorRef.value?.ElFormRef?.validate()
     const secondIndicator = {
-      ...addSecondIndicatorFormData,
-      indicatorName: getIndicatorName(addSecondIndicatorFormData.indicatorId as number),
+      ...addSecondIndicatorFormData.value,
+      indicatorName: getIndicatorName(addSecondIndicatorFormData.value.indicatorId as number),
       level: 0,
       children: [],
     }
