@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, ref, shallowRef, watch } from 'vue'
+import { ref, shallowRef } from 'vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import AsideTree from '@/views/assessTargetSystem/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
@@ -90,7 +90,6 @@ const viewNode = async (data: Data, _: Node) => {
     isLeaf,
     parentId,
   })
-  console.log('>>>>> file: index.vue ~ method: 获取配置 <<<<<\n', indicatorConfigFormData.value.config) // TODO: 删除
 }
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
   const res = await getIndicatorDetailApi({ id })
@@ -99,15 +98,8 @@ const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> =>
 const saveConfig = async () => {
   try {
     await indicatorConfigFormRef.value?.ElFormRef?.validate()
-    console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
-    const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
-    console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', res) // TODO: 删除
+    await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
     await getIndicatorDetail(indicatorConfigFormData.value.id!)
-    if (indicatorConfigFormData.value.parentId === 0) {
-      asideTreeShow.value = false
-      await nextTick()
-      asideTreeShow.value = true
-    }
     asideTreeRef.value?.refreshAllTree()
   } catch (e: any) {
     console.error(e)
@@ -122,14 +114,6 @@ const removeNode = () => {
     parentName: '',
   })
 }
-
-watch(
-  () => indicatorConfigFormData.value,
-  (newVal) => {
-    console.log('>>>>> file: index.vue ~ method: 收集到的数据 <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
-  },
-  { deep: true },
-)
 </script>
 
 <style scoped lang="scss">

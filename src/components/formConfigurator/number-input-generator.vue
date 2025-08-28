@@ -5,7 +5,7 @@
     :rules="numberInputRules"
     class="number-input-config-form"
     label-width="70px"
-    style="width: 200px"
+    style="width: 200px; margin-top: 12px"
   >
     <el-form-item class="number-input-item" label="最小值" prop="min" required>
       <zk-input-number
@@ -134,7 +134,6 @@ const resetNumberInputConfig = () => {
 watch(
   () => props.modelValue,
   (newVal) => {
-    console.log('>>>>> file: number-input-generator.vue ~ method: 3 <<<<<\n', newVal) // TODO: 删除
     numberInputData.value = newVal
   },
   { immediate: true, deep: true },

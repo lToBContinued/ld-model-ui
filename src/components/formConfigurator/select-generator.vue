@@ -1,6 +1,6 @@
 <template>
-  <el-form>
-    <!--<div v-for="(item, index) in selectOptions" :key="item.id" class="select-option-item">
+  <el-form style="margin-top: 12px" :model="selectOptions">
+    <div v-for="(item, index) in selectOptions.options" :key="item.label" class="select-option-item">
       <el-form-item class="form-item-inner" label="标签名" prop="label">
         <zk-input v-model="item.label" placeholder="请输入标签名"></zk-input>
       </el-form-item>
@@ -10,28 +10,23 @@
       <el-icon class="icon-btn" color="#67c23a" @click="addOption(index)">
         <Plus />
       </el-icon>
-      <el-icon v-if="selectOptions.length > 2" class="icon-btn" color="#f56c6c" @click="removeOption(index)">
+      <el-icon v-if="selectOptions.options.length > 2" class="icon-btn" color="#f56c6c" @click="removeOption(index)">
         <Close />
       </el-icon>
     </div>
-    &lt;!&ndash; 无效项提示（可选，提升用户体验） &ndash;&gt;
-    <div v-if="getInvalidOptionCount() > 0" class="invalid-tip">提示：未填写标签名或值的选项将不会被保存</div>-->
   </el-form>
 </template>
 
 <script setup lang="ts">
-import { Plus } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import { Close, Plus } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue'
 
 interface SelectConfig {
-  type: 'select'
-  value: NullType<number>
-  config: {
-    options: {
-      label: string
-      value: number
-    }[]
-  }
+  options: {
+    id?: string
+    label: string
+    value: NullType<number>
+  }[]
 }
 
 interface DefineProps {
@@ -39,7 +34,58 @@ interface DefineProps {
 }
 
 const props = withDefaults(defineProps<DefineProps>(), {})
-const selectOptions = ref(props.modelValue.config.options)
+const selectOptions = ref<SelectConfig>(props.modelValue)
+
+const addOption = (index: number) => {
+  selectOptions.value.options.splice(index + 1, 0, {
+    label: '',
+    value: null,
+  })
+}
+const removeOption = (index: number) => {
+  if (selectOptions.value.options.length <= 2) {
+    ElMessage.warning('至少保留2个选项')
+    return
+  }
+  selectOptions.value.options.splice(index, 1)
+}
+
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    selectOptions.value = newVal
+  },
+  { deep: true, immediate: true },
+)
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.select-config-container {
+  margin-top: $spacing-size3;
+}
+
+.select-option-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-size2;
+  flex-wrap: wrap; // 防止选项过多换行溢出
+}
+
+.form-item-inner {
+  margin-right: $spacing-size2;
+  margin-bottom: $spacing-size1; // 换行时增加间距
+}
+
+.icon-btn {
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.invalid-tip {
+  margin-top: $spacing-size1;
+  color: #909399;
+  font-size: 12px;
+  line-height: 1.5;
+}
+</style>

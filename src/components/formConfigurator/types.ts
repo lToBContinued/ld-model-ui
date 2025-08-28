@@ -11,12 +11,9 @@ export interface NumberInputFormData {
 }
 
 export interface SelectFormDataItem {
+  id?: string
   label: string
   value: number | null
-}
-
-export interface SelectFormItem extends SelectFormDataItem {
-  id?: string
 }
 
 export interface SelectConfig {
