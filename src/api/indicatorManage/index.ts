@@ -87,11 +87,11 @@ export const getIndicatorSystemListApi = () => {
 
 /**
  * @description 获取指定指标以及所有子指标
- * @param { number } params.id 指标id
+ * @param { number } parentId 指标id
  */
-export const getIndicatorAndDescendantsApi = (params: { id: number }) => {
+export const getIndicatorAndDescendantsApi = (parentId: number) => {
   return request<any, ResponseData<GetIndicatorAndDescendantsApiRes[]>>({
-    url: '/indicatorManage/getIndicatorAndDescendants',
-    params,
+    url: `/indicators/treeList/${parentId}`,
+    method: 'get',
   })
 }

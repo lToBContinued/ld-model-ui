@@ -10,8 +10,8 @@
           <div v-else>
             <div class="header">
               <p class="title bold">{{ selectedScheme?.name }}</p>
-              <p v-show="selectedScheme?.Description?.trim() !== ''" class="desc">
-                {{ selectedScheme?.Description?.trim() }}
+              <p v-show="selectedScheme?.description?.trim() !== ''" class="desc">
+                {{ selectedScheme?.description?.trim() }}
               </p>
             </div>
             <div class="btn-group">
@@ -70,7 +70,7 @@ const addSecondIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 // 指标配置表单
 const addSecondIndicatorFormData = ref<AddSecondIndicatorFormData>({
   indicatorId: undefined,
-  indicatorDesc: '',
+  description: '',
 })
 const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
   {
@@ -83,7 +83,7 @@ const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
     },
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {
@@ -106,21 +106,29 @@ const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
   selectedScheme.value = scheme
   selectedScheme.value = await getSchemeDetail(scheme.id)
-  schemeIndicatorConfig.value = JSON.parse(selectedScheme.value.config as string) || []
+  selectedScheme.value.subtreeId = scheme.id
+  console.log(11111111, selectedScheme.value)
+  schemeIndicatorConfig.value = selectedScheme.value.children || []
 }
-const getSchemeDetail = async (nodeId: number) => {
-  const res = await getSchemeDetailApi(nodeId)
+
+const getSchemeDetail = async (parentId: number) => {
+  const res = await getSchemeDetailApi(parentId)
   return res.data
 }
 const saveScheme = async () => {
   if (selectedScheme.value.id) {
     const data = {
-      id: selectedScheme.value.id,
-      config: JSON.stringify(schemeIndicatorConfig.value),
+      refIndicatorId: addSecondIndicatorFormData.value.indicatorId,
+      parentId: selectedScheme.value.id,
+      // config: JSON.stringify(schemeIndicatorConfig.value),
     }
-    const res = await updateSchemeApi(data)
+    console.log(5555555555, selectedScheme)
+    console.log(66666666, data)
+    const res = await updateSchemeApi(selectedScheme.value.subtreeId, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
+      selectedScheme.value = await getSchemeDetail(selectedScheme.value.subtreeId)
+      schemeIndicatorConfig.value = selectedScheme.value.children || []
     }
   }
 }
@@ -129,15 +137,24 @@ const removeScheme = () => {
 }
 // 二级指标
 const addSecondIndicatorDialogOpen = async () => {
-  const res = await getIndicatorAndDescendantsApi({ id: selectedScheme.value.systemId as number })
+  const systemId = selectedScheme.value?.systemId
+
+  // 更详细的调试信息
+  console.log('原始systemId值:', selectedScheme.value.refIndicatorId)
+  console.log('数据类型:', typeof systemId)
+
+  // 直接传递数字参数
+  const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
+
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-  indicatorOptions.value = res.data!.map((item) => {
-    return {
-      label: item.name,
-      value: item.id,
-    }
-  })
-  indicatorIdSelectConfig!.config!.options = indicatorOptions.value
+  if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
+    indicatorOptions.value =
+      res.data?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })) || []
+    indicatorIdSelectConfig.config.options = indicatorOptions.value
+  }
 }
 const confirmAddChildIndicator = async () => {
   try {
@@ -148,7 +165,10 @@ const confirmAddChildIndicator = async () => {
       level: 0,
       children: [],
     }
-    schemeIndicatorConfig.value.push(secondIndicator)
+    // schemeIndicatorConfig.value.push(secondIndicator)
+    console.log(2222, secondIndicator)
+    console.log(333, schemeIndicatorConfig)
+    await saveScheme()
     closeAddChildIndicatorDialog()
   } catch (e) {
     console.error(e)

@@ -45,10 +45,18 @@ export interface UpdateIndicatorDetailRes extends indicatorItem {
 
 export interface GetIndicatorSystemListRes extends indicatorItem {
   config: string
+  createdAt: string
+  description: string
+  formula: string
+  id: number
   isLeaf: number
-  level: number
+  name: string
+  orderIndex: number
   parentId: number
   parentName: string
+  systemId: number
+  updatedAt: string
+  weightToParent: number
 }
 
 export interface GetIndicatorAndDescendantsApiRes extends indicatorItem {

@@ -1,13 +1,13 @@
 export interface AddSchemeApiSend {
-//private Long systemId;
-//     private String name;
-//     private String description;
-//     private Long rootRefIndicatorId;
+  //private Long systemId;
+  //     private String name;
+  //     private String description;
+  //     private Long rootRefIndicatorId;
 
   systemId: number
-  name : string
+  name: string
   description: string
-  rootRefIndicatorId : number
+  rootRefIndicatorId: number
 }
 
 export interface AddSchemeApiRes {
@@ -19,8 +19,9 @@ export interface AddSchemeApiRes {
 }
 
 export interface UpdateSchemeApiSend {
-  id: number
-  config: string
+  subtreeId: number // 必须，方案ID
+  refIndicatorId: number // 必须，引用的指标ID
+  parentId?: number // 可选，父节点ID，顶级节点可为null
 }
 
 export interface GetSchemeListApiSend {

@@ -101,7 +101,7 @@ const addSchemeDialogOpen = async () => {
   const options = res.data!.map((item) => {
     return {
       label: item.name,
-      value: item.id,
+      value: item.systemId,
     }
   })
   const formItem = addSchemeFormConfig.value.find((item) => item.prop === 'systemId')
@@ -156,7 +156,6 @@ const closeAddSchemeDialog = () => {
   addSchemeFormRef.value?.ElFormRef?.resetFields()
   addSchemeDialogShow.value = false
 }
-
 getSchemeList()
 </script>
 
