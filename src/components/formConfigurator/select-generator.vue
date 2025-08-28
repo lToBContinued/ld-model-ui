@@ -36,12 +36,20 @@ interface DefineProps {
 const props = withDefaults(defineProps<DefineProps>(), {})
 const selectOptions = ref<SelectConfig>(props.modelValue)
 
+/**
+ * @description 添加选项
+ * @param {number} index 选项索引
+ */
 const addOption = (index: number) => {
   selectOptions.value.options.splice(index + 1, 0, {
     label: '',
     value: null,
   })
 }
+/**
+ * @description 删除选项
+ * @param {number} index 选项索引
+ */
 const removeOption = (index: number) => {
   if (selectOptions.value.options.length <= 2) {
     ElMessage.warning('至少保留2个选项')

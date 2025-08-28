@@ -45,8 +45,8 @@ export interface IndicatorConfigFormData {
   config?: any
   id?: number
   description?: string
-  name?: string
-  isLeaf?: number
+  name: string
+  isLeaf: number
   level?: number
   parentId?: number
   parentName?: string

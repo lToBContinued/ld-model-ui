@@ -4,8 +4,9 @@
     :model="numberInputData"
     :rules="numberInputRules"
     class="number-input-config-form"
+    inline
     label-width="70px"
-    style="width: 200px; margin-top: 12px"
+    style="max-width: 600px; margin-top: 12px"
   >
     <el-form-item class="number-input-item" label="最小值" prop="min" required>
       <zk-input-number
@@ -151,6 +152,6 @@ defineExpose({ verifyNumberInputConfig, resetNumberInputConfig })
 
 <style scoped lang="scss">
 .number-input-item {
-  margin-bottom: $spacing-size2;
+  margin-bottom: $spacing-size4;
 }
 </style>

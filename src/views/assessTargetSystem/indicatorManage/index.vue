@@ -3,12 +3,7 @@
     <zk-card>
       <el-row>
         <el-col :span="10">
-          <aside-tree
-            v-if="asideTreeShow"
-            ref="asideTreeRef"
-            @view-node="viewNode"
-            @remove-node="removeNode"
-          ></aside-tree>
+          <aside-tree ref="asideTreeRef" @view-node="viewNode" @remove-node="removeNode"></aside-tree>
         </el-col>
         <el-col :span="14">
           <div class="panel" v-if="indicatorConfigFormData.id">
@@ -58,12 +53,12 @@ import { IndicatorConfigFormData } from '@/views/assessTargetSystem/types.ts'
 import { GetIndicatorDetailRes, UpdateIndicatorDetailSend } from '@/api/indicatorManage/types.ts'
 import FormConfigurator from '@/components/formConfigurator/index.vue'
 
-type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
 const formConfiguratorRef = shallowRef<InstanceType<typeof FormConfigurator>>()
-const indicatorConfigFormRef = ref<InstanceType<typeof ZkForm>>()
-const asideTreeRef = ref<InstanceType<typeof AsideTree>>()
+const indicatorConfigFormRef = shallowRef<InstanceType<typeof ZkForm>>()
+const asideTreeRef = shallowRef<InstanceType<typeof AsideTree>>()
+// 指标配置表单数据
 const indicatorConfigFormData = ref<IndicatorConfigFormData>({
   config: '',
   description: '',
@@ -71,40 +66,53 @@ const indicatorConfigFormData = ref<IndicatorConfigFormData>({
   isLeaf: 0,
   parentName: '',
 })
-const asideTreeShow = ref(true)
 const indicatorConfigFormRules = {
   name: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
 }
-const currentIndicatorId = ref()
+const currentIndicatorId = ref() // 当前指标节点id
 
-const viewNode = async (data: Data, _: Node) => {
+/**
+ * @description 获取节点配置
+ * @param {Data} data 当前查看的节点数据
+ */
+const viewNode = async (data: Data) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf, parentId } = res
+  const { config, id, description, name, parentName, isLeaf } = res
   currentIndicatorId.value = id
-  Object.assign(indicatorConfigFormData.value, {
+  indicatorConfigFormData.value = {
     config,
     id,
     description,
     name,
     parentName,
     isLeaf,
-    parentId,
-  })
+  }
 }
+/**
+ * @description 获取指标详细信息
+ * @param {number} id 指标id
+ */
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
   const res = await getIndicatorDetailApi({ id })
   return res.data!
 }
+/**
+ * @description 保存指标配置
+ */
 const saveConfig = async () => {
   try {
     await indicatorConfigFormRef.value?.ElFormRef?.validate()
+    await formConfiguratorRef.value?.validatorConfig()
     await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
     await getIndicatorDetail(indicatorConfigFormData.value.id!)
-    asideTreeRef.value?.refreshAllTree()
+    asideTreeRef.value?.refreshChildNodes('update')
   } catch (e: any) {
     console.error(e)
   }
 }
+/**
+ * @description 删除节点后，重置右侧配置表单，删除节点的逻辑在树组件内进行，这里只需要重置表单数据
+ */
 const removeNode = () => {
   Object.assign(indicatorConfigFormData.value, {
     config: '',
