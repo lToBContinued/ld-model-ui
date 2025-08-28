@@ -34,3 +34,9 @@ export interface NumberInputConfig {
   value: NullType<number>
   config: NumberInputFormData
 }
+
+export type CreateNumberInputConfig = () => {
+  type: string
+  value: NullType<number>
+  config: NumberInputFormData
+}

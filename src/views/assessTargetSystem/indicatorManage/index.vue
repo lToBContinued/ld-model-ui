@@ -34,12 +34,13 @@
               </el-form-item>
               <el-form-item label="指标配置" prop="config">
                 <form-configurator
+                  ref="formConfiguratorRef"
                   v-model="indicatorConfigFormData.config"
                   :indicator-id="currentIndicatorId"
                 ></form-configurator>
               </el-form-item>
             </el-form>
-            <zk-button style="margin-right: auto" type="primary" @click="saveConfig">保存配置</zk-button>
+            <zk-button style="margin-right: auto" type="primary" @click="saveConfig">保存配置 </zk-button>
           </div>
         </el-col>
       </el-row>
@@ -48,17 +49,19 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, watch } from 'vue'
+import { nextTick, ref, shallowRef, watch } from 'vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import AsideTree from '@/views/assessTargetSystem/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
 import { RenderContentContext } from 'element-plus'
 import { IndicatorConfigFormData } from '@/views/assessTargetSystem/types.ts'
 import { GetIndicatorDetailRes, UpdateIndicatorDetailSend } from '@/api/indicatorManage/types.ts'
+import FormConfigurator from '@/components/formConfigurator/index.vue'
 
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
+const formConfiguratorRef = shallowRef<InstanceType<typeof FormConfigurator>>()
 const indicatorConfigFormRef = ref<InstanceType<typeof ZkForm>>()
 const asideTreeRef = ref<InstanceType<typeof AsideTree>>()
 const indicatorConfigFormData = ref<IndicatorConfigFormData>({
@@ -74,20 +77,9 @@ const indicatorConfigFormRules = {
 }
 const currentIndicatorId = ref()
 
-/*watch(
-  () => indicatorConfigFormData.isLeaf,
-  (newVal) => {
-    const configItem = indicatorConfigFormConfig.value.find((item) => item.prop === 'config')
-    if (configItem) {
-      configItem.config.readonly = newVal === 0
-    }
-  },
-  { immediate: true },
-)*/
-
 const viewNode = async (data: Data, _: Node) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf, parentId, systemId } = res
+  const { config, id, description, name, parentName, isLeaf, parentId } = res
   currentIndicatorId.value = id
   Object.assign(indicatorConfigFormData.value, {
     config,
@@ -97,26 +89,29 @@ const viewNode = async (data: Data, _: Node) => {
     parentName,
     isLeaf,
     parentId,
-    systemId,
   })
+  console.log('>>>>> file: index.vue ~ method: 获取配置 <<<<<\n', indicatorConfigFormData.value.config) // TODO: 删除
 }
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
   const res = await getIndicatorDetailApi({ id })
-  console.log('>>>>> file: index.vue ~ method: getIndicatorDetail <<<<<\n', res) // TODO: 删除
   return res.data!
 }
 const saveConfig = async () => {
-  await indicatorConfigFormRef.value?.ElFormRef?.validate()
-  console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
-  const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
-  console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', res) // TODO: 删除
-  await getIndicatorDetail(indicatorConfigFormData.value.id!)
-  if (indicatorConfigFormData.value.parentId === 0) {
-    asideTreeShow.value = false
-    await nextTick()
-    asideTreeShow.value = true
+  try {
+    await indicatorConfigFormRef.value?.ElFormRef?.validate()
+    console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
+    const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
+    console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', res) // TODO: 删除
+    await getIndicatorDetail(indicatorConfigFormData.value.id!)
+    if (indicatorConfigFormData.value.parentId === 0) {
+      asideTreeShow.value = false
+      await nextTick()
+      asideTreeShow.value = true
+    }
+    asideTreeRef.value?.refreshAllTree()
+  } catch (e: any) {
+    console.error(e)
   }
-  asideTreeRef.value?.refreshAllTree()
 }
 const removeNode = () => {
   Object.assign(indicatorConfigFormData.value, {
@@ -127,6 +122,14 @@ const removeNode = () => {
     parentName: '',
   })
 }
+
+watch(
+  () => indicatorConfigFormData.value,
+  (newVal) => {
+    console.log('>>>>> file: index.vue ~ method: 收集到的数据 <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
+  },
+  { deep: true },
+)
 </script>
 
 <style scoped lang="scss">

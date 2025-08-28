@@ -33,7 +33,7 @@ instance.interceptors.response.use(
   },
   function (error) {
     // 超出 2xx 范围的状态码都会触发该函数。
-    const message = error.response.data.message
+    const message = error.response.data.msg
     const status = error.response.status
     switch (status) {
       case 401:
