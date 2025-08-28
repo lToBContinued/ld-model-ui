@@ -40,9 +40,9 @@ export const removeSchemeApi = (id: number) => {
  * @param { number } data.id 方案id
  * @param { string } data.config 方案配置
  */
-export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
+export const updateSchemeApi = (id: number, data: UpdateSchemeApiSend) => {
   return request<any, ResponseData>({
-    url: '/schemeManage/updateScheme',
+    url: `/subtrees/${id}/nodes`,
     method: 'post',
     data,
   })
@@ -58,9 +58,13 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
   })
 }
 
-export const getSchemeDetailApi = (nodeId: number) => {
+/**
+ * 获取方案子树
+ * @param nodeId
+ */
+export const getSchemeDetailApi = (id: number) => {
   return request({
-    url: `/indicators/treeList/${nodeId}`,
-    method: "get"
+    url: `/subtrees/${id}/tree`,
+    method: 'get',
   })
 }

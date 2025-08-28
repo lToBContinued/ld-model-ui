@@ -29,6 +29,7 @@ export interface SchemeListItem {
   rootNodeId: number
   systemId: number
   updateAt: string
+  parentId: number
 }
 
 export interface ListState {
@@ -40,7 +41,7 @@ export interface ListState {
 
 export interface AddSecondIndicatorFormData {
   indicatorId: UndefinedType<number>
-  indicatorDesc: string
+  description: string
 }
 
 export interface AddSchemeFormData {
@@ -75,15 +76,20 @@ export interface SelectedScheme {
   config?: string
   id?: number
   systemId?: number
-  Description?: string
+  description?: string
   name?: string
+  refIndicatorId: number
+  children: SchemeIndicatorConfigItem[]
 }
 
 export interface SchemeIndicatorConfigItem {
-  indicatorId?: UndefinedType<number>
-  indicatorName?: string
+  id?: UndefinedType<number>
+  name?: string
   level?: number
-  indicatorDesc?: string
+  description?: string
+  enabled: number
+  formula: string
+  weight: string
   children?: SchemeIndicatorConfigItem[]
 }
 
