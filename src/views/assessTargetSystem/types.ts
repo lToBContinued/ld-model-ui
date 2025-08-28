@@ -1,3 +1,5 @@
+import { SchemeListItem } from '@/api/schemeManage/types.ts'
+
 export interface SchemaBasicAssessFormData {
   participateUnits: string
   trainingTime: NullType<Date>
@@ -19,17 +21,6 @@ export interface ResultFilterFormData {
   experts: string
   startDate: NullType<Date>
   endDate: NullType<Date>
-}
-
-export interface SchemeListItem {
-  createAt: string
-  description: string
-  id: number
-  name: string
-  rootNodeId: number
-  systemId: number
-  updateAt: string
-  parentId: number
 }
 
 export interface ListState {
@@ -83,14 +74,14 @@ export interface SelectedScheme {
 }
 
 export interface SchemeIndicatorConfigItem {
-  id?: UndefinedType<number>
-  name?: string
-  level?: number
-  description?: string
-  enabled: number
+  id: number
+  refIndicatorId: number
+  name: string
+  description: string
   formula: string
-  weight: string
-  children?: SchemeIndicatorConfigItem[]
+  enabled: number
+  weight: number
+  children: SchemeIndicatorConfigItem[]
 }
 
 export interface AddSecondIndicatorFormConfig {

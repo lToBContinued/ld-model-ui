@@ -45,11 +45,11 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import { AddSchemeFormData, AddSchemeFormItem, SchemeListItem } from '@/views/assessTargetSystem/types.ts'
+import { AddSchemeFormData, AddSchemeFormItem } from '@/views/assessTargetSystem/types.ts'
 import ZkForm from '@/components/zk/zk-form.vue'
 import { addSchemeApi, getSchemeListApi, removeSchemeApi } from '@/api/schemeManage/index.ts'
 import { getIndicatorSystemListApi } from '@/api/indicatorManage/index.ts'
-import { AddSchemeApiSend } from '@/api/schemeManage/types.ts'
+import { AddSchemeApiSend, SchemeListItem } from '@/api/schemeManage/types.ts'
 
 const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
@@ -114,7 +114,6 @@ const getSchemeList = async () => {
     size: listState.size,
   }
   const res = await getSchemeListApi(params)
-  console.log('>>>>> file: scheme-list.vue ~ method: getSchemeList <<<<<\n', res.data) // TODO: 删除
   schemeList.value = res.data!.records
   listState.total = res.data!.total
 }

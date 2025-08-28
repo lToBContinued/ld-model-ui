@@ -4,6 +4,7 @@ import {
   AddSchemeApiSend,
   GetSchemeListApiRes,
   GetSchemeListApiSend,
+  SchemeDetailInfo,
   UpdateSchemeApiSend,
 } from '@/api/schemeManage/types.ts'
 
@@ -59,11 +60,11 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
 }
 
 /**
- * 获取方案子树
- * @param nodeId
+ * @description 获取方案子树
+ * @param { number } id 方案id
  */
 export const getSchemeDetailApi = (id: number) => {
-  return request({
+  return request<any, ResponseData<SchemeDetailInfo>>({
     url: `/subtrees/${id}/tree`,
     method: 'get',
   })

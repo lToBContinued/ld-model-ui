@@ -52,7 +52,6 @@ import {
   AddSecondIndicatorFormConfig,
   AddSecondIndicatorFormData,
   SchemeIndicatorConfigItem,
-  SchemeListItem,
   SelectedScheme,
 } from '@/views/assessTargetSystem/types.ts'
 import { getSchemeDetailApi, updateSchemeApi } from '@/api/schemeManage'
@@ -61,8 +60,18 @@ import SchemeCollapse from '@/views/assessTargetSystem/schemeManage/components/s
 import SchemeList from '@/views/assessTargetSystem/schemeManage/components/scheme-list.vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage'
+import { SchemeDetailInfo, SchemeListItem } from '@/api/schemeManage/types.ts'
 
-const selectedScheme = ref<SelectedScheme>({})
+const selectedScheme = ref<SchemeDetailInfo>({
+  id: null,
+  refIndicatorId: null,
+  name: null,
+  description: null,
+  formula: null,
+  enabled: null,
+  weight: null,
+  children: [],
+})
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 // 二级指标
 const addSecondIndicatorDialogShow = ref(false)
@@ -104,11 +113,10 @@ watch(
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
-  selectedScheme.value = scheme
-  selectedScheme.value = await getSchemeDetail(scheme.id)
-  selectedScheme.value.subtreeId = scheme.id
-  console.log(11111111, selectedScheme.value)
-  schemeIndicatorConfig.value = selectedScheme.value.children || []
+  selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
+  console.log(selectedScheme.value)
+  selectedScheme.value.id = scheme.id
+  schemeIndicatorConfig.value = selectedScheme.value.children as SchemeIndicatorConfigItem[]
 }
 
 const getSchemeDetail = async (parentId: number) => {
@@ -122,8 +130,6 @@ const saveScheme = async () => {
       parentId: selectedScheme.value.id,
       // config: JSON.stringify(schemeIndicatorConfig.value),
     }
-    console.log(5555555555, selectedScheme)
-    console.log(66666666, data)
     const res = await updateSchemeApi(selectedScheme.value.subtreeId, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
@@ -133,7 +139,16 @@ const saveScheme = async () => {
   }
 }
 const removeScheme = () => {
-  selectedScheme.value = {}
+  selectedScheme.value = {
+    id: null,
+    refIndicatorId: null,
+    name: null,
+    description: null,
+    formula: null,
+    enabled: null,
+    weight: null,
+    children: [],
+  }
 }
 // 二级指标
 const addSecondIndicatorDialogOpen = async () => {

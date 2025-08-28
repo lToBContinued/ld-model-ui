@@ -1,9 +1,4 @@
 export interface AddSchemeApiSend {
-  //private Long systemId;
-  //     private String name;
-  //     private String description;
-  //     private Long rootRefIndicatorId;
-
   systemId: number
   name: string
   description: string
@@ -81,4 +76,15 @@ export interface SubtreeNodeUpdateDTO {
   formula?: string | null
   weight?: number | null
   enabled?: 0 | 1
+}
+
+export interface SchemeDetailInfo {
+  id: NullType<number>
+  refIndicatorId: NullType<number>
+  name: NullType<string>
+  description: NullType<string>
+  formula: NullType<string>
+  enabled: NullType<number>
+  weight: NullType<number>
+  children: SchemeDetailInfo[]
 }
