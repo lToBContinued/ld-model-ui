@@ -114,7 +114,6 @@ const getSchemeList = async () => {
     size: listState.size,
   }
   const res = await getSchemeListApi(params)
-  console.log('>>>>> file: scheme-list.vue ~ method: getSchemeList <<<<<\n', res.data) // TODO: 删除
   schemeList.value = res.data!.records
   listState.total = res.data!.total
 }
@@ -150,6 +149,7 @@ const removeSchema = async (scheme: SchemeListItem) => {
 }
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
+  console.log(scheme)
   emit('scheme-change', scheme)
 }
 const closeAddSchemeDialog = () => {

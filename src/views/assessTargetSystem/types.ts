@@ -44,6 +44,11 @@ export interface AddSecondIndicatorFormData {
   description: string
 }
 
+export interface AddChildrenIndicatorFormData {
+  indicatorId: UndefinedType<number>
+  description: string
+}
+
 export interface AddSchemeFormData {
   name: string
   systemId: UndefinedType<number>
@@ -90,6 +95,7 @@ export interface SchemeIndicatorConfigItem {
   enabled: number
   formula: string
   weight: string
+  refIndicatorId: number
   children?: SchemeIndicatorConfigItem[]
 }
 

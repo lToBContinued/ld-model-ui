@@ -93,21 +93,12 @@ const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
 ])
 const indicatorOptions = ref<{ label: string; value: number }[]>([])
 
-watch(
-  () => schemeIndicatorConfig,
-  (newVal) => {
-    console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', newVal.value) // TODO: 删除
-  },
-  { deep: true },
-)
-
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
   selectedScheme.value = scheme
   selectedScheme.value = await getSchemeDetail(scheme.id)
   selectedScheme.value.subtreeId = scheme.id
-  console.log(11111111, selectedScheme.value)
   schemeIndicatorConfig.value = selectedScheme.value.children || []
 }
 
@@ -122,8 +113,6 @@ const saveScheme = async () => {
       parentId: selectedScheme.value.id,
       // config: JSON.stringify(schemeIndicatorConfig.value),
     }
-    console.log(5555555555, selectedScheme)
-    console.log(66666666, data)
     const res = await updateSchemeApi(selectedScheme.value.subtreeId, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
@@ -138,14 +127,8 @@ const removeScheme = () => {
 // 二级指标
 const addSecondIndicatorDialogOpen = async () => {
   const systemId = selectedScheme.value?.systemId
-
-  // 更详细的调试信息
-  console.log('原始systemId值:', selectedScheme.value.refIndicatorId)
-  console.log('数据类型:', typeof systemId)
-
   // 直接传递数字参数
   const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
-
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
   if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
     indicatorOptions.value =
@@ -166,8 +149,6 @@ const confirmAddChildIndicator = async () => {
       children: [],
     }
     // schemeIndicatorConfig.value.push(secondIndicator)
-    console.log(2222, secondIndicator)
-    console.log(333, schemeIndicatorConfig)
     await saveScheme()
     closeAddChildIndicatorDialog()
   } catch (e) {
