@@ -149,6 +149,7 @@ const removeSchema = async (scheme: SchemeListItem) => {
 }
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
+  console.log(scheme)
   emit('scheme-change', scheme)
 }
 const closeAddSchemeDialog = () => {

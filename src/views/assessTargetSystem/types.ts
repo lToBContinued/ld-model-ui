@@ -80,8 +80,10 @@ export interface SchemeIndicatorConfigItem {
   description: string
   formula: string
   enabled: number
-  weight: number
-  children: SchemeIndicatorConfigItem[]
+  formula: string
+  weight: string
+  refIndicatorId: number
+  children?: SchemeIndicatorConfigItem[]
 }
 
 export interface AddSecondIndicatorFormConfig {
