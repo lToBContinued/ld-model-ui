@@ -30,7 +30,6 @@ const metricOptions = ref([])
 
 const getMetricOptions = async () => {
   const res = await getMetricOptionsApi()
-  console.log('>>>>> file: index.vue ~ method: getMetricOptions <<<<<\n', res.data) // TODO: 删除
   metricOptions.value = res.data.map((item: any) => {
     return {
       label: item.metricName,

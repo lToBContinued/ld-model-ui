@@ -18,11 +18,9 @@ export interface AddIndicatorApiRes {
 }
 
 export interface AddIndicatorApiSend {
-  id: number
   name: string
   description: string
   parentId: number
-  systemId: number
 }
 
 export interface GetIndicatorDetailRes {

@@ -100,7 +100,6 @@ async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
    * @param {} n 方案二级指标
    */
   const toVarNode = (n: any): VarTreeNode => {
-    console.log('>>>>> file: FormulaButton.vue ~ method: toVarNode <<<<<\n', n) // TODO: 删除
     const path = pathNames.get(n.id) || [n.name]
     const ns = path[0] || '根'
     const node: VarTreeNode = {
