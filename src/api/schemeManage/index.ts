@@ -4,6 +4,7 @@ import {
   AddSchemeApiSend,
   GetSchemeListApiRes,
   GetSchemeListApiSend,
+  SchemeDetailInfo,
   UpdateSchemeApiSend,
 } from '@/api/schemeManage/types.ts'
 
@@ -40,9 +41,9 @@ export const removeSchemeApi = (id: number) => {
  * @param { number } data.id 方案id
  * @param { string } data.config 方案配置
  */
-export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
+export const updateSchemeApi = (id: number, data: UpdateSchemeApiSend) => {
   return request<any, ResponseData>({
-    url: '/schemeManage/updateScheme',
+    url: `/subtrees/${id}/nodes`,
     method: 'post',
     data,
   })
@@ -58,9 +59,13 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
   })
 }
 
-export const getSchemeDetailApi = (nodeId: number) => {
-  return request({
-    url: `/indicators/treeList/${nodeId}`,
-    method: "get"
+/**
+ * @description 获取方案子树
+ * @param { number } id 方案id
+ */
+export const getSchemeDetailApi = (id: number) => {
+  return request<any, ResponseData<SchemeDetailInfo>>({
+    url: `/subtrees/${id}/tree`,
+    method: 'get',
   })
 }

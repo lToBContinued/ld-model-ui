@@ -7,7 +7,7 @@
       <el-icon class="fullscreen right-item forbid-user-select cursor-pointer" size="20" @click="changeFullScreen">
         <i-ep-FullScreen />
       </el-icon>
-      <system-notice></system-notice>
+      <!--<system-notice></system-notice>-->
     </div>
     <div class="right">
       <el-dropdown>
@@ -29,7 +29,7 @@
 // import { Expand } from '@element-plus/icons-vue'
 // import { Fold } from '@element-plus/icons-vue'
 // import useSettingStore from '@/stores/modules/setting.js'
-import SystemNotice from '@/layout/components/system-notice.vue'
+// import SystemNotice from '@/layout/components/system-notice.vue'
 import useUserStore from '@/stores/modules/user.js'
 import { ArrowDownBold } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'

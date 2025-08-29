@@ -1,9 +1,9 @@
 <template>
   <el-collapse class="scheme-collapse">
-    <el-collapse-item v-for="item in tree" :key="item.indicatorId">
+    <el-collapse-item v-for="item in tree" :key="item.id">
       <template #title>
         <div class="title-wrapper">
-          <span class="title">{{ item.indicatorName }}</span>
+          <span class="title">{{ item.name }}</span>
           <div style="display: flex">
             <zk-button size="small" @click.stop="openAddChildIndicatorDialog(item)">添加子指标 </zk-button>
             <zk-button type="danger" link @click.stop="removeNode(item)">删除</zk-button>
@@ -11,7 +11,7 @@
         </div>
       </template>
       <div :class="`content-${item.level! + 1}`">
-        <span :class="`desc-${item.level! + 1}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
+        <span :class="`desc-${item.level! + 1}`" v-if="item.description">{{ item.description }}</span>
         <scheme-collapse v-if="item.children && item.children.length > 0" v-model="item.children"></scheme-collapse>
       </div>
     </el-collapse-item>
@@ -56,12 +56,12 @@ const addChildIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 const addChildIndicatorDialogShow = ref(false)
 const parentNode = ref<SchemeIndicatorConfigItem>()
 const addChildIndicatorFormData = ref<SchemeIndicatorConfigItem>({
-  indicatorId: undefined,
-  indicatorDesc: '',
+  id: undefined,
+  description: '',
 })
 const addChildIndicatorFormConfig = ref<AddSecondIndicatorFormConfigItem[]>([
   {
-    prop: 'indicatorId',
+    prop: 'id',
     label: '指标名称',
     type: 'select',
     rules: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
@@ -70,7 +70,7 @@ const addChildIndicatorFormConfig = ref<AddSecondIndicatorFormConfigItem[]>([
     },
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {
@@ -83,21 +83,42 @@ const parentOptions = ref<{ label: string; value: number }[]>([])
 watch(
   () => props.modelValue,
   (newVal) => {
+    console.log(newVal)
     tree.value = newVal as SchemeIndicatorConfigItem[]
   },
   { deep: true },
 )
 
 const addChildIndicatorDialogOpen = async () => {
-  const res = await getIndicatorAndDescendantsApi({ id: parentNode.value?.indicatorId as number })
+  // 提取数字类型的parentId，而不是传入对象
+  console.log(11111, parentNode)
+  const parentId = parentNode.value?.refIndicatorId as number
+
+  // 检查parentId是否有效
+  if (typeof parentId !== 'number' || isNaN(parentId)) {
+    console.error('无效的parentId:', parentNode.value?.refIndicatorId)
+    return
+  }
+
+  // 直接传入数字类型的parentId
+  const res = await getIndicatorAndDescendantsApi(parentId)
+
   const indicatorIdSelectConfig = addChildIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
+
   parentOptions.value = res.data!.map((item) => {
     return {
-      label: item.indicatorName,
+      label: item.name,
       value: item.id,
     }
   })
-  indicatorIdSelectConfig!.config!.options = parentOptions.value
+  console.log(222222222, addChildIndicatorFormConfig)
+  if (addChildIndicatorFormConfig && addChildIndicatorFormConfig.value[0].config) {
+    addChildIndicatorFormConfig.value[0].config.options = parentOptions.value
+  }
+  console.log(33333333, addChildIndicatorFormConfig)
+  /*if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
+    indicatorIdSelectConfig.config.options = parentOptions.value
+  }*/
 }
 const getIndicatorName = (id: number) => {
   return parentOptions.value.find((item) => item.value === id)?.label

@@ -22,8 +22,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { ListState, SchemeListItem } from '@/views/assessTargetSystem/types.ts'
+import { ListState } from '@/views/assessTargetSystem/types.ts'
 import { getSchemeListApi } from '@/api/schemeManage/index.ts'
+import { SchemeListItem } from '@/api/schemeManage/types.ts'
 
 const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
@@ -38,6 +39,9 @@ const listState = reactive<ListState>({
 const loading = ref<boolean>(false)
 const activeId = ref<string>('')
 
+/**
+ * @description 获取方案列表
+ */
 const loadList = async () => {
   loading.value = true
   try {
@@ -60,6 +64,10 @@ const pageChange = (page: ListState['page']) => {
   listState.page = page
   loadList()
 }
+/**
+ * @description 选择方案
+ * @param {SchemeListItem} scheme 方案
+ */
 const selectScheme = (scheme: SchemeListItem) => {
   if (!scheme) return
   const idStr = String(scheme.id)

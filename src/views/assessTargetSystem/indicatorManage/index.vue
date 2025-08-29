@@ -3,12 +3,7 @@
     <zk-card>
       <el-row>
         <el-col :span="10">
-          <aside-tree
-            v-if="asideTreeShow"
-            ref="asideTreeRef"
-            @view-node="viewNode"
-            @remove-node="removeNode"
-          ></aside-tree>
+          <aside-tree ref="asideTreeRef" @view-node="viewNode" @remove-node="removeNode"></aside-tree>
         </el-col>
         <el-col :span="14">
           <div class="panel" v-if="indicatorConfigFormData.id">
@@ -34,12 +29,13 @@
               </el-form-item>
               <el-form-item label="指标配置" prop="config">
                 <form-configurator
+                  ref="formConfiguratorRef"
                   v-model="indicatorConfigFormData.config"
                   :indicator-id="currentIndicatorId"
                 ></form-configurator>
               </el-form-item>
             </el-form>
-            <zk-button style="margin-right: auto" type="primary" @click="saveConfig">保存配置</zk-button>
+            <zk-button style="margin-right: auto" type="primary" @click="saveConfig">保存配置 </zk-button>
           </div>
         </el-col>
       </el-row>
@@ -48,19 +44,21 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref, watch } from 'vue'
+import { ref, shallowRef } from 'vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import AsideTree from '@/views/assessTargetSystem/indicatorManage/components/aside-tree.vue'
 import { getIndicatorDetailApi, updateIndicatorDetailApi } from '@/api/indicatorManage'
 import { RenderContentContext } from 'element-plus'
 import { IndicatorConfigFormData } from '@/views/assessTargetSystem/types.ts'
 import { GetIndicatorDetailRes, UpdateIndicatorDetailSend } from '@/api/indicatorManage/types.ts'
+import FormConfigurator from '@/components/formConfigurator/index.vue'
 
-type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
-const indicatorConfigFormRef = ref<InstanceType<typeof ZkForm>>()
-const asideTreeRef = ref<InstanceType<typeof AsideTree>>()
+const formConfiguratorRef = shallowRef<InstanceType<typeof FormConfigurator>>()
+const indicatorConfigFormRef = shallowRef<InstanceType<typeof ZkForm>>()
+const asideTreeRef = shallowRef<InstanceType<typeof AsideTree>>()
+// 指标配置表单数据
 const indicatorConfigFormData = ref<IndicatorConfigFormData>({
   config: '',
   description: '',
@@ -68,28 +66,20 @@ const indicatorConfigFormData = ref<IndicatorConfigFormData>({
   isLeaf: 0,
   parentName: '',
 })
-const asideTreeShow = ref(true)
 const indicatorConfigFormRules = {
   name: [{ required: true, message: '请输入指标名称', trigger: 'blur' }],
 }
-const currentIndicatorId = ref()
+const currentIndicatorId = ref() // 当前指标节点id
 
-/*watch(
-  () => indicatorConfigFormData.isLeaf,
-  (newVal) => {
-    const configItem = indicatorConfigFormConfig.value.find((item) => item.prop === 'config')
-    if (configItem) {
-      configItem.config.readonly = newVal === 0
-    }
-  },
-  { immediate: true },
-)*/
-
-const viewNode = async (data: Data, _: Node) => {
+/**
+ * @description 获取节点配置
+ * @param {Data} data 当前查看的节点数据
+ */
+const viewNode = async (data: Data) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf, parentId, systemId } = res
+  const { config, id, description, name, parentName, isLeaf, parentId } = res
   currentIndicatorId.value = id
-  Object.assign(indicatorConfigFormData.value, {
+  indicatorConfigFormData.value = {
     config,
     id,
     description,
@@ -97,27 +87,37 @@ const viewNode = async (data: Data, _: Node) => {
     parentName,
     isLeaf,
     parentId,
-    systemId,
-  })
+  }
 }
+/**
+ * @description 获取指标详细信息
+ * @param {number} id 指标id
+ */
 const getIndicatorDetail = async (id: number): Promise<GetIndicatorDetailRes> => {
   const res = await getIndicatorDetailApi({ id })
-  console.log('>>>>> file: index.vue ~ method: getIndicatorDetail <<<<<\n', res) // TODO: 删除
   return res.data!
 }
+/**
+ * @description 保存指标配置
+ */
 const saveConfig = async () => {
-  await indicatorConfigFormRef.value?.ElFormRef?.validate()
-  console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', indicatorConfigFormData.value) // TODO: 删除
-  const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
-  console.log('>>>>> file: index.vue ~ method: saveConfig <<<<<\n', res) // TODO: 删除
-  await getIndicatorDetail(indicatorConfigFormData.value.id!)
-  if (indicatorConfigFormData.value.parentId === 0) {
-    asideTreeShow.value = false
-    await nextTick()
-    asideTreeShow.value = true
+  try {
+    await indicatorConfigFormRef.value?.ElFormRef?.validate()
+    await formConfiguratorRef.value?.validatorConfig()
+    const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
+    if (res.status === 200) {
+      ElMessage.success('更新指标成功')
+      await getIndicatorDetail(indicatorConfigFormData.value.id!)
+    }
+    asideTreeRef.value?.refreshChildNodes('update')
+  } catch (e: any) {
+    ElMessage.error('更新指标失败')
+    console.error(e)
   }
-  asideTreeRef.value?.refreshAllTree()
 }
+/**
+ * @description 删除节点后，重置右侧配置表单，删除节点的逻辑在树组件内进行，这里只需要重置表单数据
+ */
 const removeNode = () => {
   Object.assign(indicatorConfigFormData.value, {
     config: '',

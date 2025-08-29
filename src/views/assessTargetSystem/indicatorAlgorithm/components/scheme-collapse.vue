@@ -43,7 +43,9 @@ const props = withDefaults(defineProps<DefineProps>(), {
   schemeId: undefined,
 })
 
-const emit = defineEmits<{ (e: 'update:modelValue', v: SchemeIndicatorConfigItem[]): void }>()
+const emit = defineEmits<{
+  'update:modelValue': [value: SchemeIndicatorConfigItem[]]
+}>()
 const tree = shallowRef<SchemeIndicatorConfigItem[]>([])
 const deepClone = <T,>(o: T): T => JSON.parse(JSON.stringify(o))
 

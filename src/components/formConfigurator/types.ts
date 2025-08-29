@@ -11,12 +11,9 @@ export interface NumberInputFormData {
 }
 
 export interface SelectFormDataItem {
+  id?: string
   label: string
   value: number | null
-}
-
-export interface SelectFormItem extends SelectFormDataItem {
-  id?: string
 }
 
 export interface SelectConfig {
@@ -31,6 +28,12 @@ export interface SelectConfig {
 export interface NumberInputConfig {
   prop: string
   type: 'numberInput'
+  value: NullType<number>
+  config: NumberInputFormData
+}
+
+export type CreateNumberInputConfig = () => {
+  type: string
   value: NullType<number>
   config: NumberInputFormData
 }

@@ -1,13 +1,8 @@
 export interface AddSchemeApiSend {
-//private Long systemId;
-//     private String name;
-//     private String description;
-//     private Long rootRefIndicatorId;
-
   systemId: number
-  name : string
+  name: string
   description: string
-  rootRefIndicatorId : number
+  rootRefIndicatorId: number
 }
 
 export interface AddSchemeApiRes {
@@ -19,8 +14,8 @@ export interface AddSchemeApiRes {
 }
 
 export interface UpdateSchemeApiSend {
-  id: number
-  config: string
+  refIndicatorId: number // 必须，引用的指标ID
+  parentId?: number // 可选，父节点ID，顶级节点可为null
 }
 
 export interface GetSchemeListApiSend {
@@ -80,4 +75,17 @@ export interface SubtreeNodeUpdateDTO {
   formula?: string | null
   weight?: number | null
   enabled?: 0 | 1
+}
+
+export interface SchemeDetailInfo {
+  children: SchemeDetailInfo[]
+  description: NullType<string>
+  enabled: NullType<number>
+  formula: NullType<string>
+  id: NullType<number>
+  name: NullType<string>
+  refIndicatorId: NullType<number>
+  subtreeId: NullType<number>
+  weight: NullType<number>
+  systemId: NullType<number>
 }

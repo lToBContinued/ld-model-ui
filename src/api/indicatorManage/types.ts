@@ -1,28 +1,34 @@
-interface indicatorItem {
+export interface GetIndicatorListApiRes {
   id: number
   name: string
   description: string
-}
-
-export interface GetIndicatorListApiRes extends indicatorItem {
   parentId: number
   level: number
   isLeaf: number
   config: string
 }
 
-export interface AddIndicatorApiRes extends indicatorItem {
+export interface AddIndicatorApiRes {
+  id: number
+  name: string
+  description: string
   parentId: number
   level: number
   isLeaf: number
 }
 
-export interface AddIndicatorApiSend extends indicatorItem {
+export interface AddIndicatorApiSend {
+  id: number
+  name: string
+  description: string
   parentId: number
   systemId: number
 }
 
-export interface GetIndicatorDetailRes extends indicatorItem {
+export interface GetIndicatorDetailRes {
+  id: number
+  name: string
+  description: string
   config: string
   isLeaf: number
   level: number
@@ -31,19 +37,17 @@ export interface GetIndicatorDetailRes extends indicatorItem {
   systemId: number
 }
 
-export interface UpdateIndicatorDetailSend extends indicatorItem {
+export interface UpdateIndicatorDetailSend {
+  id: number
+  name: string
+  description: string
   config: string
 }
 
-export interface UpdateIndicatorDetailRes extends indicatorItem {
-  config: string
-  isLeaf: number
-  level: number
-  parentId: number
-  parentName: string
-}
-
-export interface GetIndicatorSystemListRes extends indicatorItem {
+export interface UpdateIndicatorDetailRes {
+  id: number
+  name: string
+  description: string
   config: string
   isLeaf: number
   level: number
@@ -51,7 +55,26 @@ export interface GetIndicatorSystemListRes extends indicatorItem {
   parentName: string
 }
 
-export interface GetIndicatorAndDescendantsApiRes extends indicatorItem {
+export interface GetIndicatorSystemListRes {
+  config: string
+  createdAt: string
+  description: string
+  formula: string
+  id: number
+  isLeaf: number
+  name: string
+  orderIndex: number
+  parentId: number
+  parentName: string
+  systemId: number
+  updatedAt: string
+  weightToParent: number
+}
+
+export interface GetIndicatorAndDescendantsApiRes {
+  id: number
+  name: string
+  description: string
   parentId: number
   level: number
   isLeaf: number
