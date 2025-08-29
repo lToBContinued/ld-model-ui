@@ -115,26 +115,16 @@ $spacing-indent: 16px;
     }
   }
 
-  [class^='content-'] {
+  .content {
     padding-top: $spacing-size1;
+    padding-left: $spacing-indent;
   }
 
-  [class^='desc-'] {
+  .desc {
     margin: 0 0 $spacing-size1;
     font-size: $font-size-s;
     line-height: 1.6;
     color: $main-text-color2;
-  }
-
-  @for $i from 1 through 10 {
-    .content-#{$i} {
-      position: relative;
-      padding-left: $i * $spacing-indent;
-    }
-    .desc-#{$i} {
-      position: relative;
-      left: -$i * $spacing-indent;
-    }
   }
 }
 
