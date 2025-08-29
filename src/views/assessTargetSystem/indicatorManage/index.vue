@@ -77,7 +77,7 @@ const currentIndicatorId = ref() // 当前指标节点id
  */
 const viewNode = async (data: Data) => {
   const res = await getIndicatorDetail(data.id)
-  const { config, id, description, name, parentName, isLeaf } = res
+  const { config, id, description, name, parentName, isLeaf, parentId } = res
   currentIndicatorId.value = id
   indicatorConfigFormData.value = {
     config,
@@ -86,6 +86,7 @@ const viewNode = async (data: Data) => {
     name,
     parentName,
     isLeaf,
+    parentId,
   }
 }
 /**
@@ -103,10 +104,14 @@ const saveConfig = async () => {
   try {
     await indicatorConfigFormRef.value?.ElFormRef?.validate()
     await formConfiguratorRef.value?.validatorConfig()
-    await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
-    await getIndicatorDetail(indicatorConfigFormData.value.id!)
+    const res = await updateIndicatorDetailApi(indicatorConfigFormData.value as UpdateIndicatorDetailSend)
+    if (res.status === 200) {
+      ElMessage.success('更新指标成功')
+      await getIndicatorDetail(indicatorConfigFormData.value.id!)
+    }
     asideTreeRef.value?.refreshChildNodes('update')
   } catch (e: any) {
+    ElMessage.error('更新指标失败')
     console.error(e)
   }
 }

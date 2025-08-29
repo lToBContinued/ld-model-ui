@@ -14,7 +14,6 @@ export interface AddSchemeApiRes {
 }
 
 export interface UpdateSchemeApiSend {
-  subtreeId: number // 必须，方案ID
   refIndicatorId: number // 必须，引用的指标ID
   parentId?: number // 可选，父节点ID，顶级节点可为null
 }
@@ -88,4 +87,5 @@ export interface SchemeDetailInfo {
   refIndicatorId: NullType<number>
   subtreeId: NullType<number>
   weight: NullType<number>
+  systemId: NullType<number>
 }

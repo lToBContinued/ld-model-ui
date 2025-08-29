@@ -70,6 +70,7 @@ const selectedScheme = ref<SchemeDetailInfo>({
   enabled: null,
   weight: null,
   subtreeId: null,
+  systemId: null,
   children: [],
 })
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
@@ -127,7 +128,6 @@ const saveScheme = async () => {
     const data = {
       refIndicatorId: addSecondIndicatorFormData.value.indicatorId,
       parentId: selectedScheme.value.id,
-      // config: JSON.stringify(schemeIndicatorConfig.value),
     }
     const res = await updateSchemeApi(selectedScheme.value.subtreeId!, data)
     if (res.status === 200) {
@@ -147,6 +147,7 @@ const removeScheme = () => {
     enabled: null,
     weight: null,
     subtreeId: null,
+    systemId: null,
     children: [],
   }
 }
