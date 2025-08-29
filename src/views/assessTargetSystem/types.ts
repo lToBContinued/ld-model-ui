@@ -64,26 +64,27 @@ export interface AddSchemeFormItem {
 }
 
 export interface SelectedScheme {
-  config?: string
-  id?: number
-  systemId?: number
-  description?: string
-  name?: string
-  refIndicatorId: number
   children: SchemeIndicatorConfigItem[]
+  description: NullType<string>
+  enabled: NullType<number>
+  formula: NullType<string>
+  id: NullType<number>
+  name: NullType<string>
+  refIndicatorId: NullType<number>
+  subtreeId: NullType<number>
+  weight: NullType<number>
 }
 
 export interface SchemeIndicatorConfigItem {
-  id: number
-  refIndicatorId: number
-  name: string
+  children?: SchemeIndicatorConfigItem[]
   description: string
-  formula: string
   enabled: number
   formula: string
-  weight: string
+  id: number
+  name: string
   refIndicatorId: number
-  children?: SchemeIndicatorConfigItem[]
+  subtreeId: number
+  weight: number
 }
 
 export interface AddSecondIndicatorFormConfig {
@@ -112,4 +113,8 @@ export interface AddChildNodeFormData {
   name: string
   description: string
   systemId: string
+}
+export interface AddChildrenIndicatorFormData {
+  indicatorId: UndefinedType<number>
+  description: string
 }

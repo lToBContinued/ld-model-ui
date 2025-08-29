@@ -87,7 +87,7 @@ export const getIndicatorSystemListApi = () => {
 
 /**
  * @description 获取指定指标以及所有子指标
- * @param { number } parentId 指标id
+ * @param { number } parentId 当前点击的指标id
  */
 export const getIndicatorAndDescendantsApi = (parentId: number) => {
   return request<any, ResponseData<GetIndicatorAndDescendantsApiRes[]>>({

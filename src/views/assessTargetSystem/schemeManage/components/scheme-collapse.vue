@@ -10,9 +10,13 @@
           </div>
         </div>
       </template>
-      <div :class="`content-${item.level! + 1}`">
-        <span :class="`desc-${item.level! + 1}`" v-if="item.description">{{ item.description }}</span>
-        <scheme-collapse v-if="item.children && item.children.length > 0" v-model="item.children"></scheme-collapse>
+      <div class="content">
+        <span class="desc" v-if="item.description">{{ item.description }}</span>
+        <scheme-collapse
+          v-if="item.children && item.children.length > 0"
+          v-model="item.children"
+          :subtree-id="subtreeId"
+        ></scheme-collapse>
       </div>
     </el-collapse-item>
   </el-collapse>
@@ -37,26 +41,23 @@
 </template>
 
 <script setup lang="ts">
-import { watch, ref, reactive } from 'vue'
+import { watch, ref } from 'vue'
 import {
   AddChildrenIndicatorFormData,
   AddSecondIndicatorFormConfigItem,
   SchemeIndicatorConfigItem,
-  SelectedScheme,
 } from '@/views/assessTargetSystem/types.ts'
 import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage/index.ts'
-import { deleteParam } from '@/api/schemeManage/legacySubtree.ts'
 import { deleteSchemeNode, updateSchemeApi } from '@/api/schemeManage'
+
 interface DefineProps {
   modelValue?: SchemeIndicatorConfigItem[]
   indicatorOptions?: { label: string; value: number }[]
+  subtreeId: number // 方案id
 }
 
 const props = withDefaults(defineProps<DefineProps>(), {})
-const emit = defineEmits<{
-  'model-value': [value: SchemeIndicatorConfigItem[]]
-}>()
 const tree = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
 const addChildIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 const addChildIndicatorDialogShow = ref(false)
@@ -65,7 +66,6 @@ const addChildIndicatorFormData = ref<AddChildrenIndicatorFormData>({
   indicatorId: undefined,
   description: '',
 })
-
 const addChildIndicatorFormConfig = ref<AddSecondIndicatorFormConfigItem[]>([
   {
     prop: 'indicatorId',
@@ -96,31 +96,20 @@ watch(
 )
 
 const addChildIndicatorDialogOpen = async () => {
-  // 提取数字类型的parentId，而不是传入对象
   const parentId = parentNode.value?.refIndicatorId as number
-  // 检查parentId是否有效
-  if (typeof parentId !== 'number' || isNaN(parentId)) {
+  if (!parentId) {
     console.error('无效的parentId:', parentNode.value?.refIndicatorId)
     return
   }
-
-  // 直接传入数字类型的parentId
+  // 获取指标名称列表
   const res = await getIndicatorAndDescendantsApi(parentId)
-
-  const indicatorIdSelectConfig = addChildIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-
   parentOptions.value = res.data!.map((item) => {
     return {
       label: item.name,
       value: item.id,
     }
   })
-  if (addChildIndicatorFormConfig && addChildIndicatorFormConfig.value[0].config) {
-    addChildIndicatorFormConfig.value[0].config.options = parentOptions.value
-  }
-  /*if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
-    indicatorIdSelectConfig.config.options = parentOptions.value
-  }*/
+  addChildIndicatorFormConfig.value[0].config!.options = parentOptions.value
 }
 const getIndicatorName = (id: number) => {
   return parentOptions.value.find((item) => item.value === id)?.label
@@ -134,21 +123,18 @@ const confirmAddChildIndicatorDialog = async () => {
   try {
     await addChildIndicatorRef.value?.ElFormRef?.validate()
     const data = {
-      level: parentNode.value!.level! + 1,
       children: [],
-      ...addChildIndicatorFormData.value,
       indicatorName: getIndicatorName(addChildIndicatorFormData.value.indicatorId as number),
+      level: parentNode.value!.level! + 1,
+      ...addChildIndicatorFormData.value,
     }
-    console.log(tree.value)
     confirmAdd(tree.value, data)
-    // const response = await updateSchemeApi(schemeId.value, submitData)
     closeAddChildIndicatorDialog()
   } catch (e) {
     console.error(e)
   }
 }
-
-const confirmAdd = (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndicatorConfigItem) => {
+const confirmAdd = async (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndicatorConfigItem) => {
   // 先获取并检查 parentId 的值
   const parentId = parentNode.value?.id
   // 如果 parentId 不存在，直接返回避免错误
@@ -158,15 +144,15 @@ const confirmAdd = (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndicatorC
   }
   for (let i = 0; i < tree.length; i++) {
     if (tree[i].id === parentId) {
+      if (!tree[i].children) {
+        tree[i].children = []
+      }
       const data = {
         parentId: parentId,
         refIndicatorId: newNode.indicatorId,
       }
-      updateSchemeApi(parentNode.value.subtreeId, data)
-      if (!tree[i].children) {
-        tree[i].children = []
-      }
-      tree[i].children.push(newNode)
+      await updateSchemeApi(props.subtreeId, data)
+      tree[i].children!.push(newNode)
     } else if (tree[i].children) {
       // 检查 children 存在再递归
       confirmAdd(tree[i].children, newNode)
@@ -185,15 +171,12 @@ const removeNode = (node: SchemeIndicatorConfigItem) => {
   }
   const handleDelete = async () => {
     try {
-      // 1. 先调用后端API删除数据
       await deleteSchemeNode(node.id)
-      // 2. 后端删除成功后，再更新前端树结构
       confirmRemoveNode(tree.value, node.id)
-      // 3. 显示删除成功提示
       ElMessage.success('删除成功')
     } catch (error) {
-      // 4. 处理删除失败情况
       ElMessage.error('删除失败，请稍后重试')
+      console.error(error)
     }
   }
 
@@ -205,12 +188,9 @@ const removeNode = (node: SchemeIndicatorConfigItem) => {
       type: 'warning',
     }).then(handleDelete)
   } else {
-    // 没有子节点，直接执行删除
     handleDelete()
   }
 }
-
-// 保持原有的confirmRemoveNode函数不变
 const confirmRemoveNode = (tree: SchemeIndicatorConfigItem[], id: number): SchemeIndicatorConfigItem[] => {
   for (let i = 0; i < tree.length; i++) {
     if (tree[i].id === id) {
