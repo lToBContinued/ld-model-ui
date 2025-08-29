@@ -70,17 +70,22 @@ const props = defineProps<{
   explainOptions: Options
 }>()
 const emit = defineEmits<{ (e: 'confirm', docs: string): void }>()
+const editorRef = ref<any>(null)
 
 /** ====== helpers ====== */
 const groupByNamespace = (items: any[]) => {
   const grouped: Record<string, any[]> = {}
-  ;(items || []).forEach((item: any) => {
-    const ns = item.namespace || '默认'
-    ;(grouped[ns] || (grouped[ns] = [])).push(item)
-  })
+  if (items.length > 0) {
+    items.forEach((item: any) => {
+      const ns = item.namespace || '默认'
+      if (!grouped[ns]) {
+        grouped[ns] = []
+      }
+      grouped[ns].push(item)
+    })
+  }
   return Object.keys(grouped).map((ns, i) => ({ value: i, label: ns, children: grouped[ns] }))
 }
-
 const flattenOrganizationTree = (tree: any[], parentPath = '', hideNs: any[] = []) => {
   let out: any[] = []
   for (const node of tree || []) {
@@ -94,12 +99,11 @@ const flattenOrganizationTree = (tree: any[], parentPath = '', hideNs: any[] = [
   }
   return out
 }
-const isNestedTree = (arr: any[]) =>
-  Array.isArray(arr) && arr.some((n) => n && Array.isArray(n.children) && n.children.length > 0)
+const isNestedTree = (arr: any[]) => {
+  return Array.isArray(arr) && arr.some((n) => n && Array.isArray(n.children) && n.children.length > 0)
+}
 
 /** ====== states ====== */
-const editorRef = ref<any>(null)
-
 const codeEditorOptions = reactive({
   entityFields: flattenOrganizationTree(
     props.formOptions?.treeData || [],
@@ -108,7 +112,6 @@ const codeEditorOptions = reactive({
   ),
   formulaFunctions: flattenOrganizationTree(props.funcOptions?.treeData || []),
 })
-
 const formParams = reactive({ ...props.formOptions, treeData: [] as any[] })
 const funcParams = reactive({
   ...props.funcOptions,
@@ -124,21 +127,14 @@ const modalParams = reactive({
 const modalOptions = props.modalOptions || {}
 
 /** ====== 同步树 → 自动补全 ====== */
-function setFormTree(arr: any[]) {
+const setFormTree = (arr: any[]) => {
   const nested = isNestedTree(arr)
   formParams.treeData = nested ? arr : groupByNamespace(arr || [])
   codeEditorOptions.entityFields = flattenOrganizationTree(arr || [], '', props.formOptions?.showParentByNameSpace)
 }
 
-setFormTree(props.formOptions?.treeData || [])
-watch(
-  () => props.formOptions?.treeData,
-  (v: any[]) => setFormTree(v || []),
-  { deep: true },
-)
-
 /** ====== 事件 ====== */
-function handleOk() {
+const handleOk = () => {
   const docs = editorRef.value?.getEditorValue?.() || ''
   if (!docs) {
     message.warning('请编辑公式内容后进行保存')
@@ -153,27 +149,31 @@ function handleOk() {
   modalParams.open = false
   emit('confirm', docs)
 }
-
-function handleCancel() {
+const handleCancel = () => {
   modalParams.open = false
 }
-
-function openDialog() {
+const openDialog = () => {
   modalParams.open = true
   nextTick(() => {
     const docs = (props.editorOptions || {})['docs'] || ''
     editorRef.value?.setEditorValue?.(docs)
   })
 }
-
-function onTipsKeyDown(e: any) {
+const onTipsKeyDown = (e: any) => {
   explainParams.list = e?.detail ? e.detail.split(' ; ') : []
 }
-
-function onSelectNode(type: 0 | 1, node: any) {
+const onSelectNode = (type: 0 | 1, node: any) => {
   if (type === 0) editorRef.value?.insertTag(node)
   else editorRef.value?.insertFormula(node)
 }
+
+setFormTree(props.formOptions?.treeData || [])
+
+watch(
+  () => props.formOptions?.treeData,
+  (v: any[]) => setFormTree(v || []),
+  { deep: true },
+)
 </script>
 
 <style scoped>

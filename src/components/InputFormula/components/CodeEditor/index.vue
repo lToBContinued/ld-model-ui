@@ -1,3 +1,18 @@
+<template>
+  <Row id="code-editor">
+    <Title v-bind="{ title: props.title, isSearch: props.isSearch }" />
+    <Row class="editor-content">
+      <CodeMirror
+        class="mirror"
+        ref="mirrorRef"
+        placeholder="请输入 例如:SUM(数值1,数值2)"
+        :extensions="extensions"
+        @ready="onReady"
+      />
+    </Row>
+  </Row>
+</template>
+
 <script setup lang="ts">
 //import {ref, defineProps, defineEmits, defineExpose, nextTick} from "vue";
 import { ref, nextTick } from 'vue'
@@ -262,20 +277,6 @@ defineExpose({
   setEditorValue,
 })
 </script>
-<template>
-  <Row id="code-editor">
-    <Title v-bind="{ title: props.title, isSearch: props.isSearch }" />
-    <Row class="editor-content">
-      <CodeMirror
-        class="mirror"
-        ref="mirrorRef"
-        placeholder="请输入 例如:SUM(数值1,数值2)"
-        :extensions="extensions"
-        @ready="onReady"
-      />
-    </Row>
-  </Row>
-</template>
 
 <style lang="scss" scoped>
 #code-editor {
