@@ -1,6 +1,6 @@
 <template>
   <el-form style="margin-top: 12px" :model="selectOptions">
-    <div v-for="(item, index) in selectOptions.options" :key="item.label" class="select-option-item">
+    <div v-for="(item, index) in selectOptions.options" class="select-option-item">
       <el-form-item class="form-item-inner" label="标签名" prop="label">
         <zk-input v-model="item.label" placeholder="请输入标签名"></zk-input>
       </el-form-item>

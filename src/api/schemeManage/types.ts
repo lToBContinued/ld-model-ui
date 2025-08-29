@@ -79,12 +79,13 @@ export interface SubtreeNodeUpdateDTO {
 }
 
 export interface SchemeDetailInfo {
-  id: NullType<number>
-  refIndicatorId: NullType<number>
-  name: NullType<string>
-  description: NullType<string>
-  formula: NullType<string>
-  enabled: NullType<number>
-  weight: NullType<number>
   children: SchemeDetailInfo[]
+  description: NullType<string>
+  enabled: NullType<number>
+  formula: NullType<string>
+  id: NullType<number>
+  name: NullType<string>
+  refIndicatorId: NullType<number>
+  subtreeId: NullType<number>
+  weight: NullType<number>
 }

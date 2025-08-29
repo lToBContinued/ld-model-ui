@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="18">
         <div class="scheme-content">
-          <el-empty v-if="Object.keys(selectedScheme).length === 0" description="暂无数据" />
+          <el-empty v-if="selectedScheme?.id === null" description="暂无数据" />
           <div v-else>
             <div class="header">
               <p class="title bold">{{ selectedScheme?.name }}</p>
@@ -47,12 +47,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import {
   AddSecondIndicatorFormConfig,
   AddSecondIndicatorFormData,
   SchemeIndicatorConfigItem,
-  SelectedScheme,
 } from '@/views/assessTargetSystem/types.ts'
 import { getSchemeDetailApi, updateSchemeApi } from '@/api/schemeManage'
 import { Plus } from '@element-plus/icons-vue'
@@ -70,6 +69,7 @@ const selectedScheme = ref<SchemeDetailInfo>({
   formula: null,
   enabled: null,
   weight: null,
+  subtreeId: null,
   children: [],
 })
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
@@ -114,8 +114,7 @@ watch(
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
   selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
-  console.log(selectedScheme.value)
-  selectedScheme.value.id = scheme.id
+  selectedScheme.value.subtreeId = scheme.id
   schemeIndicatorConfig.value = selectedScheme.value.children as SchemeIndicatorConfigItem[]
 }
 
@@ -130,7 +129,7 @@ const saveScheme = async () => {
       parentId: selectedScheme.value.id,
       // config: JSON.stringify(schemeIndicatorConfig.value),
     }
-    const res = await updateSchemeApi(selectedScheme.value.subtreeId, data)
+    const res = await updateSchemeApi(selectedScheme.value.subtreeId!, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
       selectedScheme.value = await getSchemeDetail(selectedScheme.value.subtreeId)
@@ -147,6 +146,7 @@ const removeScheme = () => {
     formula: null,
     enabled: null,
     weight: null,
+    subtreeId: null,
     children: [],
   }
 }
@@ -233,7 +233,7 @@ const getIndicatorName = (id: number) => {
       padding: $spacing-size2;
 
       font-size: $font-size-s;
-      color: $main-text-color3;
+      color: $main-text-color2;
       text-indent: 2em;
 
       background-color: $main-bg-color;
