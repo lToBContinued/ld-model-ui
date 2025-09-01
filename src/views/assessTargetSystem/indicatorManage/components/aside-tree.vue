@@ -197,11 +197,9 @@ const closeAddChildNodeDialog = () => {
 const submitAddChildNodeDialog = async () => {
   await addChildNodeFormRef.value?.ElFormRef?.validate()
   const parentId = currentData.value!.id
-  const systemId = currentData.value!.systemId
   const data = {
     name: addChildNodeFormData.value.name,
     description: addChildNodeFormData.value.description,
-    systemId,
     parentId,
   } as AddIndicatorApiSend
   const res = await addIndicatorApi(data)

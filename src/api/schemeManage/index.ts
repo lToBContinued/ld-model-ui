@@ -69,3 +69,10 @@ export const getSchemeDetailApi = (id: number) => {
     method: 'get',
   })
 }
+
+export const deleteSchemeNode = (nodeId: number) => {
+  return request<ResponseData<void>>({
+    url: `/subtrees/nodes/${nodeId}`,
+    method: 'delete',
+  })
+}

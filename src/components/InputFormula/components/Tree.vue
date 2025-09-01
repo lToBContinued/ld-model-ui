@@ -1,3 +1,56 @@
+<template>
+  <div class="tree-content">
+    <!-- 固定标题部分 -->
+    <div class="tree-title-container">
+      <Title
+        v-bind="{
+          title: props.title,
+          isSearch: props.isSearch,
+          showReset: true,
+        }"
+        @handleSearch="handleSearch"
+        @handleReset="resetTree"
+      />
+    </div>
+
+    <!-- 可滚动树部分 -->
+    <div class="tree-scroll-container">
+      <Tree
+        v-if="showTree.length > 0"
+        v-model:expandedKeys="expandedKeys"
+        v-model:selectedKeys="selectedKeys"
+        :autoExpandParent="autoExpandParent"
+        :fieldNames="props.fieldNames"
+        :tree-data="showTree"
+        show-line
+        style="height: auto"
+        @expand="onExpand"
+        @select="handleSelect"
+      >
+        <template #switcherIcon="{ switcherCls }">
+          <down-outlined :class="switcherCls" />
+        </template>
+
+        <template #title="treeNode">
+          <span class="tree-text" @dblclick="handleDbSelect(treeNode)">
+            <Tooltip placement="top" @mouseenter="showToolTip">
+              <template #title>
+                <span>{{ treeNode[props.fieldNames.title] }}</span>
+              </template>
+              <span class="text">
+                {{ treeNode[props.fieldNames.title] }}
+              </span>
+            </Tooltip>
+            <Tag :bordered="false">{{ treeNode.tagName }}</Tag>
+          </span>
+        </template>
+      </Tree>
+
+      <div v-else class="empty">暂无数据</div>
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { Tree, Tag, Tooltip } from 'ant-design-vue'
@@ -12,7 +65,10 @@ const props = defineProps({
     type: Object,
     default: () => ({ title: 'label', key: 'value', children: 'children' }),
   },
-  onHandleReset: { type: Function, default: () => {} },
+  onHandleReset: {
+    type: Function,
+    default: () => {},
+  },
 })
 
 const emits = defineEmits(['handleExplain', 'handleSelectNode'])
@@ -118,59 +174,6 @@ const resetTree = () => {
   // if (typeof props.onHandleReset === 'function') props.onHandleReset()
 }
 </script>
-
-<template>
-  <div class="tree-content">
-    <!-- 固定标题部分 -->
-    <div class="tree-title-container">
-      <Title
-        v-bind="{
-          title: props.title,
-          isSearch: props.isSearch,
-          showReset: true,
-        }"
-        @handleSearch="handleSearch"
-        @handleReset="resetTree"
-      />
-    </div>
-
-    <!-- 可滚动树部分 -->
-    <div class="tree-scroll-container">
-      <Tree
-        v-if="showTree.length > 0"
-        v-model:expandedKeys="expandedKeys"
-        v-model:selectedKeys="selectedKeys"
-        :autoExpandParent="autoExpandParent"
-        show-line
-        :tree-data="showTree"
-        :fieldNames="props.fieldNames"
-        style="height: auto"
-        @select="handleSelect"
-        @expand="onExpand"
-      >
-        <template #switcherIcon="{ switcherCls }">
-          <down-outlined :class="switcherCls" />
-        </template>
-
-        <template #title="treeNode">
-          <span class="tree-text" @dblclick="handleDbSelect(treeNode)">
-            <Tooltip placement="top" @mouseenter="showToolTip">
-              <template #title>
-                <span>{{ treeNode[props.fieldNames.title] }}</span>
-              </template>
-              <span class="text">
-                {{ treeNode[props.fieldNames.title] }}
-              </span>
-            </Tooltip>
-            <Tag :bordered="false">{{ treeNode.tagName }}</Tag>
-          </span>
-        </template>
-      </Tree>
-
-      <div v-else class="empty">暂无数据</div>
-    </div>
-  </div>
-</template>
 
 <style lang="scss" scoped>
 .tree-content {

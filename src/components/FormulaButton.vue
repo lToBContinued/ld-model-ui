@@ -6,10 +6,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, watch, nextTick } from 'vue'
+import { ref, reactive, watch, nextTick, watchEffect } from 'vue'
 import InputFormula from '@/components/InputFormula/index.vue'
 import funcJson from '@/conf/func.json'
-import { getSubtreeTree, listParamsByNode } from '@/api/schemeManage/legacySubtree.ts'
+import { listParamsByNode } from '@/api/schemeManage/legacySubtree.ts'
+import { getSchemeDetailApi } from '@/api/schemeManage'
 
 type VarTreeNode = {
   namespace: string
@@ -62,36 +63,42 @@ watch(
 )
 
 // 获取参数配置的代码
-/*watch(() => props.subtreeId, ensureVariablesLoaded, { immediate: true })
+watch(() => props.subtreeId, ensureVariablesLoaded, { immediate: true })
 
-/!**
+/**
  * @description 参数配置数据
  * @param { number } subtreeId 节点id
- *!/
+ */
 async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
-  const root: any = await getSubtreeTree(subtreeId)
+  const root = await getSchemeDetailApi(subtreeId)
   const pathNames = new Map<number, string[]>()
   const flat: any[] = []
 
+  // 将所有指标节点拉出来，放入扁平数组，方便后续遍历处理
   function dfs(n: any, path: string[]) {
     flat.push(n)
     pathNames.set(n.id, path.concat(n.name))
     ;(n.children || []).forEach((c: any) => dfs(c, path.concat(n.name)))
   }
 
-  if (root) dfs(root, [])
+  if (root.data) dfs(root.data, [])
 
+  // 获取所有指标的参数信息
   const paramMap = new Map<number, any[]>()
   await Promise.all(
-    flat.map(async (n) => {
+    flat.map(async (indicator) => {
       try {
-        const res: any = await listParamsByNode(n.data.id)
-        paramMap.set(n.id, Array.isArray(res) ? res : (res?.list ?? []))
+        const res: any = await listParamsByNode(indicator.id)
+        paramMap.set(indicator.id, Array.isArray(res) ? res : (res?.list ?? []))
       } catch {
-        paramMap.set(n.id, [])
+        paramMap.set(indicator.id, [])
       }
     }),
   )
+  /**
+   * @description 转换为变量树节点
+   * @param {} n 方案二级指标
+   */
   const toVarNode = (n: any): VarTreeNode => {
     const path = pathNames.get(n.id) || [n.name]
     const ns = path[0] || '根'
@@ -114,15 +121,15 @@ async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
     return node
   }
 
-  return root ? [toVarNode(root)] : []
+  return root ? [toVarNode(root.data)] : []
 }
 
-/!** subtreeId 变化时，刷新变量树（首次也要拉） *!/
+/** subtreeId 变化时，刷新变量树（首次也要拉） */
 async function ensureVariablesLoaded() {
   if (!props.subtreeId) return
   const arr = await buildVariableTree(props.subtreeId)
   InputFormulaOptions.formOptions.treeData = arr
-}*/
+}
 
 /** 确认：把公式回传给外面；是否后端试算由父组件控制 */
 const handleConfirm = (formula: string) => {
