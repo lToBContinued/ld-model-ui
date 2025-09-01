@@ -1,11 +1,19 @@
 <template>
-  <el-select v-bind="$attrs" clearable v-model="selectValue" :placeholder="placeholder" :style="{ width }">
+  <el-select
+    ref="ElSelectRef"
+    v-bind="$attrs"
+    clearable
+    v-model="selectValue"
+    :placeholder="placeholder"
+    :style="{ width }"
+  >
     <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
   </el-select>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { shallowRef, computed } from 'vue'
+import { SelectInstance } from 'element-plus'
 
 interface ZkSelectProps {
   modelValue: string | number
@@ -18,6 +26,7 @@ interface ZkSelectProps {
 }
 
 const emit = defineEmits(['update:modelValue'])
+const ElSelectRef = shallowRef<SelectInstance>()
 const props = withDefaults(defineProps<ZkSelectProps>(), {
   modelValue: '',
   options: () => [],
@@ -33,6 +42,8 @@ const selectValue = computed({
     emit('update:modelValue', value)
   },
 })
+
+defineExpose({ ElSelectRef })
 </script>
 
 <style scoped lang="scss"></style>

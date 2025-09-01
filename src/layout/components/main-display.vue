@@ -1,12 +1,18 @@
 <template>
-  <router-view v-slot="{ Component }">
+  <router-view v-slot="{ Component, route }">
     <transition name="fade">
-      <component :is="Component"></component>
+      <keep-alive :include="cacheList">
+        <component :is="Component" :key="route.fullPath"></component>
+      </keep-alive>
     </transition>
   </router-view>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+
+const cacheList = ref(['runAssess'])
+</script>
 
 <style scoped lang="scss">
 .fade-enter-from {

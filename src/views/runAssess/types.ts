@@ -18,22 +18,40 @@ export interface BaseFormData {
 }
 
 export interface IndicatorListItem {
-  indicatorId: number
-  indicatorName: string
-  indicatorDesc: string
-  level: number
+  children: IndicatorListItem[]
+  description: string
   formConfig: {
-    prop: string
-    type: string
-    value: NullType<number | string>
-    result: NullType<number | string>
-    rules?: Record<string, any>[]
     config?: {
-      options?: { label: string; value: string | number }[]
-      min?: number
       max?: number
+      min?: number
+      options?: { label: string; value: string | number }[]
       step?: number
     }
+    prop: string
+    result: NullType<number | string>
+    rules?: Record<string, any>[]
+    type: string
+    value: NullType<number | string>
   }
-  children: IndicatorListItem[]
+  id: number
+  name: string
+  parentId?: any
+  refIndicatorId: number
+  subtreeId: number
+}
+
+export interface RootObject {
+  id: number
+  parentId?: any
+  refIndicatorId: number
+  subtreeId: number
+  name: string
+  description?: any
+  children: any[]
+  formConfig: string
+}
+
+export interface schemeListOptionsItem {
+  label: string
+  value: number
 }

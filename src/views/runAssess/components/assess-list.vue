@@ -1,12 +1,12 @@
 <template>
   <div class="assess-list">
     <!-- 遍历指标列表 -->
-    <template v-for="indicator in indicatorsList" :key="indicator.indicatorId">
-      <div class="indicator-item-wrapper" :style="{ 'padding-left': `${(level - 1) * 16}px` }">
+    <template v-for="indicator in indicatorsList" :key="indicator.id">
+      <div class="indicator-item-wrapper">
         <div class="indicator-main">
-          <p class="indicator-name">{{ indicator.indicatorName }}</p>
+          <p class="indicator-name">{{ indicator.name }}</p>
           <div class="input-box">
-            <span class="label">请填写</span>
+            <span v-if="indicator.formConfig" class="label">请填写</span>
             <!-- 根据配置渲染不同类型的输入框 -->
             <zk-input-number
               v-if="indicator.formConfig?.type === 'numberInput'"
@@ -27,12 +27,13 @@
             ></zk-select>
           </div>
         </div>
-        <p class="indicator-desc">{{ indicator.indicatorDesc || '无描述' }}</p>
-        <assess-list
-          v-if="indicator.children && indicator.children.length > 0"
-          :level="level + 1"
-          :model-value="indicator.children"
-        ></assess-list>
+        <div class="indicator-content">
+          <p class="indicator-desc">{{ indicator.description || '无描述' }}</p>
+          <assess-list
+            v-if="indicator.children && indicator.children.length > 0"
+            :model-value="indicator.children"
+          ></assess-list>
+        </div>
       </div>
     </template>
   </div>
@@ -63,6 +64,7 @@ watch(
   () => props.modelValue,
   (newVal) => {
     indicatorsList.value = newVal
+    console.log('>>>>> file: assess-list.vue ~ method:  <<<<<\n', indicatorsList.value) // TODO: 删除
   },
   {
     deep: true,
@@ -74,13 +76,15 @@ const handleValueChange = (indicator: IndicatorListItem, value: number) => {
     // TODO:发送计算请求
     console.log(
       '>>>>> file: assess-list.vue ~ method: handleValueChange <<<<<\n',
-      `指标id: ${indicator.indicatorId}, 值: ${value}`,
+      `指标id: ${indicator.id}, 值: ${value}`,
     )
   }
 }
 </script>
 
 <style scoped lang="scss">
+$spacing-indent: 16px;
+
 .assess-list {
   width: 100%;
 }
@@ -102,23 +106,29 @@ const handleValueChange = (indicator: IndicatorListItem, value: number) => {
       margin-bottom: 0;
       font-size: $font-size-l;
     }
-  }
 
-  .input-box {
-    display: flex;
-    flex: 2;
-    align-items: center;
+    .input-box {
+      display: flex;
+      flex: 2;
+      align-items: center;
 
-    .label {
-      margin-right: $spacing-size3;
-      font-size: $font-size-m;
+      .label {
+        margin-right: $spacing-size3;
+        font-size: $font-size-m;
+      }
     }
   }
 
-  .indicator-desc {
-    margin-bottom: 0;
-    padding: $spacing-size2;
-    font-size: $font-size-s;
+  .indicator-content {
+    padding-left: $spacing-indent;
+
+    .indicator-desc {
+      margin-bottom: 0;
+      margin-left: -$spacing-indent;
+      padding: $spacing-size2;
+      font-size: $font-size-s;
+      color: $light-text-color1;
+    }
   }
 }
 </style>

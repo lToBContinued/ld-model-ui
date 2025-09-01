@@ -4,52 +4,20 @@ export const getRunAssessConfig = () => {
     msg: 'success',
     data: [
       {
-        indicatorId: 15,
-        indicatorName: '数学',
-        indicatorDesc: '一门计算学科',
-        level: 1,
-        formConfig: {
-          prop: 'math',
-          type: 'radio',
-          value: null,
-          result: null,
-          config: {
-            options: [
-              {
-                label: '满分',
-                value: 1,
-              },
-              {
-                label: '不得分',
-                value: 0,
-              },
-            ],
-          },
-        },
+        id: 15,
+        name: '数学',
+        description: '一门计算学科',
         children: [],
       },
       {
-        indicatorId: 16,
-        indicatorName: '语文',
-        indicatorDesc: '一门语言学科',
-        level: 1,
-        formConfig: {
-          prop: 'math',
-          type: 'numberInput',
-          value: null,
-          result: null,
-          config: {
-            min: 0,
-            max: 100,
-            step: 0.000005,
-          },
-        },
+        id: 16,
+        name: '语文',
+        description: '一门语言学科',
         children: [
           {
-            indicatorId: 17,
-            indicatorName: '阅读理解',
-            indicatorDesc: '大阅读',
-            level: 2,
+            id: 17,
+            name: '阅读理解',
+            description: '大阅读',
             formConfig: {
               prop: 'math',
               type: 'select',
@@ -78,10 +46,9 @@ export const getRunAssessConfig = () => {
             },
             children: [
               {
-                indicatorId: 18,
-                indicatorName: '选择',
-                indicatorDesc: '选择',
-                level: 3,
+                id: 18,
+                name: '选择',
+                description: '选择',
                 formConfig: {
                   prop: 'math',
                   type: 'numberInput',
@@ -95,44 +62,9 @@ export const getRunAssessConfig = () => {
                 },
               },
               {
-                indicatorId: 19,
-                indicatorName: '简答',
-                indicatorDesc: '简答',
-                level: 3,
-                formConfig: {
-                  prop: 'math',
-                  type: 'numberInput',
-                  value: null,
-                  result: null,
-                  config: {
-                    min: 0,
-                    max: 100,
-                    step: 0.01,
-                  },
-                },
-              },
-              {
-                indicatorId: 20,
-                indicatorName: '判断',
-                indicatorDesc: '判断',
-                level: 3,
-                formConfig: {
-                  prop: 'math',
-                  type: 'numberInput',
-                  value: null,
-                  result: null,
-                  config: {
-                    min: 0,
-                    max: 100,
-                    step: 0.01,
-                  },
-                },
-              },
-              {
-                indicatorId: 21,
-                indicatorName: '判断',
-                indicatorDesc: '判断',
-                level: 3,
+                id: 19,
+                name: '简答',
+                description: '简答',
                 formConfig: {
                   prop: 'math',
                   type: 'numberInput',
