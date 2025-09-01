@@ -1,7 +1,13 @@
 <template>
   <div class="form-configurator">
     <div>
-      <zk-select v-model="selectedType" :options="typeOptions" placeholder="请选择表单类型" width="200px"></zk-select>
+      <zk-select
+        v-model="selectedType"
+        :options="typeOptions"
+        placeholder="请选择表单类型"
+        width="200px"
+        @clear="clearFormConfig"
+      ></zk-select>
     </div>
     <number-input-generator
       v-if="selectedType === 'numberInput'"
@@ -17,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, shallowRef } from 'vue'
+import { ref, watch, shallowRef, nextTick } from 'vue'
 import { DefineProps } from '@/components/formConfigurator/types.ts'
 import SelectGenerator from '@/components/formConfigurator/select-generator.vue'
 import NumberInputGenerator from '@/components/formConfigurator/number-input-generator.vue'
@@ -29,7 +35,7 @@ const props = withDefaults(defineProps<DefineProps>(), {
 })
 
 const emit = defineEmits<{
-  'update:modelValue': [value: string]
+  'update:modelValue': [value: NullType<string>]
 }>()
 const numberInputGeneratorRef = shallowRef<InstanceType<typeof NumberInputGenerator>>()
 const selectGeneratorRef = shallowRef<InstanceType<typeof SelectGenerator>>()
@@ -56,6 +62,7 @@ const selectConfig = ref({
     },
   ],
 })
+let isClearing = false // 是否是手动清除配置操作
 
 const getFormConfig = () => {
   if (selectedType.value === 'numberInput') {
@@ -69,6 +76,7 @@ const getFormConfig = () => {
  * @param {any} config
  */
 const emitConfig = (config: any) => {
+  if (isClearing) return
   const data = {
     prop: `${props.indicatorId}`,
     type: selectedType.value,
@@ -105,6 +113,15 @@ const resetConfig = () => {
 const validatorConfig = async () => {
   await numberInputGeneratorRef.value?.verifyNumberInputConfig()
 }
+/**
+ * @description 清除配置
+ */
+const clearFormConfig = async () => {
+  isClearing = true
+  emit('update:modelValue', null)
+  await nextTick()
+  isClearing = false
+}
 
 // 获取配置
 watch(
@@ -112,7 +129,6 @@ watch(
   (newVal) => {
     if (!newVal) {
       selectedType.value = ''
-      resetConfig()
     } else {
       const configParse = JSON.parse(newVal)
       selectedType.value = configParse.type

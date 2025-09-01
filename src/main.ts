@@ -21,3 +21,14 @@ registerDirectives(app)
 app.mount('#app')
 
 document.documentElement.className = 'dark'
+const env = import.meta.env
+console.info(
+  `%c🚀 当前运行环境：${env.MODE}`,
+  `font-size: 12px;
+   color: #fff;
+   background: linear-gradient(90deg,#EE82EE 0%,#00D1FF 100%);
+   padding: 4px 10px;
+   border-radius: 4px;
+   font-weight: 700;
+   text-shadow: 1px 1px 2px rgba(0,0,0,.4);`,
+)
