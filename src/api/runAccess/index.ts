@@ -47,14 +47,21 @@ export const getRunAssessIdApi = (data: GetRunAssessIdApiSend) => {
  * @param {} data
  */
 export const saveEnterAssessDataApi = (data: SaveEnterAssessDataApiSend) => {
-  return request<any, any>({
+  return request<any, ResponseData>({
     url: `/subtree-runs/${data.runId}/values`,
     method: 'PUT',
-    data: data.enterData,
+    data: {
+      baseInfo: data.baseInfo,
+      enterData: data.enterData,
+    },
   })
 }
 
-export const calculateAssessData = (runId: number) => {
+/**
+ * @description 计算评估数据
+ * @param {number} runId 运行id
+ */
+export const calculateAssessDataApi = (runId: number) => {
   return request<any, ResponseData<CalculateAssessDataRes>>({
     url: `/subtree-runs/${runId}/evaluate`,
     method: 'POST',

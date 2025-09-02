@@ -1,3 +1,5 @@
+import { columns } from '@/views/runAssess/configs/tableConfigs.ts'
+
 export interface BaseFormConfigItem {
   prop: string
   label: string
@@ -11,8 +13,8 @@ export interface BaseFormConfigItem {
 }
 
 export interface BaseFormData {
-  company: string
-  trainingTime: NullType<Date>
+  departmentName: string
+  trainTime: NullType<Date>
   assessTime: NullType<Date>
   expert: string
 }
@@ -37,6 +39,8 @@ export interface IndicatorListItem {
   name: string
   parentId?: any
   refIndicatorId: number
+  remark?: string
+  score?: number
   subtreeId: number
 }
 
@@ -55,3 +59,15 @@ export interface schemeListOptionsItem {
   label: string
   value: number
 }
+
+export interface TableState {
+  totalData: IndicatorListItem[]
+  columns: typeof columns
+}
+
+export type GenerateSubmitFormData = (data?: TableState['totalData']) => {
+  paramId?: number
+  sourceKey?: string
+  value?: number
+  remark?: string
+}[]

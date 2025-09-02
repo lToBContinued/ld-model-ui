@@ -11,6 +11,8 @@ declare module 'vue' {
     CodeEditor: typeof import('./../components/InputFormula/components/CodeEditor/index.vue')['default']
     ConfirmSysDeleteModal: typeof import('./../components/ConfirmSysDeleteModal.vue')['default']
     ElAside: typeof import('element-plus/es')['ElAside']
+    ElAutoResize: typeof import('element-plus/es')['ElAutoResize']
+    ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
@@ -95,5 +97,8 @@ declare module 'vue' {
     ZkTransfer: typeof import('./../components/zk/zk-transfer.vue')['default']
     ZkTree: typeof import('./../components/zk/zk-tree.vue')['default']
     ZkUpload: typeof import('./../components/zk/zk-upload.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

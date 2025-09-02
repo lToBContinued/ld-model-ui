@@ -13,20 +13,45 @@
       ></zk-form>
     </zk-card>
     <zk-card style="margin-bottom: 14px">
-      <div class="select-scheme-wrapper">
+      <div class="select-scheme-wrapper" v-loading="calculating">
         <zk-select
           ref="schemeSelectRef"
           v-model="scheme"
           :options="schemeListOptions"
           class="select-scheme"
-          style="width: 240px"
-          @clear="resetSchemeSelect"
+          style="width: 300px"
+          @change="changeSelectedScheme"
         ></zk-select>
-        <el-empty v-if="indicatorList.length === 0" description="请选择方案"></el-empty>
-        <template v-else>
-          <div class="assess-list-wrapper">
-            <assess-list v-model="indicatorList"></assess-list>
-          </div>
+        <el-empty v-if="tableState.totalData.length === 0" description="请选择评估方案"></el-empty>
+        <div v-else class="input-table">
+          <zk-table
+            :columns="tableState.columns"
+            :data="tableState.totalData"
+            default-expand-all
+            row-key="id"
+            show-overflow-tooltip
+          >
+            <template #score="{ row }">
+              <!--{{ row.formConfig? }}-->
+              <zk-input-number
+                v-if="row.formConfig?.type === 'numberInput'"
+                v-model="row.score"
+                :max="row.formConfig?.config.max"
+                :min="row.formConfig?.config.min"
+                :step="row.formConfig?.config.step"
+                align="left"
+                step-strictly
+              ></zk-input-number>
+              <zk-select
+                v-if="row.formConfig?.type === 'select'"
+                v-model="row.score"
+                :options="row.formConfig?.config.options"
+              ></zk-select>
+            </template>
+            <template #remark="{ row }">
+              <zk-input v-if="row.formConfig" v-model="row.remark" :rows="1" type="textarea"></zk-input>
+            </template>
+          </zk-table>
           <zk-button
             class="submit-assess"
             type="primary"
@@ -36,7 +61,7 @@
           >
             提交评估
           </zk-button>
-        </template>
+        </div>
       </div>
     </zk-card>
   </div>
@@ -44,60 +69,37 @@
 
 <script setup lang="ts">
 import ZkSelect from '@/components/zk/zk-select.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
+import { ref, shallowRef, reactive } from 'vue'
+import {
+  BaseFormConfigItem,
+  BaseFormData,
+  GenerateSubmitFormData,
+  IndicatorListItem,
+  schemeListOptionsItem,
+  TableState,
+} from '@/views/runAssess/types.ts'
+import { SchemeListItem } from '@/api/schemeManage/types.ts'
+import { getSchemeListApi } from '@/api/schemeManage'
+import {
+  calculateAssessDataApi,
+  getIndicatorConfigBySchemeApi,
+  getRunAssessIdApi,
+  getTrainCompanyApi,
+  saveEnterAssessDataApi,
+} from '@/api/runAccess'
+import { GetIndicatorConfigBySchemeApiRes } from '@/api/runAccess/types.ts'
+import { columns } from '@/views/runAssess/configs/tableConfigs.ts'
+import { formConfig } from '@/views/runAssess/configs/formConfigs.ts'
 
 defineOptions({
   name: 'runAssess',
 })
-import ZkForm from '@/components/zk/zk-form.vue'
-import { ref, shallowRef, watchEffect } from 'vue'
-import AssessList from '@/views/runAssess/components/assess-list.vue'
-import { BaseFormConfigItem, BaseFormData, IndicatorListItem, schemeListOptionsItem } from '@/views/runAssess/types.ts'
-import { SchemeListItem } from '@/api/schemeManage/types.ts'
-import { getSchemeListApi } from '@/api/schemeManage'
-import { getIndicatorConfigBySchemeApi, getRunAssessIdApi, getTrainCompanyApi } from '@/api/runAccess'
-import { GetIndicatorConfigBySchemeApiRes } from '@/api/runAccess/types.ts'
 
-// 参训单位列表
-const baseFormConfig = ref<BaseFormConfigItem[]>([
-  {
-    prop: 'company',
-    label: '参训单位',
-    type: 'select',
-    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
-    config: {
-      options: [],
-    },
-  },
-  {
-    prop: 'trainingTime',
-    label: '参训时间',
-    type: 'datePicker',
-    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
-    config: {
-      type: 'date',
-      format: 'YYYY-MM-DD',
-    },
-  },
-  {
-    prop: 'assessTime',
-    label: '评估时间',
-    type: 'datePicker',
-    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
-    config: {
-      type: 'date',
-      format: 'YYYY-MM-DD',
-    },
-  },
-  {
-    prop: 'expert',
-    label: '专家',
-    type: 'input',
-    rules: [{ required: true, message: '此项不能为空', trigger: 'blur' }],
-  },
-])
+const baseFormConfig = ref<BaseFormConfigItem[]>(formConfig)
 const baseFormData = ref<BaseFormData>({
-  company: '',
-  trainingTime: null,
+  departmentName: '',
+  trainTime: null,
   assessTime: null,
   expert: '',
 })
@@ -106,28 +108,25 @@ const schemeListOptions = ref<schemeListOptionsItem[]>([])
 const indicatorList = ref<IndicatorListItem[]>([])
 const baseFormDataRef = ref<InstanceType<typeof ZkForm>>()
 const schemeSelectRef = shallowRef<InstanceType<typeof ZkSelect>>()
-
-/**
- * @description 方案改变时，获取指标列表
- */
-watchEffect(async () => {
-  if (scheme.value) {
-    const res = await getIndicatorConfigBySchemeApi(scheme.value)
-    indicatorList.value = parseFormConfigDeep(res.data!.children)
-  }
+const tableState = reactive<TableState>({
+  totalData: [],
+  columns: columns,
 })
+const calculating = ref(false)
 
 /**
  * @description 获取单位列表
  */
 const getCompanyList = async () => {
   const res = await getTrainCompanyApi()
-  baseFormConfig.value.find((item) => item.prop === 'company')!.config!.options = res.data!.records.map((item: any) => {
-    return {
-      label: item.departmentName,
-      value: item.departmentId,
-    }
-  })
+  baseFormConfig.value.find((item) => item.prop === 'departmentName')!.config!.options = res.data!.records.map(
+    (item: any) => {
+      return {
+        label: item.departmentName,
+        value: item.departmentId,
+      }
+    },
+  )
 }
 /**
  * @description 获取方案列表选项
@@ -146,71 +145,93 @@ const getSchemeListOptions = async () => {
   })
 }
 /**
- * @description 清除方案选择框
+ * @description 方案改变时
+ * @param {number} schemeId 方案id
  */
-const resetSchemeSelect = () => {
-  indicatorList.value = []
+const changeSelectedScheme = async (schemeId: number) => {
+  if (!schemeId) {
+    tableState.totalData = []
+    return
+  }
+  const res = await getIndicatorConfigBySchemeApi(schemeId)
+  tableState.totalData = parseFormConfigDeep([res.data!])
 }
 /**
  * @description 解析formConfig
- * @param {GetIndicatorConfigBySchemeApiRes[]} data 原始指标列表
+ * @param {GetIndicatorConfigBySchemeApiRes} data 原始指标列表
  */
-const parseFormConfigDeep = (data: GetIndicatorConfigBySchemeApiRes[]): IndicatorListItem[] => {
-  return data.map((item) => ({
-    ...item,
-    formConfig: item.formConfig ? JSON.parse(item.formConfig) : null,
-    children: item.children ? parseFormConfigDeep(item.children) : [],
-  })) as IndicatorListItem[]
+const parseFormConfigDeep = (data: GetIndicatorConfigBySchemeApiRes[]): TableState['totalData'] => {
+  return data.map((item) => {
+    let formConfig = null
+    try {
+      formConfig = item.formConfig != null ? JSON.parse(item.formConfig) : null
+    } catch {
+      formConfig = null
+    }
+    return {
+      ...item,
+      formConfig,
+      children: item.children ? parseFormConfigDeep(item.children) : undefined,
+    } as IndicatorListItem
+  })
 }
 /**
  * @description 提交评估
  */
 const submitAssess = async () => {
   try {
-    // await baseFormDataRef.value?.ElFormRef?.validate()
-    // console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', indicatorList.value) // TODO: 删除
-    // const runId = await getRunAssessId()
-    const scoreList = pickIdAndValue(indicatorList.value)
+    // 非空校验
+    await baseFormDataRef.value?.ElFormRef?.validate()
+    const scoreList = generateSubmitFormData()
+    if (scoreList.some((item) => !item.value)) {
+      throw new Error('有表单项或评估项未填，请检查！')
+    }
+    calculating.value = true
     const data = {
       baseInfo: baseFormData.value,
-      scoreList,
+      enterData: scoreList,
     }
-    console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', data) // TODO: 删除
+    const runId = await getRunAssessId() // 获取评估运行id
+    await saveAssessData(runId, data) // 保存录入评估数据
+    // await calculateAssess(runId) // 计算
+    calculating.value = false
   } catch (e) {
+    calculating.value = false
     ElMessage.error('有表单项或评估项未填，请检查！')
     console.error(e)
   }
 }
 /**
- * @description 获取树的indicatorId和value，并以数组形式返回
- * @param {IndicatorListItem[]} tree
+ * @description 保存评估录入数据
  */
-const pickIdAndValue = (
-  tree: IndicatorListItem[],
-): {
-  nodeId: number
-  score: NullType<number | string>
-}[] => {
-  const result: {
-    nodeId: number
-    score: NullType<number | string>
-  }[] = []
-  const pick = (nodes: IndicatorListItem[]) => {
-    nodes.forEach((node) => {
-      if (node.formConfig !== null) {
-        const nodeInfo = {
-          nodeId: node.id,
-          score: node.formConfig.value,
-        }
-        result.push(nodeInfo)
-      }
-      if (node.children && node.children.length > 0) {
-        pick(node.children)
-      }
-    })
+const saveAssessData = async (runId: number, data: any) => {
+  try {
+    const body = {
+      runId,
+      ...data,
+    }
+    const res = await saveEnterAssessDataApi(body)
+    if (res.status === 200) {
+      return Promise.resolve(res)
+    } else {
+      return Promise.resolve('保存分数失败，请重试')
+    }
+  } catch (e) {
+    ElMessage.error('保存分数失败，请重试')
+    console.error(e)
   }
-  pick(tree)
-  return result
+}
+/**
+ * @description 计算
+ * @param {number} runId 运行id
+ */
+const calculateAssess = async (runId: number) => {
+  try {
+    const res = await calculateAssessDataApi(runId)
+    console.log('>>>>> file: index.vue ~ method: calculateAssess <<<<<\n', res) // TODO: 删除
+  } catch (e) {
+    console.error(e)
+  }
 }
 /**
  * @description 获取评估运行id
@@ -222,6 +243,30 @@ const getRunAssessId = async () => {
     schemeId: scheme.value!,
   })
   return res.id
+}
+/**
+ * @description 生成提交评估的表单结果
+ */
+const generateSubmitFormData: GenerateSubmitFormData = (data = tableState.totalData) => {
+  return data.flatMap((item: IndicatorListItem) => {
+    if (item.children && item.children.length > 0) {
+      return generateSubmitFormData(item.children)
+    }
+    let sourceKey = ''
+    if (item.formConfig) {
+      if (item.formConfig.type === 'select') {
+        sourceKey = item.formConfig.config?.options!.find((option) => option.value === item.score)?.label || ''
+      } else if (item.formConfig.type === 'numberInput') {
+        sourceKey = ''
+      }
+    }
+    return {
+      paramId: item.id,
+      sourceKey: sourceKey,
+      value: item.score,
+      remark: item.remark,
+    }
+  })
 }
 
 getCompanyList()
@@ -240,9 +285,8 @@ getSchemeListOptions()
 .select-scheme-wrapper {
   width: 100%;
 
-  .assess-list-wrapper {
+  .input-table {
     margin-top: $spacing-size2;
-    border: 1px solid $border-color2;
   }
 }
 </style>

@@ -31,10 +31,17 @@ export interface GetRunAssessIdApiRes {
 
 export interface SaveEnterAssessDataApiSend {
   runId: number
+  baseInfo: {
+    departmentName: string
+    trainTime: Date
+    assessTime: Date
+    expert: string
+  }
   enterData: {
     paramId: number // 指标id
     sourceKey: string // 选择框的label（如果是选择框的话）
     value: number // 填写值
+    remark: string // 备注
   }[]
 }
 
