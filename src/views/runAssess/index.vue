@@ -169,7 +169,7 @@ const submitAssess = async () => {
   try {
     // await baseFormDataRef.value?.ElFormRef?.validate()
     // console.log('>>>>> file: index.vue ~ method: submitAssess <<<<<\n', indicatorList.value) // TODO: 删除
-    const runId = await getRunAssessId()
+    // const runId = await getRunAssessId()
     const scoreList = pickIdAndValue(indicatorList.value)
     const data = {
       baseInfo: baseFormData.value,
@@ -191,14 +191,19 @@ const pickIdAndValue = (
   nodeId: number
   score: NullType<number | string>
 }[] => {
-  const result: { nodeId: number; score: NullType<number | string> }[] = []
+  const result: {
+    nodeId: number
+    score: NullType<number | string>
+  }[] = []
   const pick = (nodes: IndicatorListItem[]) => {
     nodes.forEach((node) => {
-      const nodeInfo = {
-        nodeId: node.id,
-        score: node.formConfig.value,
+      if (node.formConfig !== null) {
+        const nodeInfo = {
+          nodeId: node.id,
+          score: node.formConfig.value,
+        }
+        result.push(nodeInfo)
       }
-      result.push(nodeInfo)
       if (node.children && node.children.length > 0) {
         pick(node.children)
       }
