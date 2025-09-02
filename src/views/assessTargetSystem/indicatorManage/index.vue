@@ -27,7 +27,7 @@
                   disabled
                 ></zk-radio>
               </el-form-item>
-              <el-form-item label="指标配置" prop="config">
+              <el-form-item label="指标配置" prop="config" v-if="indicatorConfigFormData.isLeaf !== 0">
                 <form-configurator
                   ref="formConfiguratorRef"
                   v-model="indicatorConfigFormData.config"
