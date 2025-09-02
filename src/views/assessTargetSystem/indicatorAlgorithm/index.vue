@@ -89,7 +89,7 @@ const getSchemeDetail = async (id: number) => {
       padding: $spacing-size2;
 
       font-size: $font-size-s;
-      color: $main-text-color3;
+      color: $main-text-color2;
       text-indent: 2em;
 
       background-color: $main-bg-color;
