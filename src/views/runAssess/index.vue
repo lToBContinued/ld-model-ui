@@ -105,14 +105,13 @@ const baseFormData = ref<BaseFormData>({
 })
 const scheme = ref<UndefinedType<number>>()
 const schemeListOptions = ref<schemeListOptionsItem[]>([])
-const indicatorList = ref<IndicatorListItem[]>([])
 const baseFormDataRef = ref<InstanceType<typeof ZkForm>>()
 const schemeSelectRef = shallowRef<InstanceType<typeof ZkSelect>>()
 const tableState = reactive<TableState>({
   totalData: [],
   columns: columns,
 })
-const calculating = ref(false)
+const calculating = ref(false) // 计算中的加载遮罩
 
 /**
  * @description 获取单位列表
@@ -184,7 +183,8 @@ const submitAssess = async () => {
     await baseFormDataRef.value?.ElFormRef?.validate()
     const scoreList = generateSubmitFormData()
     if (scoreList.some((item) => !item.value)) {
-      throw new Error('有表单项或评估项未填，请检查！')
+      ElMessage.warning('有表单项或评估项未填，请检查！')
+      return
     }
     calculating.value = true
     const data = {
@@ -193,32 +193,35 @@ const submitAssess = async () => {
     }
     const runId = await getRunAssessId() // 获取评估运行id
     await saveAssessData(runId, data) // 保存录入评估数据
-    // await calculateAssess(runId) // 计算
-    calculating.value = false
-  } catch (e) {
-    calculating.value = false
-    ElMessage.error('有表单项或评估项未填，请检查！')
+    await calculateAssess(runId) // 计算
+    ElMessage.success('评估提交并计算完成')
+  } catch (e: any) {
+    let msg
+    if (e.message === 'SAVE_FAILED') {
+      msg = '保存评估数据失败'
+    } else if (e.message === 'CALC_FAILED') {
+      msg = '计算失败'
+    }
+    ElMessage.error(msg)
     console.error(e)
+  } finally {
+    calculating.value = false
   }
 }
 /**
  * @description 保存评估录入数据
  */
 const saveAssessData = async (runId: number, data: any) => {
-  try {
-    const body = {
-      runId,
-      ...data,
-    }
-    const res = await saveEnterAssessDataApi(body)
-    if (res.status === 200) {
-      return Promise.resolve(res)
-    } else {
-      return Promise.resolve('保存分数失败，请重试')
-    }
-  } catch (e) {
-    ElMessage.error('保存分数失败，请重试')
-    console.error(e)
+  const body = {
+    runId,
+    ...data,
+  }
+  const res = await saveEnterAssessDataApi(body)
+  if (res.status === 200) {
+    ElMessage.success('保存评估数据成功')
+    return res
+  } else {
+    throw new Error('SAVE_FAILED')
   }
 }
 /**
@@ -226,11 +229,12 @@ const saveAssessData = async (runId: number, data: any) => {
  * @param {number} runId 运行id
  */
 const calculateAssess = async (runId: number) => {
-  try {
-    const res = await calculateAssessDataApi(runId)
-    console.log('>>>>> file: index.vue ~ method: calculateAssess <<<<<\n', res) // TODO: 删除
-  } catch (e) {
-    console.error(e)
+  const res = await calculateAssessDataApi(runId)
+  if (res.status === 200) {
+    ElMessage.success('计算成功')
+    return res
+  } else {
+    throw new Error('CALC_FAILED')
   }
 }
 /**
