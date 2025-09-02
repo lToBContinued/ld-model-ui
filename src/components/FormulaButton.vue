@@ -86,12 +86,14 @@ async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
   // 获取所有指标的参数信息
   const paramMap = new Map<number, any[]>()
   await Promise.all(
-    flat.map(async (indicator) => {
+    flat.map(async (node) => {
       try {
-        const res: any = await listParamsByNode(indicator.id)
-        paramMap.set(indicator.id, Array.isArray(res) ? res : (res?.list ?? []))
+        const temp: any = await listParamsByNode(node.refIndicatorId)
+        const res = temp.data
+        // const res: any = await listParamsByNode(indicator.id)
+        paramMap.set(node.refIndicatorId, Array.isArray(res) ? res : (res?.list ?? []))
       } catch {
-        paramMap.set(indicator.id, [])
+        paramMap.set(node.refIndicatorId, [])
       }
     }),
   )
@@ -100,6 +102,7 @@ async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
    * @param {} n 方案二级指标
    */
   const toVarNode = (n: any): VarTreeNode => {
+    console.log(333333, n)
     const path = pathNames.get(n.id) || [n.name]
     const ns = path[0] || '根'
     const node: VarTreeNode = {
@@ -109,7 +112,7 @@ async function buildVariableTree(subtreeId: number): Promise<VarTreeNode[]> {
       tagName: 'number',
       children: [],
     }
-    for (const p of paramMap.get(n.id) || []) {
+    for (const p of paramMap.get(n.refIndicatorId) || []) {
       node.children!.push({
         namespace: ns,
         label: p.name,

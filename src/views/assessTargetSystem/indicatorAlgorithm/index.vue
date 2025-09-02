@@ -45,7 +45,7 @@ const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value?.id) return
   selectedScheme.value = scheme
   const data = await getSchemeDetail(scheme.id)
-  schemeIndicatorConfig.value = data!.children
+  schemeIndicatorConfig.value = [data!]
 }
 /**
  * @description 获取方案配置详情
