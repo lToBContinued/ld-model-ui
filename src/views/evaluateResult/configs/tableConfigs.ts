@@ -1,4 +1,4 @@
-import { dayjs } from 'element-plus'
+import { formatDate } from '@/utils/common/formatData.ts'
 
 export const evaluateResultTableConfig = [
   {
@@ -7,7 +7,7 @@ export const evaluateResultTableConfig = [
     width: '150px',
   },
   {
-    prop: 'subject',
+    prop: 'indicatorSystemName',
     label: '评估科目',
   },
   {
@@ -15,8 +15,7 @@ export const evaluateResultTableConfig = [
     label: '评估时间',
     width: '200px',
     render: ({ assessTime }: { assessTime: string }) => {
-      const date = new Date(assessTime)
-      return dayjs(date).format('YYYY-MM-DD')
+      return formatDate(assessTime)
     },
   },
   {
@@ -38,5 +37,26 @@ export const evaluateResultTableConfig = [
     width: '200px',
     align: 'center',
     headerAlign: 'center',
+  },
+]
+
+export const recordDetailTableColumn = [
+  {
+    prop: 'name',
+    label: '指标名称',
+  },
+  {
+    prop: 'description',
+    label: '指标描述',
+  },
+  {
+    prop: 'score',
+    label: '指标得分',
+    width: '100px',
+    align: 'center',
+    headerAlign: 'center',
+    render({ score }: { score: number }) {
+      return score.toFixed(2)
+    },
   },
 ]

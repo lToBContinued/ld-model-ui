@@ -25,11 +25,11 @@
     <zk-card class="module-bottom">
       <div class="result-wrapper">
         <zk-table
-          v-model:current-page="tableState.currentPage"
-          v-model:page-size="tableState.pageSize"
-          :columns="evaluateResultTableConfig"
-          :data="tableState.totalData"
-          :total="tableState.total"
+          v-model:current-page="assessResultTableState.currentPage"
+          v-model:page-size="assessResultTableState.pageSize"
+          :columns="assessResultTableState.columns"
+          :data="assessResultTableState.totalData"
+          :total="assessResultTableState.total"
           max-height="400"
           @update:current-page="handelCurrentPageChange"
           @update:page-size="handelPageSizeChange"
@@ -45,11 +45,52 @@
           </template>
         </zk-table>
         <zk-dialog
-          title="评估详情"
           v-model="detailDialogShow"
-          @cancel="closeDetailDialog"
-          @close="closeDetailDialog"
-        ></zk-dialog>
+          :show-footer="false"
+          close-on-click-modal
+          title="评估详情"
+          top="10vh"
+          width="80%"
+        >
+          <el-descriptions class="margin-top" :column="3" border>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">执行方案名称</div>
+              </template>
+              <span>{{ selectedIndicatorSysDetail!['schemeName'] }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">体系名称</div>
+              </template>
+              <span>{{ selectedIndicatorSysDetail!['indicatorSystemName'] }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">评估专家</div>
+              </template>
+              <span>{{ selectedIndicatorSysDetail!['experts'] }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">总分</div>
+              </template>
+              <span>{{ selectedIndicatorSysDetail!['totalScore'] }}</span>
+            </el-descriptions-item>
+            <el-descriptions-item>
+              <template #label>
+                <div class="cell-item">评估时间</div>
+              </template>
+              <span>{{ selectedIndicatorSysDetail!['assessTime'] }}</span>
+            </el-descriptions-item>
+          </el-descriptions>
+          <zk-table
+            :columns="recordDetailTableState.columns"
+            :data="recordDetailTableState.totalData"
+            max-height="500"
+            row-key="id"
+          ></zk-table>
+        </zk-dialog>
       </div>
     </zk-card>
   </div>
@@ -58,8 +99,13 @@
 <script setup lang="ts">
 import { ref, onMounted, reactive, shallowRef } from 'vue'
 import { evaluateResultFormConfig } from '@/views/evaluateResult/configs/formConfig.ts'
-import { assessResultTableState, EvaluateResultFormType } from '@/views/evaluateResult/type.ts'
-import { evaluateResultTableConfig } from '@/views/evaluateResult/configs/tableConfigs.ts'
+import {
+  AssessResultTableState,
+  EvaluateResultFormType,
+  RecordDetailTableState,
+  SelectedIndicatorSysDetail,
+} from '@/views/evaluateResult/type.ts'
+import { evaluateResultTableConfig, recordDetailTableColumn } from '@/views/evaluateResult/configs/tableConfigs.ts'
 import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOption } from '@/views/evaluateResult/configs/chartsOption.ts'
 import { getTraineesListApi } from '@/api/global'
@@ -71,6 +117,7 @@ import {
   getRecordDetailApi,
   getSchemeByIndicatorSysApi,
 } from '@/api/evaluateResult'
+import { formatDate } from '@/utils/common/formatData.ts'
 
 const resultChartInstance = ref<NullType<HTMLDivElement>>(null)
 const { renderChart } = useEcharts(resultChartInstance, { themeMode: 'dark' })
@@ -83,13 +130,24 @@ const formData = ref<EvaluateResultFormType>({
   endDate: undefined,
   subject: [undefined, undefined],
 })
-const tableState = reactive<assessResultTableState>({
+const assessResultTableState = reactive<AssessResultTableState>({
   totalData: [],
   pageSize: 10,
   currentPage: 1,
   total: 0,
+  columns: evaluateResultTableConfig,
 })
-const selectedRecordDetail = ref()
+const recordDetailTableState = reactive<RecordDetailTableState>({
+  totalData: [],
+  columns: recordDetailTableColumn,
+})
+const selectedIndicatorSysDetail = ref<SelectedIndicatorSysDetail>({
+  schemeName: '',
+  indicatorSystemName: '',
+  experts: '',
+  totalScore: '',
+  assessTime: '',
+})
 
 onMounted(() => {
   renderChart(resultChartOption)
@@ -172,21 +230,21 @@ const getAssessResultList = async () => {
     departmentName: formData.value.department,
     endDate: formData.value.endDate,
     indicatorSystemId: formData.value.subject![0],
-    pageNum: tableState.currentPage,
-    pageSize: tableState.pageSize,
+    pageNum: assessResultTableState.currentPage,
+    pageSize: assessResultTableState.pageSize,
     startDate: formData.value.startDate,
     subtreeId: formData.value.subject![1],
   }
   const res = await getAssessResultListApi(data)
-  tableState.totalData = res.data!.records
-  tableState.total = res.data!.total
+  assessResultTableState.totalData = res.data!.records
+  assessResultTableState.total = res.data!.total
 }
 const handelCurrentPageChange = (pageNum: number) => {
-  tableState.currentPage = pageNum
+  assessResultTableState.currentPage = pageNum
   getAssessResultList()
 }
 const handelPageSizeChange = (pageSize: number) => {
-  tableState.pageSize = pageSize
+  assessResultTableState.pageSize = pageSize
   getAssessResultList()
 }
 /**
@@ -196,9 +254,12 @@ const handelPageSizeChange = (pageSize: number) => {
 const checkDetail = async (runId: number) => {
   detailDialogShow.value = true
   const res = await getRecordDetailApi(runId)
-}
-const closeDetailDialog = () => {
-  detailDialogShow.value = false
+  recordDetailTableState.totalData = res.data!.children
+  selectedIndicatorSysDetail.value!['indicatorSystemName'] = res.data?.indicatorSystemName
+  selectedIndicatorSysDetail.value!['schemeName'] = res.data?.subtreeName
+  selectedIndicatorSysDetail.value!['experts'] = res.data?.experts
+  selectedIndicatorSysDetail.value!['totalScore'] = res.data?.totalScore?.toFixed(2) || ''
+  selectedIndicatorSysDetail.value!['assessTime'] = formatDate(res.data?.assessTime as string)
 }
 
 getTraineesList()
@@ -224,5 +285,12 @@ getAssessResultList()
 .chart {
   width: 100%;
   height: 400px;
+}
+.el-descriptions {
+  margin-bottom: $spacing-size4;
+}
+.cell-item {
+  display: flex;
+  align-items: center;
 }
 </style>

@@ -39,3 +39,38 @@ export interface GetAssessResultListApiRes {
   current: number
   pages: number
 }
+
+interface GetRecordDetailApiResChildren {
+  id: number
+  children: GetRecordDetailApiResChildren[]
+  parentId?: any
+  hasChildren?: any
+  hasSon: number
+  refIndicatorId: number
+  subtreeId: number
+  name: string
+  description: string
+  formConfig?: any
+  paramId?: any
+  score: number
+  result?: any
+  formula: string
+}
+
+export interface GetRecordDetailApiRes {
+  id: number
+  subtreeId: number
+  title: string
+  experts: string
+  departmentName: string
+  remark?: any
+  status: string
+  totalScore: number
+  createdAt: string
+  trainTime: string
+  assessTime: string
+  indicatorSystemId: number
+  indicatorSystemName: string
+  subtreeName: string
+  children: GetRecordDetailApiResChildren[]
+}

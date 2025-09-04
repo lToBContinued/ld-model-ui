@@ -3,6 +3,7 @@ import {
   GetAssessResultListApiRes,
   GetAssessResultListApiSend,
   GetIndicatorSystemApiRes,
+  GetRecordDetailApiRes,
   GetSchemeByIndicatorSysApiRes,
 } from '@/api/evaluateResult/types.ts'
 
@@ -47,7 +48,7 @@ export const getAssessResultListApi = (params: GetAssessResultListApiSend) => {
  * @param {number} runId
  */
 export const getRecordDetailApi = (runId: number) => {
-  return request<ResponseData>({
+  return request<any, ResponseData<GetRecordDetailApiRes>>({
     url: `/subtree-runs/${runId}`,
   })
 }
