@@ -150,7 +150,7 @@ export default [
     meta: {
       title: '系统管理',
       icon: '',
-      hidden: false,
+      hidden: true,
       disabled: false,
       iconShow: false,
     },
@@ -174,7 +174,7 @@ export default [
         meta: {
           title: '用户管理',
           icon: '',
-          hidden: false,
+          hidden: true,
           disabled: false,
           iconShow: false,
         },
@@ -186,7 +186,7 @@ export default [
         meta: {
           title: '评估单位管理',
           icon: '',
-          hidden: false,
+          hidden: true,
           disabled: false,
           iconShow: false,
         },
