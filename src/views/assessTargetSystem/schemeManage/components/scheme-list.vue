@@ -1,15 +1,11 @@
 <template>
   <div class="scheme-component-wrapper">
-    <zk-button @click="addSchemeDialogShow = true" :icon="Plus" style="margin: 4px 0 0 4px">添加方案</zk-button>
+    <zk-button @click="addSchemeDialogShow = true" :icon="Plus" style="margin: 4px 0 0 4px"> 添加方案 </zk-button>
     <ul class="scheme-list">
       <li v-highlight v-for="item in schemeList" :key="item.id">
         <div class="scheme-item bold" @click="selectScheme(item)">
           <span>{{ item.name }}</span>
-          <el-popconfirm title="确定要删除此方案吗？" @confirm="removeSchema(item)">
-            <template #reference>
-              <zk-button type="danger" link>删除</zk-button>
-            </template>
-          </el-popconfirm>
+          <zk-button type="danger" link @click.stop="removeSchema(item)">删除</zk-button>
         </div>
       </li>
     </ul>
@@ -140,12 +136,18 @@ const confirmAddScheme = async () => {
   }
 }
 const removeSchema = async (scheme: SchemeListItem) => {
-  const res = await removeSchemeApi(scheme.id)
-  if (res.status === 200) {
-    ElMessage.success(res.msg)
-    await getSchemeList()
-  }
-  emit('remove-scheme', scheme)
+  ElMessageBox.confirm('确定要删除此方案吗？', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    draggable: true,
+  }).then(async () => {
+    const res = await removeSchemeApi(scheme.id)
+    if (res.status === 200) {
+      ElMessage.success(res.msg)
+      await getSchemeList()
+    }
+    emit('remove-scheme', scheme)
+  })
 }
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
