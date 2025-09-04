@@ -29,6 +29,12 @@
               v-model="formData[item.prop]"
               v-bind="item.config"
             ></zk-input-number>
+            <!--级联选择器-->
+            <zk-cascader
+              v-else-if="item.type === 'cascader'"
+              v-model="formData[item.prop]"
+              v-bind="item.config"
+            ></zk-cascader>
             <!-- 输入框 -->
             <zk-input v-else-if="item.type === 'input'" v-model="formData[item.prop]" v-bind="item.config"></zk-input>
             <template v-if="item.slot === 'default'" #default>

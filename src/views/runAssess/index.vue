@@ -182,7 +182,7 @@ const submitAssess = async () => {
     // 非空校验
     await baseFormDataRef.value?.ElFormRef?.validate()
     const scoreList = generateSubmitFormData()
-    if (scoreList.some((item) => !item.value)) {
+    if (scoreList.some((item) => !item.value?.toString())) {
       ElMessage.warning('有表单项或评估项未填，请检查！')
       return
     }
@@ -196,13 +196,16 @@ const submitAssess = async () => {
     await calculateAssess(runId) // 计算
     ElMessage.success('评估提交并计算完成')
   } catch (e: any) {
-    let msg
-    if (e.message === 'SAVE_FAILED') {
-      msg = '保存评估数据失败'
-    } else if (e.message === 'CALC_FAILED') {
-      msg = '计算失败'
+    if (e.message) {
+      let msg
+      if (e.message === 'SAVE_FAILED') {
+        msg = '保存评估数据失败'
+      } else if (e.message === 'CALC_FAILED') {
+        msg = '计算失败'
+      }
+      ElMessage.error(msg)
     }
-    ElMessage.error(msg)
+    ElMessage.error('提交失败，请检查是否有未填项或网络正常连接')
     console.error(e)
   } finally {
     calculating.value = false

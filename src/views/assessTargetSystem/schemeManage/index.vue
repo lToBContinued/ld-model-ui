@@ -116,6 +116,8 @@ const indicatorOptions = ref<{ label: string; value: number }[]>([])
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
+  const res = await getSchemeDetailApi(scheme.id)
+  console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', res) // TODO: 删除
   selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
   selectedScheme.value.subtreeId = scheme.id
   schemeIndicatorConfig.value = selectedScheme.value.children as SchemeDetailChildren[]
@@ -158,12 +160,11 @@ const addSecondIndicatorDialogOpen = async () => {
   const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
   if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
-    indicatorOptions.value =
+    indicatorIdSelectConfig.config.options =
       res.data?.map((item) => ({
         label: item.name,
         value: item.id,
       })) || []
-    indicatorIdSelectConfig.config.options = indicatorOptions.value
   }
 }
 const confirmAddChildIndicator = async () => {
@@ -185,10 +186,6 @@ const confirmAddChildIndicator = async () => {
 const closeAddChildIndicatorDialog = () => {
   addSecondIndicatorRef.value?.ElFormRef?.resetFields()
   addSecondIndicatorDialogShow.value = false
-}
-
-const getIndicatorName = (id: number) => {
-  return indicatorOptions.value.find((item) => item.value === id)?.label
 }
 </script>
 
