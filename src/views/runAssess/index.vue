@@ -265,7 +265,7 @@ const generateSubmitFormData: GenerateSubmitFormData = (data = tableState.totalD
       }
     }
     return {
-      paramId: item.id,
+      paramId: item.paramId,
       sourceKey: sourceKey,
       value: item.score,
       remark: item.remark,

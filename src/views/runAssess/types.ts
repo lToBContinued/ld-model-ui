@@ -42,6 +42,7 @@ export interface IndicatorListItem {
   remark?: string
   score?: number
   subtreeId: number
+  paramId: number
 }
 
 export interface RootObject {
