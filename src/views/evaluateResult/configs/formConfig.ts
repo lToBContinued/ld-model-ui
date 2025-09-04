@@ -1,18 +1,20 @@
-import { evaluateTypeMap } from '@/views/evaluateResult/configs/map.ts'
-
-export const evaluateResultFormConfig = [
+export const evaluateResultFormConfig: Record<string, any> = [
   {
-    prop: 'companyName',
+    prop: 'department',
     label: '公司名称',
     type: 'select',
+    config: {
+      filterable: true,
+      options: [],
+    },
   },
   {
     prop: 'startDate',
     label: '开始日期',
     type: 'datePicker',
     config: {
-      type: 'datetime',
-      format: 'YYYY/MM/DD HH:mm',
+      type: 'date',
+      format: 'YYYY-MM-DD',
     },
   },
   {
@@ -20,19 +22,23 @@ export const evaluateResultFormConfig = [
     label: '结束日期',
     type: 'datePicker',
     config: {
-      type: 'datetime',
-      format: 'YYYY/MM/DD HH:mm',
+      type: 'date',
+      format: 'YYYY-MM-DD',
     },
   },
   {
     prop: 'subject',
     label: '评估科目',
-    type: 'select',
+    type: 'cascader',
     config: {
-      options: Object.entries(evaluateTypeMap).map(([key, value]) => ({
-        label: value,
-        value: Number(key),
-      })),
+      filterable: true,
+      props: {
+        checkStrictly: true,
+        label: 'name',
+        lazy: true,
+        value: 'id',
+      },
+      options: [],
     },
   },
 ]
