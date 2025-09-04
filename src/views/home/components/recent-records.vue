@@ -38,7 +38,6 @@ const getRecentRecord = async () => {
 }
 const checkRow = (row: any) => {
   dialogShow.value = true
-  console.log('>>>>> file: recent-records.vue ~ method: checkRow <<<<<\n', row) // TODO: 删除
 }
 const closeDialog = () => {
   dialogShow.value = false

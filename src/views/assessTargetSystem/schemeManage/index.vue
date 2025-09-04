@@ -117,7 +117,6 @@ const indicatorOptions = ref<{ label: string; value: number }[]>([])
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
   const res = await getSchemeDetailApi(scheme.id)
-  console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', res) // TODO: 删除
   selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
   selectedScheme.value.subtreeId = scheme.id
   schemeIndicatorConfig.value = selectedScheme.value.children as SchemeDetailChildren[]

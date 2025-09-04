@@ -36,7 +36,6 @@ export const getSchemeByIndicatorSysApi = (indicatorId: number) => {
  * @param {number} params.subtreeId
  */
 export const getAssessResultListApi = (params: GetAssessResultListApiSend) => {
-  console.log('>>>>> file: index.ts ~ method: getAssessResultListApi <<<<<\n', params) // TODO: 删除
   return request<any, ResponseData<GetAssessResultListApiRes>>({
     url: `/subtrees/runs`,
     params: params,

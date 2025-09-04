@@ -16,12 +16,12 @@
         </div>
       </div>
     </zk-card>
-    <zk-card class="module-bottom">
+    <!--<zk-card class="module-bottom">
       <template #header>
         <span class="card-title">评估分布</span>
       </template>
       <div class="chart" ref="resultChartInstance"></div>
-    </zk-card>
+    </zk-card>-->
     <zk-card class="module-bottom">
       <div class="result-wrapper">
         <zk-table
@@ -196,7 +196,6 @@ const handelPageSizeChange = (pageSize: number) => {
 const checkDetail = async (runId: number) => {
   detailDialogShow.value = true
   const res = await getRecordDetailApi(runId)
-  console.log('>>>>> file: index.vue ~ method: checkDetail <<<<<\n', res.data) // TODO: 删除
 }
 const closeDetailDialog = () => {
   detailDialogShow.value = false

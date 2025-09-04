@@ -16,14 +16,12 @@
               :step="indicator.formConfig?.config?.step"
               step-strictly
               style="width: 160px"
-              @change="handleValueChange(indicator, $event)"
             ></zk-input-number>
             <zk-select
               v-else-if="indicator.formConfig?.type === 'select'"
               v-model="indicator.formConfig.value as string | number"
               :options="indicator.formConfig?.config?.options"
               style="width: 160px"
-              @change="handleValueChange(indicator, $event)"
             ></zk-select>
           </div>
         </div>
@@ -42,7 +40,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import AssessList from './assess-list.vue'
-import { isNumber, isString } from '@/utils/common/validate.ts'
 import { IndicatorListItem } from '@/views/runAssess/types.ts'
 
 interface DefineProps {
@@ -64,22 +61,11 @@ watch(
   () => props.modelValue,
   (newVal) => {
     indicatorsList.value = newVal
-    console.log('>>>>> file: assess-list.vue ~ method:  <<<<<\n', indicatorsList.value) // TODO: 删除
   },
   {
     deep: true,
   },
 )
-
-const handleValueChange = (indicator: IndicatorListItem, value: number) => {
-  if (isString(value) || isNumber(value)) {
-    // TODO:发送计算请求
-    console.log(
-      '>>>>> file: assess-list.vue ~ method: handleValueChange <<<<<\n',
-      `指标id: ${indicator.id}, 值: ${value}`,
-    )
-  }
-}
 </script>
 
 <style scoped lang="scss">
