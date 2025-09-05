@@ -34,7 +34,7 @@ export const evaluateResultTableConfig = [
   {
     label: '操作',
     slot: 'operation',
-    width: '200px',
+    width: '100px',
     align: 'center',
     headerAlign: 'center',
   },

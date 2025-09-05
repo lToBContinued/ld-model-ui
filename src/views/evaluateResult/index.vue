@@ -40,7 +40,7 @@
           <template #operation="{ row }">
             <div class="btn-group">
               <zk-button type="primary" size="small" @click="checkDetail(row.id)">查看</zk-button>
-              <zk-button type="success" size="small">导出</zk-button>
+              <!--<zk-button type="success" size="small">导出</zk-button>-->
             </div>
           </template>
         </zk-table>
@@ -195,8 +195,9 @@ const submitForm = async () => {
 /**
  * @description 重置
  */
-const reset = () => {
+const reset = async () => {
   ZkFormRef.value?.ElFormRef?.resetFields()
+  await getAssessResultList()
 }
 const formatLevel = (level: number) => {
   switch (level) {
@@ -229,11 +230,11 @@ const getAssessResultList = async () => {
   const data = {
     departmentName: formData.value.department,
     endDate: formData.value.endDate,
-    indicatorSystemId: formData.value.subject![0],
+    indicatorSystemId: formData.value.subject ? formData.value.subject[0] : undefined,
     pageNum: assessResultTableState.currentPage,
     pageSize: assessResultTableState.pageSize,
     startDate: formData.value.startDate,
-    subtreeId: formData.value.subject![1],
+    subtreeId: formData.value.subject ? formData.value.subject[1] : undefined,
   }
   const res = await getAssessResultListApi(data)
   assessResultTableState.totalData = res.data!.records
