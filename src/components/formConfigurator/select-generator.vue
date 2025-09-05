@@ -74,9 +74,9 @@ watch(
 
 .select-option-item {
   display: flex;
+  flex-wrap: wrap; // 防止选项过多换行溢出
   align-items: center;
   margin-bottom: $spacing-size2;
-  flex-wrap: wrap; // 防止选项过多换行溢出
 }
 
 .form-item-inner {
@@ -92,8 +92,8 @@ watch(
 
 .invalid-tip {
   margin-top: $spacing-size1;
-  color: #909399;
   font-size: 12px;
   line-height: 1.5;
+  color: #909399;
 }
 </style>

@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watchEffect } from 'vue'
+import { ref, watchEffect } from 'vue'
 import { schemaBasicAssessFormConfig } from '../configs/formConfigs.ts'
 import { SchemaBasicAssessFormData } from '../types.ts'
 import { getAssessSubjectOptionsApi, getParticipateUnitsSelectOptionsApi } from '@/api/schema/index.ts'

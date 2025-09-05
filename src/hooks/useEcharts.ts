@@ -1,6 +1,6 @@
 import { type Ref, computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { echarts } from '@/plugins/echarts.ts'
-import { useDark, useDebounceFn, useResizeObserver } from '@vueuse/core'
+import { useDebounceFn, useResizeObserver } from '@vueuse/core'
 import type { UseResizeObserverReturn } from '@vueuse/core'
 import type { Color, EChartsCoreOption, EChartsInitOpts, SetOptionOpts } from 'echarts'
 import { downloadFile } from '@/utils/common/file.ts'

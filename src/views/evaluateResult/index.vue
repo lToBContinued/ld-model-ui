@@ -287,9 +287,11 @@ getAssessResultList()
   width: 100%;
   height: 400px;
 }
+
 .el-descriptions {
   margin-bottom: $spacing-size4;
 }
+
 .cell-item {
   display: flex;
   align-items: center;

@@ -11,7 +11,7 @@
         </div>
       </template>
       <div class="content">
-        <span class="desc" v-if="item.description">{{ item.description }}</span>
+        <p class="desc" v-if="item.description">{{ item.description }}</p>
         <scheme-collapse
           v-if="item.children && item.children.length > 0"
           v-model="item.children"
@@ -243,7 +243,10 @@ $spacing-indent: 16px; // 缩进间距
   }
 
   .desc {
+    translate: -$spacing-indent;
+
     margin: 0 0 $spacing-size1;
+
     font-size: $font-size-s;
     line-height: 1.6;
     color: $main-text-color2;

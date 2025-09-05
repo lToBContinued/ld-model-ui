@@ -52,9 +52,6 @@ const props = withDefaults(defineProps<DefineProps>(), {
   level: 1,
 })
 
-const emit = defineEmits<{
-  'update:model-value': [value: IndicatorListItem[]]
-}>()
 const indicatorsList = ref<IndicatorListItem[]>(props.modelValue)
 
 watch(
@@ -112,6 +109,7 @@ $spacing-indent: 16px;
       margin-bottom: 0;
       margin-left: -$spacing-indent;
       padding: $spacing-size2;
+
       font-size: $font-size-s;
       color: $light-text-color1;
     }
