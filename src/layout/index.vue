@@ -1,4 +1,3 @@
-k
 <template>
   <div class="layout">
     <el-container>
@@ -39,7 +38,7 @@ const menuStore = useMenuStore()
 </script>
 
 <style scoped lang="scss">
-.common-layout {
+.layout {
   height: 100vh;
 }
 
@@ -88,6 +87,8 @@ const menuStore = useMenuStore()
 
 ::v-deep(.el-main) {
   position: relative;
+
+  overflow-x: hidden;
 
   width: calc(100% - $aside-width);
   margin-top: 50px;

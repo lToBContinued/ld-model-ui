@@ -8,7 +8,6 @@
         <button class="btn primary" @click="startCreate" :disabled="loading || readonly">新增参数</button>
       </div>
     </header>
-
     <!-- 主体：左侧列表 + 右侧编辑 -->
     <section class="spe__body" v-if="!loading && params.length > 0">
       <!-- 左：当前节点下的参数清单（可选择、上下移动、删除） -->
@@ -41,7 +40,6 @@
           </div>
         </div>
       </aside>
-
       <!-- 右：选中参数的编辑表单；数字型与映射型展示不同字段 -->
       <main class="spe__editor" v-if="current">
         <div class="field-row">
@@ -145,7 +143,6 @@
         </div>
       </main>
     </section>
-
     <!-- 空态/加载态 -->
     <section class="spe__empty" v-else-if="!loading">
       <p>暂无参数</p>
@@ -153,7 +150,6 @@
     <section class="spe__loading" v-else>
       <p>加载中…</p>
     </section>
-
     <!-- “新增参数”弹窗：与右侧编辑表单相同的字段，但面向创建 -->
     <teleport to="body">
       <div v-if="createOpen" class="spe-mask" @click.self="closeCreate">
@@ -162,7 +158,6 @@
             <strong>新增参数</strong>
             <button class="btn ghost" @click="closeCreate">✕</button>
           </header>
-
           <div class="dlg__body">
             <div class="field-row">
               <label>名称</label>
@@ -175,7 +170,6 @@
                 <option :value="2">映射型</option>
               </select>
             </div>
-
             <!-- 数字型创建字段 -->
             <template v-if="createForm.type === 1">
               <div class="field-row">
@@ -202,7 +196,6 @@
                 />
               </div>
             </template>
-
             <!-- 映射型创建字段：支持多行映射项一次性提交 -->
             <template v-else>
               <div class="map__head">
@@ -235,7 +228,6 @@
               </div>
             </template>
           </div>
-
           <footer class="dlg__footer">
             <button class="btn" @click="closeCreate">取消</button>
             <button class="btn primary" @click="doCreate" :disabled="!createForm.name">保存</button>

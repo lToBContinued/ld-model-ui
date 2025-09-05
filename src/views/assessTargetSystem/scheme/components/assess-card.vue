@@ -6,8 +6,8 @@
       </template>
       <zk-form
         ref="assessFormDataRef"
-        v-model:form-config="assessFormConfig"
-        v-model:form-data="assessFormData"
+        v-model="assessFormData"
+        :form-config="assessFormConfig"
         inline
         label-width="100"
       ></zk-form>
@@ -24,7 +24,7 @@
 import { reactive, ref, watch } from 'vue'
 import { assessFormConfig } from '@/views/assessTargetSystem/configs/formConfigs.ts'
 import { AssessFormData } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import ResultCard from '@/views/assessTargetSystem/scheme/components/result-card.vue'
 
 interface AssessCardProps {
@@ -34,7 +34,7 @@ interface AssessCardProps {
 const props = withDefaults(defineProps<AssessCardProps>(), {})
 
 const assessFormDataRef = ref<InstanceType<typeof ZkForm>>()
-const assessFormData = reactive<AssessFormData>({
+const assessFormData = ref<AssessFormData>({
   target: undefined,
   comprehensive: undefined,
   accuracy: undefined,
@@ -55,7 +55,7 @@ const resetAssessForm = () => {
   showResult.value = false
 }
 const submitAssessForm = () => {
-  console.log('>>>>> file: assess-card.vue ~ method: submitAssessForm <<<<<\n', assessFormData)
+  console.log('>>>>> file: assess-card.vue ~ method: submitAssessForm <<<<<\n', assessFormData.value)
   showResult.value = true
 }
 </script>

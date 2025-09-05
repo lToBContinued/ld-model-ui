@@ -6,8 +6,8 @@
       </template>
       <zk-form
         ref="resultFilterFormRef"
-        v-model:form-config="resultFilterFormConfig"
-        v-model:form-data="resultFilterFormData"
+        v-model="resultFilterFormData"
+        :form-config="resultFilterFormConfig"
         inline
         label-width="100"
       ></zk-form>
@@ -34,7 +34,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { resultFilterFormConfig } from '@/views/assessTargetSystem/configs/formConfigs.ts'
 import { ResultFilterFormData } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { useEcharts } from '@/hooks/useEcharts.ts'
 import { resultChartOptions } from '@/views/assessTargetSystem/configs/chartOptions.ts'
 import { resultTableColumns } from '@/views/assessTargetSystem/configs/tableConfigs.ts'
@@ -50,7 +50,7 @@ withDefaults(defineProps<ResultCardProps>(), {})
 const resultChart = ref<NullType<HTMLDivElement>>(null)
 const { renderChart } = useEcharts(resultChart)
 const resultFilterFormRef = ref<InstanceType<typeof ZkForm>>()
-const resultFilterFormData = reactive<ResultFilterFormData>({
+const resultFilterFormData = ref<ResultFilterFormData>({
   company: '',
   experts: '',
   startDate: null,
@@ -72,7 +72,7 @@ const resetResultFilterForm = () => {
   resultFilterFormRef.value?.ElFormRef?.resetFields()
 }
 const submitResultFilterForm = () => {
-  console.log('>>>>> file: result-card.vue ~ method: submitResultFilterForm <<<<<\n', resultFilterFormData)
+  console.log('>>>>> file: result-card.vue ~ method: submitResultFilterForm <<<<<\n', resultFilterFormData.value)
 }
 getTableData()
 </script>

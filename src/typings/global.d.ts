@@ -24,17 +24,9 @@ declare global {
     status: number
     msg: string
     total?: number
-    currentPage?: number
-    pageSize?: number
+    page?: number
+    size?: number
     token?: string
     data?: T
-  }
-
-  /** 分页请求参数 */
-  interface PaginationParams {
-    /** 当前页码 */
-    currentPage: number
-    /** 每页显示条数 */
-    pageSize: number
   }
 }

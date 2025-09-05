@@ -71,7 +71,7 @@ export const getIndicatorDetailApi = (params: { id: number }) => {
 export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
   return request<any, ResponseData<UpdateIndicatorDetailRes>>({
     url: '/indicators',
-    method: 'put',
+    method: 'PUT',
     data,
   })
 }
@@ -81,17 +81,17 @@ export const updateIndicatorDetailApi = (data: UpdateIndicatorDetailSend) => {
  */
 export const getIndicatorSystemListApi = () => {
   return request<any, ResponseData<GetIndicatorSystemListRes[]>>({
-    url: '/indicatorManage/getIndicatorSystemList',
+    url: `/indicators/treeList/0`,
   })
 }
 
 /**
  * @description 获取指定指标以及所有子指标
- * @param { number } params.id 指标id
+ * @param { number } parentId 当前点击的指标id
  */
-export const getIndicatorAndDescendantsApi = (params: { id: number }) => {
+export const getIndicatorAndDescendantsApi = (parentId: number) => {
   return request<any, ResponseData<GetIndicatorAndDescendantsApiRes[]>>({
-    url: '/indicatorManage/getIndicatorAndDescendants',
-    params,
+    url: `/indicators/treeList/${parentId}`,
+    method: 'get',
   })
 }

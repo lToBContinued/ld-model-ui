@@ -6,12 +6,12 @@
       </el-col>
       <el-col :span="18">
         <div class="scheme-content">
-          <el-empty v-if="Object.keys(selectedScheme).length === 0" description="暂无数据" />
+          <el-empty v-if="selectedScheme?.id === null" description="暂无数据" />
           <div v-else>
             <div class="header">
-              <p class="title bold">{{ selectedScheme?.schemeName }}</p>
-              <p v-show="selectedScheme?.schemeDesc?.trim() !== ''" class="desc">
-                {{ selectedScheme?.schemeDesc?.trim() }}
+              <p class="title bold">{{ selectedScheme?.name }}</p>
+              <p v-show="selectedScheme?.description?.trim() !== ''" class="desc">
+                {{ selectedScheme?.description?.trim() }}
               </p>
             </div>
             <div class="btn-group">
@@ -20,7 +20,11 @@
               </zk-button>
               <zk-button type="primary" @click="saveScheme">保存方案</zk-button>
             </div>
-            <scheme-collapse v-model="schemeIndicatorConfig" :indicator-options="indicatorOptions"></scheme-collapse>
+            <scheme-collapse
+              v-model="schemeIndicatorConfig"
+              :indicator-options="indicatorOptions"
+              :subtreeId="selectedScheme.subtreeId"
+            ></scheme-collapse>
           </div>
         </div>
       </el-col>
@@ -38,8 +42,8 @@
       </template>
       <zk-form
         ref="addSecondIndicatorRef"
-        v-model:form-config="addSecondIndicatorFormConfig"
-        v-model:form-data="addSecondIndicatorFormData"
+        v-model="addSecondIndicatorFormData"
+        :form-config="addSecondIndicatorFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -47,30 +51,45 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { ref } from 'vue'
 import {
   AddSecondIndicatorFormConfig,
   AddSecondIndicatorFormData,
   SchemeIndicatorConfigItem,
-  SchemeListItem,
   SelectedScheme,
 } from '@/views/assessTargetSystem/types.ts'
 import { getSchemeDetailApi, updateSchemeApi } from '@/api/schemeManage'
 import { Plus } from '@element-plus/icons-vue'
 import SchemeCollapse from '@/views/assessTargetSystem/schemeManage/components/scheme-collapse.vue'
 import SchemeList from '@/views/assessTargetSystem/schemeManage/components/scheme-list.vue'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage'
+import {
+  SchemeDetailChildren,
+  SchemeDetailInfo,
+  SchemeListItem,
+  UpdateSchemeApiSend,
+} from '@/api/schemeManage/types.ts'
 
-const selectedScheme = ref<SelectedScheme>({})
+const selectedScheme = ref<SelectedScheme>({
+  id: null,
+  refIndicatorId: null,
+  name: null,
+  description: null,
+  formula: null,
+  enabled: null,
+  weight: null,
+  subtreeId: null,
+  children: [],
+})
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 // 二级指标
 const addSecondIndicatorDialogShow = ref(false)
 const addSecondIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 // 指标配置表单
-const addSecondIndicatorFormData = reactive<AddSecondIndicatorFormData>({
+const addSecondIndicatorFormData = ref<AddSecondIndicatorFormData>({
   indicatorId: undefined,
-  indicatorDesc: '',
+  description: '',
 })
 const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
   {
@@ -83,7 +102,7 @@ const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
     },
   },
   {
-    prop: 'indicatorDesc',
+    prop: 'description',
     label: '指标描述',
     type: 'input',
     config: {
@@ -91,64 +110,73 @@ const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
     },
   },
 ])
+// 添加二级指标的对话框的指标名称选项
 const indicatorOptions = ref<{ label: string; value: number }[]>([])
-
-watch(
-  () => schemeIndicatorConfig,
-  (newVal) => {
-    console.log('>>>>> file: index.vue ~ method: schemeChange <<<<<\n', newVal.value) // TODO: 删除
-  },
-  { deep: true },
-)
 
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
-  selectedScheme.value = scheme
-  selectedScheme.value = await getSchemeDetail(scheme.id)
-  schemeIndicatorConfig.value = JSON.parse(selectedScheme.value.config as string) || []
+  const res = await getSchemeDetailApi(scheme.id)
+  selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
+  selectedScheme.value.subtreeId = scheme.id
+  schemeIndicatorConfig.value = selectedScheme.value.children as SchemeDetailChildren[]
 }
-const getSchemeDetail = async (id: number) => {
-  const res = await getSchemeDetailApi(id)
+
+const getSchemeDetail = async (parentId: number) => {
+  const res = await getSchemeDetailApi(parentId)
   return res.data
 }
 const saveScheme = async () => {
   if (selectedScheme.value.id) {
     const data = {
-      id: selectedScheme.value.id,
-      config: JSON.stringify(schemeIndicatorConfig.value),
-    }
-    const res = await updateSchemeApi(data)
+      refIndicatorId: addSecondIndicatorFormData.value.indicatorId,
+      parentId: selectedScheme.value.id,
+    } as UpdateSchemeApiSend
+    const res = await updateSchemeApi(selectedScheme.value.subtreeId!, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
+      selectedScheme.value = await getSchemeDetail(selectedScheme.value.subtreeId!)
+      schemeIndicatorConfig.value = selectedScheme.value.children || []
     }
   }
 }
 const removeScheme = () => {
-  selectedScheme.value = {}
+  selectedScheme.value = {
+    id: null,
+    refIndicatorId: null,
+    name: null,
+    description: null,
+    formula: null,
+    enabled: null,
+    weight: null,
+    subtreeId: null,
+    children: [],
+  }
 }
 // 二级指标
 const addSecondIndicatorDialogOpen = async () => {
-  const res = await getIndicatorAndDescendantsApi({ id: selectedScheme.value.indicatorSystem as number })
+  // 直接传递数字参数
+  const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-  indicatorOptions.value = res.data!.map((item) => {
-    return {
-      label: item.indicatorName,
-      value: item.id,
-    }
-  })
-  indicatorIdSelectConfig!.config!.options = indicatorOptions.value
+  if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
+    indicatorIdSelectConfig.config.options =
+      res.data?.map((item) => ({
+        label: item.name,
+        value: item.id,
+      })) || []
+  }
 }
 const confirmAddChildIndicator = async () => {
   try {
     await addSecondIndicatorRef.value?.ElFormRef?.validate()
-    const secondIndicator = {
-      ...addSecondIndicatorFormData,
-      indicatorName: getIndicatorName(addSecondIndicatorFormData.indicatorId as number),
-      level: 0,
-      children: [],
-    }
-    schemeIndicatorConfig.value.push(secondIndicator)
+    // const secondIndicator = {
+    //   ...addSecondIndicatorFormData.value,
+    //   indicatorName: getIndicatorName(addSecondIndicatorFormData.value.indicatorId as number),
+    //   level: 0,
+    //   children: [],
+    // }
+    // schemeIndicatorConfig.value.push(secondIndicator)
+    await saveScheme()
     closeAddChildIndicatorDialog()
   } catch (e) {
     console.error(e)
@@ -158,10 +186,6 @@ const closeAddChildIndicatorDialog = () => {
   addSecondIndicatorRef.value?.ElFormRef?.resetFields()
   addSecondIndicatorDialogShow.value = false
 }
-
-const getIndicatorName = (id: number) => {
-  return indicatorOptions.value.find((item) => item.value === id)?.label
-}
 </script>
 
 <style scoped lang="scss">
@@ -169,7 +193,7 @@ const getIndicatorName = (id: number) => {
   overflow-y: auto;
 
   width: 100%;
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+  height: calc(100vh - 50px - 2 * $spacing-size3);
   margin-left: $spacing-size2;
   padding: $spacing-size3;
 
@@ -198,7 +222,7 @@ const getIndicatorName = (id: number) => {
       padding: $spacing-size2;
 
       font-size: $font-size-s;
-      color: $main-text-color3;
+      color: $main-text-color2;
       text-indent: 2em;
 
       background-color: $main-bg-color;
@@ -213,9 +237,5 @@ const getIndicatorName = (id: number) => {
       margin-right: auto;
     }
   }
-}
-
-::v-deep(.el-card__body) {
-  height: calc(100vh - 50px - 2 * $spacing-size5);
 }
 </style>

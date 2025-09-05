@@ -1,14 +1,22 @@
 <template>
   <div class="scheme-component-wrapper">
-    <zk-button @click="addSchemeGroup" :icon="Plus" style="margin: 4px 0 0 4px">添加方案</zk-button>
+    <zk-button @click="addSchemeDialogShow = true" :icon="Plus" style="margin: 4px 0 0 4px"> 添加方案 </zk-button>
     <ul class="scheme-list">
       <li v-highlight v-for="item in schemeList" :key="item.id">
         <div class="scheme-item bold" @click="selectScheme(item)">
-          <span>{{ item.schemeName }}</span>
+          <span>{{ item.name }}</span>
           <zk-button type="danger" link @click.stop="removeSchema(item)">删除</zk-button>
         </div>
       </li>
     </ul>
+    <div class="pagination-wrapper">
+      <zk-pagination
+        v-model:current-page="listState.page"
+        :total="listState.total"
+        layout="prev, pager, next,"
+        @update:current-page="currentPageChange"
+      ></zk-pagination>
+    </div>
     <zk-dialog
       v-model="addSchemeDialogShow"
       width="500px"
@@ -22,8 +30,8 @@
       </template>
       <zk-form
         ref="addSchemeFormRef"
-        v-model:form-config="addSchemeFormConfig"
-        v-model:form-data="addSchemeFormData"
+        v-model="addSchemeFormData"
+        :form-config="addSchemeFormConfig"
         label-width="100"
       ></zk-form>
     </zk-dialog>
@@ -33,33 +41,39 @@
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { Plus } from '@element-plus/icons-vue'
-import { AddSchemeFormData, AddSchemeFormItem, SchemeListItem } from '@/views/assessTargetSystem/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import { AddSchemeFormData, AddSchemeFormItem } from '@/views/assessTargetSystem/types.ts'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { addSchemeApi, getSchemeListApi, removeSchemeApi } from '@/api/schemeManage/index.ts'
 import { getIndicatorSystemListApi } from '@/api/indicatorManage/index.ts'
-import { AddSchemeApiSend } from '@/api/schemeManage/types.ts'
+import { AddSchemeApiSend, SchemeListItem } from '@/api/schemeManage/types.ts'
 
 const emit = defineEmits<{
   'scheme-change': [scheme: SchemeListItem]
   'remove-scheme': [scheme: SchemeListItem]
 }>()
+const listState = reactive({
+  total: 0,
+  totalData: [],
+  page: 1,
+  size: 30,
+})
 const addSchemeFormRef = ref<InstanceType<typeof ZkForm>>()
 const addSchemeDialogShow = ref(false)
 const schemeList = ref<SchemeListItem[]>([])
-const addSchemeFormData = reactive<AddSchemeFormData>({
-  indicatorSystem: undefined,
-  schemeDesc: '',
-  schemeName: '',
+const addSchemeFormData = ref<AddSchemeFormData>({
+  systemId: undefined,
+  description: '',
+  name: '',
 })
 const addSchemeFormConfig = ref<AddSchemeFormItem[]>([
   {
-    prop: 'schemeName',
+    prop: 'name',
     label: '方案名称',
     type: 'input',
     rules: [{ required: true, message: '请输入方案名称', trigger: 'blur' }],
   },
   {
-    prop: 'indicatorSystem',
+    prop: 'systemId',
     label: '指标体系',
     type: 'select',
     rules: [{ required: true, message: '请选择指标体系', trigger: 'change' }],
@@ -68,7 +82,7 @@ const addSchemeFormConfig = ref<AddSchemeFormItem[]>([
     },
   },
   {
-    prop: 'schemeDesc',
+    prop: 'description',
     label: '方案描述',
     type: 'input',
     config: {
@@ -82,23 +96,29 @@ const addSchemeDialogOpen = async () => {
   const res = await getIndicatorSystemListApi()
   const options = res.data!.map((item) => {
     return {
-      label: item.indicatorName,
-      value: item.id,
+      label: item.name,
+      value: item.systemId,
     }
   })
-  const formItem = addSchemeFormConfig.value.find((item) => item.prop === 'indicatorSystem')
+  const formItem = addSchemeFormConfig.value.find((item) => item.prop === 'systemId')
   formItem!.config!.options = options
 }
 // 获取方案列表
 const getSchemeList = async () => {
-  const res = await getSchemeListApi()
-  schemeList.value = res.data
+  const params = {
+    page: listState.page,
+    size: listState.size,
+  }
+  const res = await getSchemeListApi(params)
+  schemeList.value = res.data!.records
+  listState.total = res.data!.total
+}
+const currentPageChange = (currentPage: number) => {
+  listState.page = currentPage
+  getSchemeList()
 }
 // 方案相关
 const addSchemeGroup = () => {
-  addSchemeDialogShow.value = true
-}
-const closeAddSchemeDialog = () => {
   addSchemeFormRef.value?.ElFormRef?.resetFields()
   addSchemeDialogShow.value = false
 }
@@ -106,43 +126,67 @@ const confirmAddScheme = async () => {
   try {
     await addSchemeFormRef.value?.ElFormRef?.validate()
     const newGroup = {
-      ...addSchemeFormData,
+      ...addSchemeFormData.value,
     } as AddSchemeApiSend
     await addSchemeApi(newGroup)
     await getSchemeList()
-    closeAddSchemeDialog()
+    addSchemeGroup()
   } catch (e) {
     console.error(e)
   }
 }
 const removeSchema = async (scheme: SchemeListItem) => {
-  const res = await removeSchemeApi(scheme.id)
-  if (res.status === 200) {
-    ElMessage.success(res.msg)
-    await getSchemeList()
-  }
-  emit('remove-scheme', scheme)
+  ElMessageBox.confirm('确定要删除此方案吗？', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    draggable: true,
+  }).then(async () => {
+    const res = await removeSchemeApi(scheme.id)
+    if (res.status === 200) {
+      ElMessage.success(res.msg)
+      await getSchemeList()
+    }
+    emit('remove-scheme', scheme)
+  })
 }
 // 选择方案
 const selectScheme = (scheme: SchemeListItem) => {
   emit('scheme-change', scheme)
 }
-
+const closeAddSchemeDialog = () => {
+  addSchemeFormRef.value?.ElFormRef?.resetFields()
+  addSchemeDialogShow.value = false
+}
 getSchemeList()
 </script>
 
 <style scoped lang="scss">
 .scheme-component-wrapper {
+  position: relative;
+
   overflow: hidden;
-  height: calc(100vh - 50px - 2 * $spacing-size5);
+
+  height: calc(100vh - 50px - 2 * $spacing-size3);
+
   background-color: $primary-color;
   border: 1px solid $border-color1;
 
-  .scheme-list {
-    overflow-y: auto;
-    height: calc(100% - 40px - $spacing-size3);
-    margin-top: $spacing-size3;
+  .pagination-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 100%;
+    height: 35px;
   }
+}
+
+.scheme-list {
+  overflow-y: auto;
+  height: calc(100% - 40px - $spacing-size3);
+  margin-top: $spacing-size3;
+  padding-bottom: 35px;
 
   .scheme-item {
     @include flex-center(row-between);
@@ -156,15 +200,18 @@ getSchemeList()
     line-height: calc(40px - 2 * $spacing-size1);
     color: $main-text-color2;
 
+    border-top: 1px solid $border-color1;
+    border-bottom: 1px solid $border-color1;
+
     transition: all 0.3s;
 
     &:hover {
-      background-color: #e3edff;
+      background-color: $hover-color;
     }
   }
+}
 
-  .scheme-item-active {
-    background-color: #fff;
-  }
+.el-pagination {
+  margin-top: 0;
 }
 </style>

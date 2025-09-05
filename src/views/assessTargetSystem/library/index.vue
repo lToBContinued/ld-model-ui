@@ -2,7 +2,7 @@
   <div class="library">
     <zk-tree :data="metricsTreeData" :active="{ check: true }" lazy :load="loadNodes" @view-node="viewNode"></zk-tree>
     <zk-drawer v-model="drawerShow" :title="selectedMetrics.label">
-      <zk-form v-model:form-config="drawerFormConfig" v-model:form-data="drawerFormData"></zk-form>
+      <zk-form v-model="drawerFormData" :form-config="drawerFormConfig"></zk-form>
     </zk-drawer>
   </div>
 </template>
@@ -14,42 +14,11 @@ import type { LoadFunction } from 'element-plus'
 type Node = RenderContentContext['node']
 type Data = RenderContentContext['data']
 
-const metricsTreeData = reactive([
-  {
-    id: 1,
-    label: '一级指标-处置效果',
-    children: [
-      {
-        id: 11,
-        label: '二级指标-送命指标',
-      },
-      {
-        id: 12,
-        label: '二级指标-及时性',
-      },
-      {
-        id: 13,
-        label: '二级指标-准确性',
-      },
-      {
-        id: 14,
-        label: '二级指标-连续性',
-      },
-      {
-        id: 15,
-        label: '二级指标-完整性',
-      },
-      {
-        id: 16,
-        label: '二级指标-可靠性',
-      },
-    ],
-  },
-])
+const metricsTreeData = reactive([])
 const selectedMetrics = ref<Data>([])
 const drawerShow = ref(false)
 const drawerFormConfig = reactive({})
-const drawerFormData = reactive({})
+const drawerFormData = ref({})
 
 const viewNode = (node: Node, data: Data) => {
   drawerShow.value = true
@@ -69,11 +38,6 @@ const loadNodes: LoadFunction = (node, resolve) => {
 
   setTimeout(() => {
     const data = [
-      {
-        id: 11,
-        isLeaf: true,
-        label: '二级指标-送命指标',
-      },
       {
         id: 12,
         isLeaf: true,

@@ -48,7 +48,7 @@ import { companyTableColumns } from '@/views/systemManage/companyManage/configs/
 import { getAssessCompanyListApi } from '@/api/companyManage'
 import { addCompanyFormDataType } from '@/views/systemManage/types.ts'
 import { addCompanyFormConfig } from '@/views/systemManage/companyManage/configs/formConfigs.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { FormRules } from 'element-plus'
 
 const addCompanyFormRef = ref<InstanceType<typeof ZkForm>>()

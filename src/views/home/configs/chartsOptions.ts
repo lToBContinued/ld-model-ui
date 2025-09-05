@@ -19,11 +19,6 @@ export const abilityChartOptions: EChartsOption = {
       areaStyle: {},
     },
   ],
-  title: {
-    text: '能力分布雷达图',
-    left: 0,
-    top: '45%',
-  },
   legend: {
     data: ['张三', '李四'],
     left: 'right',

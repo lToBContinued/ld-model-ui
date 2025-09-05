@@ -1,6 +1,5 @@
 import request from '@/utils/request.ts'
 import {
-  SchemeListItem,
   SchemeDetail,
   ParamMapEntryDTO,
   CreateParamDTO,
@@ -9,26 +8,12 @@ import {
 } from '@/api/schemeManage/types.ts'
 
 /**
- * @description 获取方案列表
- * @returns {Promise<ResponseData<SchemeListItem[]>>} 方案列表数据
- */
-export const getSchemeListApi = () => {
-  return request<ResponseData<SchemeListItem[]>>({
-    url: '/subtrees/page',
-    params: {
-      page: 1,
-      size: 10,
-    },
-  })
-}
-
-/**
  * @description 获取方案详情
  * @param {number} id - 方案ID
  * @returns {Promise<ResponseData<SchemeDetail>>} 方案详情数据
  */
 export const getSchemeDetailApi = (id: number) => {
-  return request<ResponseData<SchemeDetail>>({
+  return request<any, ResponseData<SchemeDetail>>({
     url: `/subtrees/${id}/tree`,
   })
 }

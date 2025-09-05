@@ -139,7 +139,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { listParamsByNode } from '@/api/subtrees'
+import { listParamsByNode } from '@/api/schemeManage/legacySubtree.ts'
 
 defineOptions({ name: 'ParamTableMode' })
 

@@ -45,22 +45,24 @@ export interface SchemeListItem {
 }
 
 export interface SchemeIndicatorConfigItem {
-  indicatorId?: UndefinedType<number>
-  indicatorName?: string
-  level?: number
-  indicatorDesc?: string
-  enabled?: boolean
-  weight?: number
+  id: number
+  refIndicatorId: number
+  name: string
+  description?: string
   formula?: string
-  children?: SchemeIndicatorConfigItem[]
+  enabled: number
+  weight?: number
+  children: SchemeIndicatorConfigItem[]
 }
 
 export interface SelectedScheme {
-  config?: string
+  createdAt?: string
+  description?: string
   id?: number
-  indicatorSystem?: number
-  schemeDesc?: string
-  schemeName?: string
+  name?: string
+  rootNodeId?: number
+  systemId?: number
+  updatedAt?: string
 }
 
 export interface CompanyFormData {

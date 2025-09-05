@@ -34,7 +34,7 @@
     >
       <zk-form
         ref="addOneCompanyFormRef"
-        v-model:form-data="companyFormData"
+        v-model="companyFormData"
         :form-config="companyFormConfig"
         :rules="rules"
         label-width="80"
@@ -62,9 +62,9 @@ import { traineesColumns } from '@/views/systemManage/traineesManage/configs/tab
 import { reactive, ref } from 'vue'
 import { companyFormConfig } from '@/views/systemManage/traineesManage/configs/formConfigs.ts'
 import { CompanyFormData, CompanyTableState, CompanyTableStateList } from '@/views/systemManage/types.ts'
-import ZkForm from '@/components/zk-form.vue'
+import ZkForm from '@/components/zk/zk-form.vue'
 import { UploadFile } from 'element-plus'
-import ZkUpload from '@/components/zk-upload.vue'
+import ZkUpload from '@/components/zk/zk-upload.vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
 
 /*-------------------------------------------------------------------------------------------------------------------**/
@@ -78,7 +78,7 @@ const tableState = reactive<CompanyTableState>({
 // 新增/编辑单位弹窗
 const companyDialogShow = ref(false)
 const addOneCompanyFormRef = ref<InstanceType<typeof ZkForm>>()
-const companyFormData = reactive<CompanyFormData>({
+const companyFormData = ref<CompanyFormData>({
   companyName: '',
   companyCode: '',
   department: '',

@@ -3,6 +3,8 @@ import {
   AddSchemeApiRes,
   AddSchemeApiSend,
   GetSchemeListApiRes,
+  GetSchemeListApiSend,
+  SchemeDetailInfo,
   UpdateSchemeApiSend,
 } from '@/api/schemeManage/types.ts'
 
@@ -14,7 +16,7 @@ import {
  */
 export const addSchemeApi = (data: AddSchemeApiSend) => {
   return request<ResponseData<AddSchemeApiRes>>({
-    url: '/schemeManage/addScheme',
+    url: '/subtrees',
     method: 'post',
     data,
   })
@@ -22,12 +24,12 @@ export const addSchemeApi = (data: AddSchemeApiSend) => {
 
 /**
  * @description 删除方案
- * @param { string } id 方案id
+ * @param { number } id 方案id
  */
 export const removeSchemeApi = (id: number) => {
   return request<any, ResponseData>({
-    url: '/schemeManage/removeScheme',
-    method: 'post',
+    url: `/subtrees/${id}`,
+    method: 'delete',
     data: {
       id,
     },
@@ -39,9 +41,9 @@ export const removeSchemeApi = (id: number) => {
  * @param { number } data.id 方案id
  * @param { string } data.config 方案配置
  */
-export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
+export const updateSchemeApi = (id: number, data: UpdateSchemeApiSend) => {
   return request<any, ResponseData>({
-    url: '/schemeManage/updateScheme',
+    url: `/subtrees/${id}/nodes`,
     method: 'post',
     data,
   })
@@ -50,17 +52,27 @@ export const updateSchemeApi = (data: UpdateSchemeApiSend) => {
 /**
  * @description 获取方案列表
  */
-export const getSchemeListApi = () => {
-  return request<any, ResponseData<GetSchemeListApiRes[]>>({
-    url: '/schemeManage/getSchemeList',
+export const getSchemeListApi = (params: GetSchemeListApiSend) => {
+  return request<any, ResponseData<GetSchemeListApiRes>>({
+    url: '/subtrees/page',
+    params,
   })
 }
 
+/**
+ * @description 获取方案子树
+ * @param { number } id 方案id
+ */
 export const getSchemeDetailApi = (id: number) => {
-  return request({
-    url: '/schemeManage/getSchemeDetail',
-    params: {
-      id,
-    },
+  return request<any, ResponseData<SchemeDetailInfo>>({
+    url: `/subtrees/${id}/tree`,
+    method: 'get',
+  })
+}
+
+export const deleteSchemeNode = (nodeId: number) => {
+  return request<ResponseData<void>>({
+    url: `/subtrees/nodes/${nodeId}`,
+    method: 'delete',
   })
 }

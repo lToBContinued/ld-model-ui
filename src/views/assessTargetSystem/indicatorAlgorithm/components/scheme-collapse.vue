@@ -1,14 +1,14 @@
 <template>
   <el-collapse class="scheme-collapse">
-    <el-collapse-item v-for="item in tree" :key="item.indicatorId">
+    <el-collapse-item v-for="item in tree" :key="item.id">
       <template #title>
         <div class="title-wrapper">
           <span class="title">{{ item.name }}</span>
           <zk-button size="small" @click.stop="openDialog(item)">指标算法配置</zk-button>
         </div>
       </template>
-      <div :class="`content-${(item.level ?? 0) + 1}`">
-        <span :class="`desc-${(item.level ?? 0) + 1}`" v-if="item.indicatorDesc">{{ item.indicatorDesc }}</span>
+      <div class="content">
+        <span class="desc" v-if="item.description">{{ item.description }}</span>
         <scheme-collapse
           v-if="item.children?.length"
           v-model="item.children"
@@ -19,49 +19,47 @@
     </el-collapse-item>
   </el-collapse>
   <!-- 放在根模板末尾，避免层级和布局干扰 -->
-  <AlgorithmConfigDialog
-    v-model="dlgOpen"
-    :subtree-id="schemeId"
-    :node="currentIndicator"
-    @save="onDialogSave"
-    @changed="bubbleChanged"
-  />
+  <AlgorithmConfigDialog v-model="dlgOpen" :subtree-id="schemeId" :node="currentIndicator" @save="onDialogSave" />
 </template>
 
 <script setup lang="ts">
-import { shallowRef, watch, ref } from 'vue'
+import { watch, ref, defineAsyncComponent } from 'vue'
 import type { SchemeIndicatorConfigItem } from '@/views/assessTargetSystem/types.ts'
 import { ElMessage } from 'element-plus'
 import { updateSubtreeNode } from '@/api/schemeManage/legacySubtree.ts' // ✅ 用节点级保存
-import AlgorithmConfigDialog from './AlgorithmConfigDialog.vue'
+const AlgorithmConfigDialog = defineAsyncComponent(() => import('./AlgorithmConfigDialog.vue'))
 
 defineOptions({ name: 'SchemeCollapse' })
 
 interface DefineProps {
-  modelValue?: SchemeIndicatorConfigItem[]
-  indicatorOptions?: { label: string; value: number }[]
-  schemeId?: number // subtreeId
+  modelValue?: SchemeIndicatorConfigItem[] // 指标算法配置
+  indicatorOptions?: { label: string; value: number }[] // 指标选项
+  schemeId?: number // 方案id
 }
+
 const props = withDefaults(defineProps<DefineProps>(), {
   modelValue: () => [],
   indicatorOptions: () => [],
   schemeId: undefined,
 })
-const emit = defineEmits<{ (e: 'update:modelValue', v: SchemeIndicatorConfigItem[]): void }>()
 
-const tree = shallowRef<SchemeIndicatorConfigItem[]>([])
+const emit = defineEmits<{
+  'update:modelValue': [value: SchemeIndicatorConfigItem[]]
+}>()
+const tree = ref<SchemeIndicatorConfigItem[]>([])
 const deepClone = <T,>(o: T): T => JSON.parse(JSON.stringify(o))
 
 watch(
   () => props.modelValue,
-  (v) => {
-    tree.value = deepClone(v ?? [])
+  (newVal) => {
+    tree.value = newVal
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 )
 
 const dlgOpen = ref(false)
-const currentIndicator = ref<SchemeIndicatorConfigItem | null>(null)
+const currentIndicator = ref<NullType<SchemeIndicatorConfigItem>>()
+
 function openDialog(item: SchemeIndicatorConfigItem) {
   currentIndicator.value = item
   dlgOpen.value = true
@@ -117,26 +115,16 @@ $spacing-indent: 16px;
     }
   }
 
-  [class^='content-'] {
+  .content {
     padding-top: $spacing-size1;
+    padding-left: $spacing-indent;
   }
 
-  [class^='desc-'] {
+  .desc {
     margin: 0 0 $spacing-size1;
     font-size: $font-size-s;
     line-height: 1.6;
     color: $main-text-color2;
-  }
-
-  @for $i from 1 through 10 {
-    .content-#{$i} {
-      position: relative;
-      padding-left: $i * $spacing-indent;
-    }
-    .desc-#{$i} {
-      position: relative;
-      left: -$i * $spacing-indent;
-    }
   }
 }
 

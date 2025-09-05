@@ -1,3 +1,22 @@
+<template>
+  <Row class="title" :style="{ height: props.isSearch ? '60px' : '30px' }">
+    <h1>
+      {{ props.title }}
+    </h1>
+    <div v-if="props.isSearch" class="search-container">
+      <InputSearch
+        v-model:value="searchText"
+        :placeholder="props.searchPlaceholder"
+        style="zoom: 0.9"
+        @search="onSearch"
+      />
+      <Button v-if="props.showReset" size="small" @click="onReset" class="clear-btn">
+        <CloseOutlined />
+      </Button>
+    </div>
+  </Row>
+</template>
+
 <script setup lang="ts">
 //import {defineProps,defineEmits, ref} from 'vue'
 import { ref } from 'vue'
@@ -35,25 +54,6 @@ const onReset = () => {
   emits('handleReset')
 }
 </script>
-
-<template>
-  <Row class="title" :style="{ height: props.isSearch ? '60px' : '30px' }">
-    <h1>
-      {{ props.title }}
-    </h1>
-    <div v-if="props.isSearch" class="search-container">
-      <InputSearch
-        v-model:value="searchText"
-        :placeholder="props.searchPlaceholder"
-        style="zoom: 0.9"
-        @search="onSearch"
-      />
-      <Button v-if="props.showReset" size="small" @click="onReset" class="clear-btn">
-        <CloseOutlined />
-      </Button>
-    </div>
-  </Row>
-</template>
 
 <style lang="scss" scoped>
 .title {

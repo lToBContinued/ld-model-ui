@@ -22,7 +22,7 @@
         <span class="menu-item-title forbid-user-select">{{ item.children[0].meta?.title }}</span>
       </template>
     </el-menu-item>
-    <el-sub-menu v-if="item.children && item.children?.length >= 2" :index="item.path">
+    <el-sub-menu v-if="item.children && item.children?.length >= 2 && !item.meta?.hidden" :index="item.path">
       <template #title>
         <svg-icon v-if="item.iconShow" :name="item.meta?.icon" size="20"></svg-icon>
         <span class="menu-item-title forbid-user-select">{{ item.meta?.title }}</span>
