@@ -15,8 +15,8 @@ const resolve = (url: string) => {
 }
 
 // https://vite.dev/config/
-export default defineConfig((mode) => {
-  const env = loadEnv(mode as any, process.cwd())
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode as any, process.cwd(), '')
 
   return {
     base: './',
