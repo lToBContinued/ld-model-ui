@@ -158,13 +158,14 @@ const openAddSecondIndicatorDialog = async () => {
   // 直接传递数字参数
   const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-  indicatorIdSelectConfig!.config!.options! = res.data?.map((option) => {
-    return {
-      label: option.name,
-      value: option.id,
-      disabled: selectedScheme.value.children?.find((item) => item.name === option.name),
-    }
-  })
+  indicatorIdSelectConfig!.config!.options! =
+    res.data?.map((option) => {
+      return {
+        label: option.name,
+        value: option.id,
+        disabled: !!selectedScheme.value.children?.find((item) => item.name === option.name),
+      }
+    }) ?? []
 }
 const confirmAddChildIndicator = async () => {
   try {
