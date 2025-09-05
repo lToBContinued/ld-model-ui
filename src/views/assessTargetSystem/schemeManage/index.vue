@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="18">
         <div class="scheme-content">
-          <el-empty v-if="selectedScheme?.id === null" description="暂无数据" />
+          <el-empty v-if="!selectedScheme?.id" description="暂无数据" />
           <div v-else>
             <div class="header">
               <p class="title bold">{{ selectedScheme?.name }}</p>
@@ -15,7 +15,7 @@
               </p>
             </div>
             <div class="btn-group">
-              <zk-button class="add-second-level" :icon="Plus" @click="addSecondIndicatorDialogShow = true">
+              <zk-button class="add-second-level" :icon="Plus" @click="openAddSecondIndicatorDialog">
                 添加二级指标
               </zk-button>
               <zk-button type="primary" @click="saveScheme">刷新</zk-button>
@@ -36,7 +36,6 @@
       @cancel="closeAddChildIndicatorDialog"
       @close="closeAddChildIndicatorDialog"
       @confirm="confirmAddChildIndicator"
-      @open="addSecondIndicatorDialogOpen"
     >
       <template #title>
         <span style="font-size: 18px">添加二级指标</span>
@@ -121,7 +120,6 @@ const schemeChange = async (scheme: SchemeListItem) => {
   selectedScheme.value.subtreeId = scheme.id // 保存方案id
   schemeIndicatorConfig.value = selectedScheme.value.children as SchemeIndicatorConfigItem[] // 提取出指标配置
 }
-
 const saveScheme = async () => {
   if (selectedScheme.value.id) {
     const data = {
@@ -155,17 +153,18 @@ const removeScheme = () => {
   }
 }
 // 二级指标
-const addSecondIndicatorDialogOpen = async () => {
+const openAddSecondIndicatorDialog = async () => {
+  addSecondIndicatorDialogShow.value = true
   // 直接传递数字参数
   const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-  if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
-    indicatorIdSelectConfig.config.options =
-      res.data?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      })) || []
-  }
+  indicatorIdSelectConfig!.config!.options! = res.data?.map((option) => {
+    return {
+      label: option.name,
+      value: option.id,
+      disabled: selectedScheme.value.children?.find((item) => item.name === option.name),
+    }
+  })
 }
 const confirmAddChildIndicator = async () => {
   try {

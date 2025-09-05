@@ -26,7 +26,6 @@
     @cancel="closeAddChildIndicatorDialog"
     @close="closeAddChildIndicatorDialog"
     @confirm="confirmAddChildIndicatorDialog"
-    @open="addChildIndicatorDialogOpen"
   >
     <template #title>
       <span style="font-size: 18px">添加子指标</span>
@@ -96,7 +95,13 @@ watch(
   { deep: true },
 )
 
-const addChildIndicatorDialogOpen = async () => {
+const getIndicatorName = (id: number) => {
+  return parentOptions.value.find((item) => item.value === id)?.label
+}
+// 添加节点
+const openAddChildIndicatorDialog = async (node: SchemeIndicatorConfigItem) => {
+  addChildIndicatorDialogShow.value = true
+  parentNode.value = node
   const parentId = parentNode.value?.refIndicatorId as number
   if (!parentId) {
     console.error('无效的parentId:', parentNode.value?.refIndicatorId)
@@ -111,14 +116,16 @@ const addChildIndicatorDialogOpen = async () => {
     }
   })
   addChildIndicatorFormConfig.value[0].config!.options = parentOptions.value
-}
-const getIndicatorName = (id: number) => {
-  return parentOptions.value.find((item) => item.value === id)?.label
-}
-// 添加节点
-const openAddChildIndicatorDialog = (node: SchemeIndicatorConfigItem) => {
-  addChildIndicatorDialogShow.value = true
-  parentNode.value = node
+  // 已选择的指标禁止再次选择
+  parentNode.value.children?.forEach((item) => {
+    addChildIndicatorFormConfig
+      .value!.find((item) => item.prop === 'indicatorId')!
+      .config!.options?.forEach((i) => {
+        if (i.label === item.name) {
+          i.disabled = i.label === item.name
+        }
+      })
+  })
 }
 const confirmAddChildIndicatorDialog = async () => {
   try {
@@ -179,8 +186,8 @@ const removeNode = (node: SchemeIndicatorConfigItem) => {
   }
   const handleDelete = async () => {
     try {
-      await deleteSchemeNode(node.id)
-      confirmRemoveNode(indicatorList.value, node.id)
+      await deleteSchemeNode(node.id!)
+      confirmRemoveNode(indicatorList.value, node.id!)
       ElMessage.success('删除成功')
     } catch (error) {
       ElMessage.error('删除失败，请稍后重试')

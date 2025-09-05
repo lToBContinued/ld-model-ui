@@ -85,7 +85,7 @@ export interface AddSecondIndicatorFormConfig {
   type: string
   rules?: Record<string, any>[]
   config?: {
-    options?: Array<{ label: string; value: number | string }>
+    options?: Array<{ label: string; value: number | string; disabled?: boolean }>
     type?: string
   }
 }
@@ -96,7 +96,7 @@ export interface AddSecondIndicatorFormConfigItem {
   type: string
   rules?: Record<string, any>[]
   config?: {
-    options?: Array<{ label: string; value: number | string }>
+    options?: Array<{ label: string; value: number | string; disabled?: boolean }>
     type?: string
   }
 }
