@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="18">
         <div class="scheme-content">
-          <el-empty v-if="selectedScheme?.id === null" description="暂无数据" />
+          <el-empty v-if="!selectedScheme?.id" description="暂无数据" />
           <div v-else>
             <div class="header">
               <p class="title bold">{{ selectedScheme?.name }}</p>
@@ -15,12 +15,13 @@
               </p>
             </div>
             <div class="btn-group">
-              <zk-button class="add-second-level" :icon="Plus" @click="addSecondIndicatorDialogShow = true">
+              <zk-button class="add-second-level" :icon="Plus" @click="openAddSecondIndicatorDialog">
                 添加二级指标
               </zk-button>
-              <zk-button type="primary" @click="saveScheme">保存方案</zk-button>
+              <zk-button type="primary" @click="saveScheme">刷新</zk-button>
             </div>
             <scheme-collapse
+              v-if="schemeCollapseShow"
               v-model="schemeIndicatorConfig"
               :indicator-options="indicatorOptions"
               :subtreeId="selectedScheme.subtreeId"
@@ -35,7 +36,6 @@
       @cancel="closeAddChildIndicatorDialog"
       @close="closeAddChildIndicatorDialog"
       @confirm="confirmAddChildIndicator"
-      @open="addSecondIndicatorDialogOpen"
     >
       <template #title>
         <span style="font-size: 18px">添加二级指标</span>
@@ -56,7 +56,6 @@ import {
   AddSecondIndicatorFormConfig,
   AddSecondIndicatorFormData,
   SchemeIndicatorConfigItem,
-  SelectedScheme,
 } from '@/views/assessTargetSystem/types.ts'
 import { getSchemeDetailApi, updateSchemeApi } from '@/api/schemeManage'
 import { Plus } from '@element-plus/icons-vue'
@@ -64,23 +63,22 @@ import SchemeCollapse from '@/views/assessTargetSystem/schemeManage/components/s
 import SchemeList from '@/views/assessTargetSystem/schemeManage/components/scheme-list.vue'
 import ZkForm from '@/components/zk/zk-form.vue'
 import { getIndicatorAndDescendantsApi } from '@/api/indicatorManage'
-import {
-  SchemeDetailChildren,
-  SchemeDetailInfo,
-  SchemeListItem,
-  UpdateSchemeApiSend,
-} from '@/api/schemeManage/types.ts'
+import { SchemeListItem, UpdateSchemeApiSend } from '@/api/schemeManage/types.ts'
 
-const selectedScheme = ref<SelectedScheme>({
-  id: null,
-  refIndicatorId: null,
-  name: null,
-  description: null,
-  formula: null,
-  enabled: null,
-  weight: null,
-  subtreeId: null,
+const selectedScheme = ref<SchemeIndicatorConfigItem>({
+  id: undefined,
   children: [],
+  parentId: undefined,
+  hasChildren: undefined,
+  hasSon: undefined,
+  refIndicatorId: undefined,
+  subtreeId: undefined,
+  orderIndex: undefined,
+  name: undefined,
+  description: undefined,
+  formula: undefined,
+  enabled: undefined,
+  weight: undefined,
 })
 const schemeIndicatorConfig = ref<SchemeIndicatorConfigItem[]>([])
 // 二级指标
@@ -112,19 +110,15 @@ const addSecondIndicatorFormConfig = ref<AddSecondIndicatorFormConfig[]>([
 ])
 // 添加二级指标的对话框的指标名称选项
 const indicatorOptions = ref<{ label: string; value: number }[]>([])
+const schemeCollapseShow = ref(true)
 
 // 方案
 const schemeChange = async (scheme: SchemeListItem) => {
   if (scheme.id === selectedScheme.value.id) return
   const res = await getSchemeDetailApi(scheme.id)
-  selectedScheme.value = (await getSchemeDetail(scheme.id)) as SchemeDetailInfo
-  selectedScheme.value.subtreeId = scheme.id
-  schemeIndicatorConfig.value = selectedScheme.value.children as SchemeDetailChildren[]
-}
-
-const getSchemeDetail = async (parentId: number) => {
-  const res = await getSchemeDetailApi(parentId)
-  return res.data
+  selectedScheme.value = res.data as SchemeIndicatorConfigItem // 保存查询到的数据
+  selectedScheme.value.subtreeId = scheme.id // 保存方案id
+  schemeIndicatorConfig.value = selectedScheme.value.children as SchemeIndicatorConfigItem[] // 提取出指标配置
 }
 const saveScheme = async () => {
   if (selectedScheme.value.id) {
@@ -135,47 +129,47 @@ const saveScheme = async () => {
     const res = await updateSchemeApi(selectedScheme.value.subtreeId!, data)
     if (res.status === 200) {
       ElMessage.success('更新方案成功')
-      selectedScheme.value = await getSchemeDetail(selectedScheme.value.subtreeId!)
+      const res = await getSchemeDetailApi(selectedScheme.value.subtreeId!)
+      selectedScheme.value = res.data as SchemeIndicatorConfigItem
       schemeIndicatorConfig.value = selectedScheme.value.children || []
     }
   }
 }
 const removeScheme = () => {
   selectedScheme.value = {
-    id: null,
-    refIndicatorId: null,
-    name: null,
-    description: null,
-    formula: null,
-    enabled: null,
-    weight: null,
-    subtreeId: null,
+    id: undefined,
     children: [],
+    parentId: undefined,
+    hasChildren: undefined,
+    hasSon: undefined,
+    refIndicatorId: undefined,
+    subtreeId: undefined,
+    orderIndex: undefined,
+    name: undefined,
+    description: undefined,
+    formula: undefined,
+    enabled: undefined,
+    weight: undefined,
   }
 }
 // 二级指标
-const addSecondIndicatorDialogOpen = async () => {
+const openAddSecondIndicatorDialog = async () => {
+  addSecondIndicatorDialogShow.value = true
   // 直接传递数字参数
   const res = await getIndicatorAndDescendantsApi(Number(selectedScheme.value.refIndicatorId))
   const indicatorIdSelectConfig = addSecondIndicatorFormConfig.value.find((item) => item.prop === 'indicatorId')
-  if (indicatorIdSelectConfig && indicatorIdSelectConfig.config) {
-    indicatorIdSelectConfig.config.options =
-      res.data?.map((item) => ({
-        label: item.name,
-        value: item.id,
-      })) || []
-  }
+  indicatorIdSelectConfig!.config!.options! =
+    res.data?.map((option) => {
+      return {
+        label: option.name,
+        value: option.id,
+        disabled: !!selectedScheme.value.children?.find((item) => item.name === option.name),
+      }
+    }) ?? []
 }
 const confirmAddChildIndicator = async () => {
   try {
     await addSecondIndicatorRef.value?.ElFormRef?.validate()
-    // const secondIndicator = {
-    //   ...addSecondIndicatorFormData.value,
-    //   indicatorName: getIndicatorName(addSecondIndicatorFormData.value.indicatorId as number),
-    //   level: 0,
-    //   children: [],
-    // }
-    // schemeIndicatorConfig.value.push(secondIndicator)
     await saveScheme()
     closeAddChildIndicatorDialog()
   } catch (e) {

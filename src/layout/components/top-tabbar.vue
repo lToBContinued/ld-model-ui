@@ -10,17 +10,17 @@
       <!--<system-notice></system-notice>-->
     </div>
     <div class="right">
-      <el-dropdown>
-        <div class="username-wrapper">
-          <span class="username bold">{{ userStore.username }}</span>
-          <el-icon><ArrowDownBold /></el-icon>
-        </div>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="userLogout">退出登录</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <!--<el-dropdown>-->
+      <!--  <div class="username-wrapper">-->
+      <!--    <span class="username bold">{{ userStore.username }}</span>-->
+      <!--    <el-icon><ArrowDownBold /></el-icon>-->
+      <!--  </div>-->
+      <!--  <template #dropdown>-->
+      <!--    <el-dropdown-menu>-->
+      <!--      <el-dropdown-item @click="userLogout">退出登录</el-dropdown-item>-->
+      <!--    </el-dropdown-menu>-->
+      <!--  </template>-->
+      <!--</el-dropdown>-->
     </div>
   </div>
 </template>

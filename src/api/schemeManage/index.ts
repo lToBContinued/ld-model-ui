@@ -2,9 +2,9 @@ import request from '@/utils/request.ts'
 import {
   AddSchemeApiRes,
   AddSchemeApiSend,
+  GetSchemeDetailApiRes,
   GetSchemeListApiRes,
   GetSchemeListApiSend,
-  SchemeDetailInfo,
   UpdateSchemeApiSend,
 } from '@/api/schemeManage/types.ts'
 
@@ -37,7 +37,7 @@ export const removeSchemeApi = (id: number) => {
 }
 
 /**
- * @description 更新方案
+ * @description 添加子指标
  * @param { number } data.id 方案id
  * @param { string } data.config 方案配置
  */
@@ -64,7 +64,7 @@ export const getSchemeListApi = (params: GetSchemeListApiSend) => {
  * @param { number } id 方案id
  */
 export const getSchemeDetailApi = (id: number) => {
-  return request<any, ResponseData<SchemeDetailInfo>>({
+  return request<any, ResponseData<GetSchemeDetailApiRes>>({
     url: `/subtrees/${id}/tree`,
     method: 'get',
   })

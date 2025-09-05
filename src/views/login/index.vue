@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { LoginFormData } from '@/views/login/types/index.ts'
 import { particles } from './particles.ts'
 import { loadSlim } from 'tsparticles-slim'

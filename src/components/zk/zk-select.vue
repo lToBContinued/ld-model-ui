@@ -7,7 +7,13 @@
     :placeholder="placeholder"
     :style="{ width }"
   >
-    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      :disabled="item.disabled"
+    ></el-option>
   </el-select>
 </template>
 
@@ -20,6 +26,7 @@ interface ZkSelectProps {
   options: {
     label: string
     value: string | number
+    disabled?: boolean
   }[]
   placeholder?: string
   width?: string
