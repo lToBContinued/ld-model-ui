@@ -1,6 +1,6 @@
 <template>
   <el-collapse class="scheme-collapse">
-    <el-collapse-item v-for="item in tree" :key="item.id">
+    <el-collapse-item v-for="item in indicatorList" :key="item.id">
       <template #title>
         <div class="title-wrapper">
           <span class="title">{{ item.name }}</span>
@@ -45,6 +45,7 @@ import { watch, ref } from 'vue'
 import {
   AddChildrenIndicatorFormData,
   AddSecondIndicatorFormConfigItem,
+  ConfirmAdd,
   SchemeIndicatorConfigItem,
 } from '@/views/assessTargetSystem/types.ts'
 import ZkForm from '@/components/zk/zk-form.vue'
@@ -58,7 +59,7 @@ interface DefineProps {
 }
 
 const props = withDefaults(defineProps<DefineProps>(), {})
-const tree = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
+const indicatorList = ref<SchemeIndicatorConfigItem[]>(props.modelValue!)
 const addChildIndicatorRef = ref<InstanceType<typeof ZkForm>>()
 const addChildIndicatorDialogShow = ref(false)
 const parentNode = ref<SchemeIndicatorConfigItem>()
@@ -90,7 +91,7 @@ const parentOptions = ref<{ label: string; value: number }[]>([])
 watch(
   () => props.modelValue,
   (newVal) => {
-    tree.value = newVal as SchemeIndicatorConfigItem[]
+    indicatorList.value = newVal as SchemeIndicatorConfigItem[]
   },
   { deep: true },
 )
@@ -125,16 +126,15 @@ const confirmAddChildIndicatorDialog = async () => {
     const data = {
       children: [],
       indicatorName: getIndicatorName(addChildIndicatorFormData.value.indicatorId as number),
-      level: parentNode.value!.level! + 1,
       ...addChildIndicatorFormData.value,
     }
-    confirmAdd(tree.value, data)
+    await confirmAdd(indicatorList.value, data)
     closeAddChildIndicatorDialog()
   } catch (e) {
     console.error(e)
   }
 }
-const confirmAdd = async (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndicatorConfigItem) => {
+const confirmAdd: ConfirmAdd = async (tree, newNode) => {
   // 先获取并检查 parentId 的值
   const parentId = parentNode.value?.id
   // 如果 parentId 不存在，直接返回避免错误
@@ -149,10 +149,18 @@ const confirmAdd = async (tree: SchemeIndicatorConfigItem[], newNode: SchemeIndi
       }
       const data = {
         parentId: parentId,
-        refIndicatorId: newNode.indicatorId,
+        refIndicatorId: newNode.indicatorId as number,
+        name: newNode.indicatorName,
       }
-      await updateSchemeApi(props.subtreeId, data)
-      tree[i].children!.push(newNode)
+      const res = await updateSchemeApi(props.subtreeId, data)
+      const pushNewNodeData = {
+        id: res.data,
+        name: newNode.indicatorName,
+        description: newNode.description,
+        parentId: parentId,
+        refIndicatorId: newNode.indicatorId as number,
+      }
+      tree[i].children!.push(pushNewNodeData)
     } else if (tree[i].children) {
       // 检查 children 存在再递归
       confirmAdd(tree[i].children, newNode)
@@ -172,14 +180,13 @@ const removeNode = (node: SchemeIndicatorConfigItem) => {
   const handleDelete = async () => {
     try {
       await deleteSchemeNode(node.id)
-      confirmRemoveNode(tree.value, node.id)
+      confirmRemoveNode(indicatorList.value, node.id)
       ElMessage.success('删除成功')
     } catch (error) {
       ElMessage.error('删除失败，请稍后重试')
       console.error(error)
     }
   }
-
   // 如果有子节点，需要二次确认
   if (node.children && node.children.length > 0) {
     ElMessageBox.confirm('这个节点下有子节点，确定删除吗？', '提示', {

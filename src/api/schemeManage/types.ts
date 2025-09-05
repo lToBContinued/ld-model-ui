@@ -77,25 +77,20 @@ export interface SubtreeNodeUpdateDTO {
   enabled?: 0 | 1
 }
 
-export interface SchemeDetailChildren {
-  description: string
-  enabled: number
-  formula: string
+interface GetSchemeDetailApiResItem {
   id: number
-  name: string
+  children: GetSchemeDetailApiResItem[]
+  parentId: number
+  hasChildren: boolean
+  hasSon: boolean
   refIndicatorId: number
+  subtreeId: number
+  orderIndex: number
+  name: string
+  description: string
+  formula: string
+  enabled: number
   weight: number
 }
 
-export interface SchemeDetailInfo {
-  children: SchemeDetailChildren[]
-  description: string
-  enabled: number
-  formula: string
-  id: number
-  name: string
-  refIndicatorId: number
-  subtreeId: number
-  weight: number
-  systemId: number
-}
+export type GetSchemeDetailApiRes = GetSchemeDetailApiResItem[]

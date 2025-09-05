@@ -63,28 +63,20 @@ export interface AddSchemeFormItem {
   }
 }
 
-export interface SelectedScheme {
-  children: SchemeIndicatorConfigItem[]
-  description: NullType<string>
-  enabled: NullType<number>
-  formula: NullType<string>
-  id: NullType<number>
-  name: NullType<string>
-  refIndicatorId: NullType<number>
-  subtreeId: NullType<number>
-  weight: NullType<number>
-}
-
 export interface SchemeIndicatorConfigItem {
+  id?: number
   children?: SchemeIndicatorConfigItem[]
-  description: string
-  enabled: number
-  formula: string
-  id: number
-  name: string
-  refIndicatorId: number
-  subtreeId: number
-  weight: number
+  parentId?: number
+  hasChildren?: boolean
+  hasSon?: boolean
+  refIndicatorId?: number
+  subtreeId?: number
+  orderIndex?: number
+  name?: string
+  description?: string
+  formula?: string
+  enabled?: number
+  weight?: number
 }
 
 export interface AddSecondIndicatorFormConfig {
@@ -114,7 +106,16 @@ export interface AddChildNodeFormData {
   description: string
   systemId: string
 }
+
 export interface AddChildrenIndicatorFormData {
   indicatorId: UndefinedType<number>
   description: string
 }
+
+export type ConfirmAdd = (
+  tree: SchemeIndicatorConfigItem[],
+  newNode: AddChildrenIndicatorFormData & {
+    indicatorName: string
+    children: any[]
+  },
+) => void
